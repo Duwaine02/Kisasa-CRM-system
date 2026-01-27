@@ -71,20 +71,27 @@
   </div>
 
   <script>
-    // DEMO CREDENTIALS
-    const demoUser = {
-      email: "agent@crm.com",
-      password: "password123"
-    };
+    // DEMO CREDENTIALS (email-based)
+    const users = [
+      { email: "admin@kisasa.com", password: "admin123", name: "Admin", role: "admin" },
+      { email: "agent@kisasa.com", password: "password123", name: "Agent Duwaine", role: "agent" }
+    ];
 
     const loginForm = document.getElementById("loginForm");
     loginForm.addEventListener("submit", function(e){
       e.preventDefault();
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.toLowerCase();
       const password = document.getElementById("password").value;
 
-      if(email === demoUser.email && password === demoUser.password){
-        localStorage.setItem("loggedInAgent", JSON.stringify({name: "Agent Duwaine"}));
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if(user){
+        // Save name, email, and role in localStorage
+        localStorage.setItem("loggedInAgent", JSON.stringify({
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }));
         window.location.href = "index.html";
       } else {
         alert("Invalid email or password");
@@ -98,7 +105,6 @@
     togglePassword.addEventListener("click", () => {
       const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
       passwordInput.setAttribute("type", type);
-      // Toggle the eye icon
       togglePassword.classList.toggle("fa-eye-slash");
     });
   </script>
