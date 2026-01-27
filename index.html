@@ -3,74 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <title>Kisasa CRM Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="stylesheet.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Sidebar can be shared -->
-  <aside class="sidebar">
-    <h2>Kisasa CRM</h2>
-    <nav>
-      <a href="#">Dashboard</a>
-      <a href="#">Leads</a>
-      <a href="#">Clients</a>
-      <a href="#">Quotes</a>
-      <a href="#" id="logoutBtn">Logout</a>
-    </nav>
-  </aside>
 
-  <!-- Agent Dashboard -->
-  <main id="agentDashboard" style="display:none">
-    <header>
-      <h1>Agent Dashboard</h1>
-      <div>Logged in as: <strong id="agentName"></strong></div>
-    </header>
-    <section class="stats">
-      <div class="card"><p>New Leads</p><h2 id="newLeads"></h2></div>
-      <div class="card"><p>In Progress</p><h2 id="inProgress"></h2></div>
-      <div class="card"><p>Completed</p><h2 id="completedClients"></h2></div>
-      <div class="card"><p>Win Rate</p><h2 id="winRate"></h2></div>
-    </section>
-    <section>
-      <h3>Tasks</h3>
-      <div id="taskList"></div>
-    </section>
-    <section>
-      <h3>Completed Clients</h3>
-      <div id="completedList"></div>
-    </section>
-    <section>
-      <h3>Recent Leads</h3>
-      <div id="recentLeads"></div>
-    </section>
-    <section>
-      <h3>Sales Chart</h3>
-      <canvas id="salesChart"></canvas>
-    </section>
-  </main>
+  <!-- LAYOUT WRAPPER -->
+  <div class="layout">
 
-  <!-- Admin Dashboard -->
-  <main id="adminDashboard" style="display:none">
-    <header>
-      <h1>Admin Dashboard</h1>
-      <div>Logged in as: <strong id="adminName"></strong></div>
-      <select id="monthSelector"></select>
-    </header>
-    <section id="adminStats" class="stats"></section>
-    <section class="team-overview">
-      <h2>Team Overview</h2>
-      <div id="adminCards"></div>
-    </section>
-    <section class="agent-tasks">
-      <h2>Agent Tasks</h2>
-      <div id="agentTasksContainer"></div>
-    </section>
-    <section class="charts">
-      <h2>Monthly Performance</h2>
-      <canvas id="monthlyChart"></canvas>
-    </section>
-  </main>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Kisasa CRM</h2>
+      <nav>
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Leads</a>
+        <a href="#">Clients</a>
+        <a href="#">Quotes</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Agent Dashboard -->
+    <main class="main" id="agentDashboard" style="display:none">
+      <header class="header">
+        <h1>Agent Dashboard</h1>
+        <div>Logged in as: <strong id="agentName"></strong></div>
+      </header>
+
+      <section class="stats">
+        <div class="card"><p>New Leads</p><h2 id="newLeads"></h2></div>
+        <div class="card"><p>In Progress</p><h2 id="inProgress"></h2></div>
+        <div class="card"><p>Completed</p><h2 id="completedClients"></h2></div>
+        <div class="card"><p>Win Rate</p><h2 id="winRate"></h2></div>
+      </section>
+
+      <section>
+        <h3>Tasks</h3>
+        <div id="taskList"></div>
+      </section>
+
+      <section>
+        <h3>Completed Clients</h3>
+        <div id="completedList"></div>
+      </section>
+
+      <section>
+        <h3>Recent Leads</h3>
+        <div id="recentLeads"></div>
+      </section>
+
+      <section>
+        <h3>Sales Chart</h3>
+        <canvas id="salesChart"></canvas>
+      </section>
+    </main>
+
+    <!-- Admin Dashboard -->
+    <main class="main" id="adminDashboard" style="display:none">
+      <header class="header admin-header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p class="subtext">Overview of agents & performance</p>
+        </div>
+        <div class="admin-controls">
+          <select id="agentSelector"></select>
+          <select id="monthSelector"></select>
+          <button id="addAgentBtn">+ Add Agent</button>
+        </div>
+      </header>
+
+      <section class="stats" id="adminStats"></section>
+
+      <section class="team-overview">
+        <h2>Team Overview</h2>
+        <div id="adminCards"></div>
+      </section>
+
+      <section class="agent-detail">
+        <h2 id="selectedAgentName">Agent Overview</h2>
+        <div class="stats" id="agentStats"></div>
+
+        <div class="panel">
+          <h3>Agent Tasks</h3>
+          <div id="agentTasksContainer"></div>
+        </div>
+      </section>
+
+      <section class="charts">
+        <h2>Monthly Performance</h2>
+        <canvas id="monthlyChart"></canvas>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- Add Agent Modal -->
+  <div class="modal" id="addAgentModal">
+    <div class="modal-content">
+      <h2>Add New Agent</h2>
+      <input type="text" id="newAgentName" placeholder="Full Name">
+      <input type="email" id="newAgentEmail" placeholder="Email">
+      <button id="saveAgentBtn">Save Agent</button>
+      <button class="secondary" id="closeAgentModal">Cancel</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
