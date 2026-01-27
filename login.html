@@ -13,12 +13,10 @@
     .password-container {
       position: relative;
     }
-
     .password-container input {
       width: 100%;
       padding-right: 40px; /* space for the eye icon */
     }
-
     .password-container i {
       position: absolute;
       top: 50%;
@@ -28,7 +26,6 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
     .password-container i:hover {
       color: #333;
     }
@@ -71,37 +68,39 @@
   </div>
 
   <script>
-    // DEMO CREDENTIALS (email-based)
+    // DEMO USERS
     const users = [
-      { email: "admin@kisasa.com", password: "admin123", name: "Admin", role: "admin" },
-      { email: "agent@kisasa.com", password: "password123", name: "Agent Duwaine", role: "agent" }
+      { email: "admin@kisasa.com", password: "admin123", name: "Admin", role: "admin", id: 1 },
+      { email: "agent@kisasa.com", password: "password123", name: "Agent Duwaine", role: "agent", id: 2 }
     ];
 
     const loginForm = document.getElementById("loginForm");
     loginForm.addEventListener("submit", function(e){
       e.preventDefault();
-      const email = document.getElementById("email").value.toLowerCase();
-      const password = document.getElementById("password").value;
+
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value.trim();
 
       const user = users.find(u => u.email === email && u.password === password);
 
       if(user){
-        // Save name, email, and role in localStorage
-        localStorage.setItem("loggedInAgent", JSON.stringify({
+        // Save name, email, role, and id in localStorage
+        localStorage.setItem("loggedInUser", JSON.stringify({
+          id: user.id,
           name: user.name,
           email: user.email,
           role: user.role
         }));
+        // Redirect to main dashboard
         window.location.href = "index.html";
       } else {
         alert("Invalid email or password");
       }
     });
 
-    // Password toggle functionality
+    // Password toggle
     const togglePassword = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("password");
-
     togglePassword.addEventListener("click", () => {
       const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
       passwordInput.setAttribute("type", type);
