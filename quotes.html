@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotes - CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stylesheet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <style>
+/* Compact sidebar */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 70px;
+  background: #0f172a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.sidebar nav a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #cbd5f5;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background: #1e293b;
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  padding: 24px 32px;
+  background-color: #f7f7f7;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.back-btn:hover {
+  background-color: #333;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.table-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button {
+  padding: 6px 10px;
+  margin-right: 5px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0b7dda;
+}
+</style>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav>
+      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
+      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
+      <a href="quotes.html" title="Quotes" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
+      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <h1>Quotes</h1>
+
+    <div class="table-card">
+      <button onclick="createQuote()" style="margin-bottom:10px;">+ New Quote</button>
+      <table id="quotesTable">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+const quotes = [
+  {client:"Alice Johnson", amount:"$500", status:"Pending", date:"2026-01-27"},
+  {client:"Bob Smith", amount:"$1200", status:"Sent", date:"2026-01-25"}
+];
+
+const quotesTable = document.querySelector('#quotesTable tbody');
+quotes.forEach(q => {
+  quotesTable.innerHTML += `
+    <tr>
+      <td>${q.client}</td>
+      <td>${q.amount}</td>
+      <td>${q.status}</td>
+      <td>${q.date}</td>
+      <td><button onclick="generatePDF('${q.client}','${q.amount}')">📄 PDF</button></td>
+    </tr>
+  `;
+});
+
+function generatePDF(client, amount){
+  alert(`PDF generated for ${client}, Amount: ${amount}`);
+}
+
+function createQuote(){
+  alert("Open new quote modal (to implement)");
+}
+</script>
+</body>
+</html>

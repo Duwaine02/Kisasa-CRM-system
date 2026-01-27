@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stylesheet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <style>
+/* Compact sidebar */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 70px;
+  background: #0f172a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.sidebar nav a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #cbd5f5;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background: #1e293b;
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  padding: 24px 32px;
+  background-color: #f7f7f7;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.back-btn:hover {
+  background-color: #333;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.table-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button {
+  padding: 6px 10px;
+  margin-right: 5px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0b7dda;
+}
+</style>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav>
+      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
+      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
+      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
+      <a href="settings.html" title="Settings" class="active"><i class="fas fa-cog"></i></a>
+    
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <h1>Settings</h1>
+
+    <div class="table-card">
+      <h3>Profile Settings</h3>
+      <input type="text" placeholder="Name" style="width:100%;padding:8px;margin:8px 0;border-radius:6px;">
+      <input type="email" placeholder="Email" style="width:100%;padding:8px;margin:8px 0;border-radius:6px;">
+      <button style="margin-top:10px;">Save Changes</button>
+    </div>
+
+    <div class="table-card" style="margin-top:20px;">
+      <h3>Change Password</h3>
+      <input type="password" placeholder="Old Password" style="width:100%;padding:8px;margin:8px 0;border-radius:6px;">
+      <input type="password" placeholder="New Password" style="width:100%;padding:8px;margin:8px 0;border-radius:6px;">
+      <button style="margin-top:10px;">Update Password</button>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

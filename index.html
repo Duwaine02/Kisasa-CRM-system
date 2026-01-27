@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agent CRM Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h2>CRM System</h2>
+    <nav>
+      <a class="active" href="index.html">Dashboard</a>
+      <a href="leads.html">Leads</a>
+      <a href="clients.html">Clients</a>
+      <a href="quotes.html">Quotes</a>
+      <a href="reports.html">Reports</a>
+      <a href="settings.html">Settings</a>
+      <a id="logoutBtn" href="#">Logout</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="header">
+      <h1>Agent Dashboard</h1>
+      <div class="agent-info">
+        Logged in as: <strong id="agentName">Agent Duwaine</strong>
+      </div>
+    </header>
+
+    <section class="stats">
+      <div class="card"><p>New Leads</p><h2 id="newLeads">0</h2></div>
+      <div class="card"><p>Deals in Progress</p><h2 id="inProgress">0</h2></div>
+      <div class="card"><p>Clients Completed</p><h2 id="completedClients">0</h2></div>
+      <div class="card"><p>Win Rate</p><h2 id="winRate">0%</h2></div>
+    </section>
+
+    <section class="grid">
+      <div>
+        <div class="box">
+          <h3>Monthly Sales Performance</h3>
+          <div class="chart-container"><canvas id="salesChart"></canvas></div>
+        </div>
+
+        <div class="box">
+          <h3>My Tasks</h3>
+          <div id="taskList"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="box">
+          <h3>Completed Clients</h3>
+          <div id="completedList"></div>
+        </div>
+
+        <div class="box">
+          <div class="box-header"><h3>Recent Leads</h3><span class="view-all">View All</span></div>
+          <div id="recentLeads"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
