@@ -3,7 +3,7 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - main  # branch that triggers the workflow
+      - main
 
 jobs:
   deploy:
@@ -15,6 +15,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # folder containing your website files
-          destination_branch: gh-pages  # branch that hosts the Pages site
+          github_token: ${{ secrets.PAT_TOKEN }}  # use PAT instead of GITHUB_TOKEN
+          publish_dir: ./  # root folder of your site
+          destination_branch: gh-pages
