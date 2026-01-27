@@ -3,20 +3,20 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - main  # your default branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # change if your site files are in /docs or /build
+          publish_dir: ./   # change to ./docs or ./build if your site is in a folder
+
 
 
 
