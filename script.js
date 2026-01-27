@@ -1,158 +1,108 @@
 // Redirect to login if not logged in
-const loggedInUser = JSON.parse(localStorage.getItem("loggedInAgent")); // should include role: "agent" or "admin"
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser")); // role: "agent" or "admin"
 if (!loggedInUser) {
   window.location.href = "login.html";
 }
 
-// Example agents data
+// Example agents data with monthly stats
 const agents = [
-  { id: 1, name: "Agent 1", totalLeads: 50, closedLeads: 30 },
-  { id: 2, name: "Admin", totalLeads: 60, closedLeads: 40 },
-  { id: 3, name: "Agent 2", totalLeads: 40, closedLeads: 20 }
+  {
+    id: 1,
+    name: "Agent 1",
+    email: "agent1@crm.com",
+    monthlyData: {
+      "2026-01": { totalLeads: 50, closedLeads: 30, tasks: ["Follow up Client A", "Call Client B"] },
+      "2026-02": { totalLeads: 60, closedLeads: 40, tasks: ["Send Quote to Client C"] }
+    }
+  },
+  {
+    id: 2,
+    name: "Admin",
+    email: "admin@crm.com",
+    monthlyData: {
+      "2026-01": { totalLeads: 60, closedLeads: 40, tasks: ["Review Agent 1 tasks"] },
+      "2026-02": { totalLeads: 70, closedLeads: 50, tasks: ["Approve quotes"] }
+    }
+  },
+  {
+    id: 3,
+    name: "Agent 2",
+    email: "agent2@crm.com",
+    monthlyData: {
+      "2026-01": { totalLeads: 40, closedLeads: 20, tasks: ["Call Client D"] },
+      "2026-02": { totalLeads: 50, closedLeads: 30, tasks: ["Follow up Client E"] }
+    }
+  }
 ];
 
-// Helper function
-function getProgress(agent) {
-  return ((agent.closedLeads / agent.totalLeads) * 100).toFixed(1);
+// Helper to calculate progress
+function getProgress(data) {
+  return data.totalLeads === 0 ? 0 : ((data.closedLeads / data.totalLeads) * 100).toFixed(1);
 }
 
-// Dashboard containers
+// DASHBOARD ELEMENTS
 const agentDashboard = document.getElementById("agentDashboard");
 const adminDashboard = document.getElementById("adminDashboard");
+const monthSelector = document.getElementById("monthSelector");
 
-if (loggedInUser.role === "admin") {
-  // Admin login
-  agentDashboard.style.display = "none";
-  adminDashboard.style.display = "block";
+// Set current month by default
+let selectedMonth = monthSelector ? monthSelector.value : "2026-01";
 
-  // Update admin header
-  document.getElementById("adminName").textContent = loggedInUser.name;
-
-  // Admin personal stats
-  const adminData = agents.find(a => a.id === loggedInUser.id);
-  const adminStats = document.getElementById("adminStats");
-  adminStats.innerHTML = `
-    <div class="card"><p>My Leads</p><h2>${adminData.totalLeads}</h2></div>
-    <div class="card"><p>Leads Closed</p><h2>${adminData.closedLeads}</h2></div>
-    <div class="card"><p>Progress</p><h2>${getProgress(adminData)}%</h2></div>
-  `;
-
-  // Render all agents
-  const adminCards = document.getElementById("adminCards");
-  adminCards.innerHTML = "";
-  agents.forEach(agent => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.style.marginBottom = "10px";
-    card.innerHTML = `
-      <h3>${agent.name}${agent.id === loggedInUser.id ? " (You)" : ""}</h3>
-      <p>Leads Closed: ${agent.closedLeads} / ${agent.totalLeads}</p>
-      <div class="progress-bar">
-        <div class="progress" style="width: ${getProgress(agent)}%;"></div>
-      </div>
-    `;
-    adminCards.appendChild(card);
+// Update month selection for admin
+if (monthSelector) {
+  monthSelector.addEventListener("change", (e) => {
+    selectedMonth = e.target.value;
+    renderAdminDashboard();
   });
+}
 
-} else {
-  // Agent login
+// RENDER FUNCTIONS
+function renderAgentDashboard() {
+  if (!agentDashboard) return;
+
+  const agentData = agents.find(a => a.id === loggedInUser.id);
+  const monthlyData = agentData.monthlyData[selectedMonth] || { totalLeads: 0, closedLeads: 0, tasks: [] };
+
   agentDashboard.style.display = "block";
   adminDashboard.style.display = "none";
 
-  // Populate header & stats
   document.getElementById("agentName").textContent = loggedInUser.name;
 
-  // Example agent data (replace with dynamic data if available)
-  const agentData = agents.find(a => a.id === loggedInUser.id) || {
-    totalLeads: 0,
-    closedLeads: 0
-  };
-
-  const agentStats = {
-    newLeads: 12,
-    inProgress: 6,
-    completed: agentData.closedLeads,
-    winRate: getProgress(agentData)
-  };
-
-  document.getElementById("newLeads").textContent = agentStats.newLeads;
-  document.getElementById("inProgress").textContent = agentStats.inProgress;
-  document.getElementById("completedClients").textContent = agentStats.completed;
-  document.getElementById("winRate").textContent = agentStats.winRate + "%";
+  // Stats
+  document.getElementById("newLeads").textContent = monthlyData.totalLeads - monthlyData.closedLeads;
+  document.getElementById("inProgress").textContent = Math.floor(monthlyData.totalLeads * 0.3); // example
+  document.getElementById("completedClients").textContent = monthlyData.closedLeads;
+  document.getElementById("winRate").textContent = getProgress(monthlyData) + "%";
 
   // Tasks
-  const tasks = [
-    { type: "followup", client: "Client A", details: "Follow up with Client A" },
-    { type: "quote", client: "Client B", details: "Send quotation to Client B" },
-    { type: "call", client: "Client C", details: "Call Client C", phone: "0123456789" }
-  ];
-
   const taskList = document.getElementById("taskList");
-  function renderTasks() {
-    taskList.innerHTML = "";
-    tasks.forEach(task => {
-      const taskItem = document.createElement("div");
-      taskItem.classList.add("task-item");
+  taskList.innerHTML = "";
+  monthlyData.tasks.forEach(task => {
+    const div = document.createElement("div");
+    div.classList.add("task-item");
+    div.innerHTML = `<div class="task-name">${task}</div><div class="task-actions"><button>✅</button></div>`;
+    taskList.appendChild(div);
+  });
 
-      const taskName = document.createElement("div");
-      taskName.classList.add("task-name");
-      taskName.textContent = task.details;
-
-      const actions = document.createElement("div");
-      actions.classList.add("task-actions");
-
-      if (task.type === "quote") {
-        const btn = document.createElement("button");
-        btn.innerHTML = "💼";
-        btn.title = "Send Quote";
-        btn.onclick = () => alert(`Opening quote page for ${task.client}`);
-        actions.appendChild(btn);
-      }
-
-      if (task.type === "call") {
-        const btn = document.createElement("button");
-        btn.innerHTML = "📞";
-        btn.title = "Call Client";
-        btn.onclick = () => alert(`Phone number for ${task.client}: ${task.phone}`);
-        actions.appendChild(btn);
-      }
-
-      if (task.type === "followup") {
-        const btn = document.createElement("button");
-        btn.innerHTML = "⏱️";
-        btn.title = "Follow Up";
-        btn.onclick = () => alert(`Follow up with ${task.client}`);
-        actions.appendChild(btn);
-      }
-
-      taskItem.appendChild(taskName);
-      taskItem.appendChild(actions);
-      taskList.appendChild(taskItem);
-    });
-  }
-  renderTasks();
-
-  // Completed Clients
-  const completedClients = ["Client X", "Client Y", "Client Z"];
+  // Completed Clients (dummy)
   const completedList = document.getElementById("completedList");
   completedList.innerHTML = "";
-  completedClients.forEach(client => {
+  for (let i = 1; i <= monthlyData.closedLeads; i++) {
     const div = document.createElement("div");
     div.classList.add("list-item");
-    div.innerHTML = `${client} <span class="view-all">View</span>`;
+    div.innerHTML = `Client ${i} <span class="view-all">View</span>`;
     completedList.appendChild(div);
-  });
+  }
 
-  // Recent Leads
-  const recentLeads = ["John Smith", "Sarah Adams", "Michael Brown"];
+  // Recent Leads (dummy)
   const recentLeadsContainer = document.getElementById("recentLeads");
   recentLeadsContainer.innerHTML = "";
-  recentLeads.forEach(lead => {
+  for (let i = 1; i <= 3; i++) {
     const div = document.createElement("div");
     div.classList.add("list-item");
-    div.textContent = lead;
+    div.textContent = `Lead ${i}`;
     recentLeadsContainer.appendChild(div);
-  });
+  }
 
   // Sales Chart
   const ctx = document.getElementById("salesChart").getContext("2d");
@@ -178,8 +128,63 @@ if (loggedInUser.role === "admin") {
   });
 }
 
-// Logout button
+function renderAdminDashboard() {
+  if (!adminDashboard) return;
+
+  agentDashboard.style.display = "none";
+  adminDashboard.style.display = "block";
+
+  // Admin header
+  document.getElementById("adminName").textContent = loggedInUser.name;
+
+  const adminData = agents.find(a => a.id === loggedInUser.id).monthlyData[selectedMonth];
+  const adminStats = document.getElementById("adminStats");
+  adminStats.innerHTML = `
+    <div class="card"><p>My Leads</p><h2>${adminData.totalLeads}</h2></div>
+    <div class="card"><p>Leads Closed</p><h2>${adminData.closedLeads}</h2></div>
+    <div class="card"><p>Progress</p><h2>${getProgress(adminData)}%</h2></div>
+  `;
+
+  // Team overview
+  const adminCards = document.getElementById("adminCards");
+  adminCards.innerHTML = "";
+  agents.forEach(agent => {
+    const monthData = agent.monthlyData[selectedMonth] || { totalLeads: 0, closedLeads: 0 };
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `
+      <h3>${agent.name}${agent.id === loggedInUser.id ? " (You)" : ""}</h3>
+      <p>Leads Closed: ${monthData.closedLeads} / ${monthData.totalLeads}</p>
+      <div class="progress-bar">
+        <div class="progress" style="width: ${getProgress(monthData)}%;"></div>
+      </div>
+    `;
+    adminCards.appendChild(card);
+  });
+
+  // Optionally render tasks for each agent in a separate section
+  const agentTasksContainer = document.getElementById("agentTasksContainer");
+  if (agentTasksContainer) {
+    agentTasksContainer.innerHTML = "";
+    agents.forEach(agent => {
+      const monthData = agent.monthlyData[selectedMonth] || { tasks: [] };
+      const div = document.createElement("div");
+      div.classList.add("agent-task-card");
+      div.innerHTML = `<h4>${agent.name}</h4><ul>${monthData.tasks.map(t => `<li>${t}</li>`).join('')}</ul>`;
+      agentTasksContainer.appendChild(div);
+    });
+  }
+}
+
+// INITIAL RENDER
+if (loggedInUser.role === "admin") {
+  renderAdminDashboard();
+} else {
+  renderAgentDashboard();
+}
+
+// LOGOUT
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("loggedInAgent");
+  localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 });

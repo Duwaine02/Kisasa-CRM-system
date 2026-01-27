@@ -1,90 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Kisasa CRM Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-<div class="layout">
+  <!-- Sidebar can be shared -->
   <aside class="sidebar">
-    <h2>Kisasa</h2>
+    <h2>Kisasa CRM</h2>
     <nav>
-      <a class="active" href="index.html">Dashboard</a>
-      <a href="leads.html">Leads</a>
-      <a href="clients.html">Clients</a>
-      <a href="quotes.html">Quotes</a>
-      <a href="reports.html">Reports</a>
-      <a href="settings.html">Settings</a>
-      <a id="logoutBtn" href="#">Logout</a>
+      <a href="#">Dashboard</a>
+      <a href="#">Leads</a>
+      <a href="#">Clients</a>
+      <a href="#">Quotes</a>
+      <a href="#" id="logoutBtn">Logout</a>
     </nav>
   </aside>
 
-  <main class="main">
-    <!-- Agent Dashboard -->
-    <div id="agentDashboard">
-      <header class="header">
-        <h1>Agent Dashboard</h1>
-        <div class="agent-info">
-          Logged in as: <strong id="agentName">Agent Duwaine</strong>
-        </div>
-      </header>
-
-      <section class="stats">
-        <div class="card"><p>New Leads</p><h2 id="newLeads">0</h2></div>
-        <div class="card"><p>Deals in Progress</p><h2 id="inProgress">0</h2></div>
-        <div class="card"><p>Clients Completed</p><h2 id="completedClients">0</h2></div>
-        <div class="card"><p>Win Rate</p><h2 id="winRate">0%</h2></div>
-      </section>
-
-      <section class="grid">
-        <div>
-          <div class="box">
-            <h3>Monthly Sales Performance</h3>
-            <div class="chart-container"><canvas id="salesChart"></canvas></div>
-          </div>
-
-          <div class="box">
-            <h3>My Tasks</h3>
-            <div id="taskList"></div>
-          </div>
-        </div>
-
-        <div>
-          <div class="box">
-            <h3>Completed Clients</h3>
-            <div id="completedList"></div>
-          </div>
-
-          <div class="box">
-            <div class="box-header"><h3>Recent Leads</h3><span class="view-all">View All</span></div>
-            <div id="recentLeads"></div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- Admin Dashboard -->
-    <div id="adminDashboard" style="display: none;">
-      <header class="header">
-        <h1>Admin Dashboard</h1>
-        <div class="agent-info">
-          Logged in as: <strong id="adminName">Admin</strong>
-        </div>
-      </header>
-
-      <section class="stats" id="adminStats"></section>
-
-      <section class="grid">
-        <div id="adminCards"></div>
-      </section>
-    </div>
+  <!-- Agent Dashboard -->
+  <main id="agentDashboard" style="display:none">
+    <header>
+      <h1>Agent Dashboard</h1>
+      <div>Logged in as: <strong id="agentName"></strong></div>
+    </header>
+    <section class="stats">
+      <div class="card"><p>New Leads</p><h2 id="newLeads"></h2></div>
+      <div class="card"><p>In Progress</p><h2 id="inProgress"></h2></div>
+      <div class="card"><p>Completed</p><h2 id="completedClients"></h2></div>
+      <div class="card"><p>Win Rate</p><h2 id="winRate"></h2></div>
+    </section>
+    <section>
+      <h3>Tasks</h3>
+      <div id="taskList"></div>
+    </section>
+    <section>
+      <h3>Completed Clients</h3>
+      <div id="completedList"></div>
+    </section>
+    <section>
+      <h3>Recent Leads</h3>
+      <div id="recentLeads"></div>
+    </section>
+    <section>
+      <h3>Sales Chart</h3>
+      <canvas id="salesChart"></canvas>
+    </section>
   </main>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="script.js"></script>
+  <!-- Admin Dashboard -->
+  <main id="adminDashboard" style="display:none">
+    <header>
+      <h1>Admin Dashboard</h1>
+      <div>Logged in as: <strong id="adminName"></strong></div>
+      <select id="monthSelector"></select>
+    </header>
+    <section id="adminStats" class="stats"></section>
+    <section class="team-overview">
+      <h2>Team Overview</h2>
+      <div id="adminCards"></div>
+    </section>
+    <section class="agent-tasks">
+      <h2>Agent Tasks</h2>
+      <div id="agentTasksContainer"></div>
+    </section>
+    <section class="charts">
+      <h2>Monthly Performance</h2>
+      <canvas id="monthlyChart"></canvas>
+    </section>
+  </main>
+
+  <script src="script.js" type="module"></script>
 </body>
 </html>

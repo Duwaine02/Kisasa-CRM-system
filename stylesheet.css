@@ -72,7 +72,7 @@ body {
   font-size: 14px;
 }
 
-/* STATS */
+/* STATS CARDS */
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -149,9 +149,11 @@ body {
   color: #166534;
 }
 
-/* CHART */
-.chart-container {
+/* CHARTS */
+.chart-container,
+canvas {
   height: 220px;
+  width: 100%;
 }
 
 /* TASK LIST */
@@ -201,4 +203,85 @@ body {
 .task-actions button:hover {
   background-color: #e0f2fe;
   color: #1d4ed8;
+}
+
+/* ADMIN DASHBOARD */
+#adminDashboard {
+  display: none;
+}
+
+.team-overview,
+.agent-tasks,
+.charts {
+  margin-bottom: 28px;
+}
+
+.team-overview h2,
+.agent-tasks h2,
+.charts h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+#adminCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+#adminCards .card {
+  padding: 14px;
+}
+
+.progress-bar {
+  background: #e5e7eb;
+  height: 10px;
+  border-radius: 20px;
+  margin-top: 6px;
+}
+
+.progress {
+  background: #2563eb;
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+/* AGENT TASKS */
+#agentTasksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agent-task-card {
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.agent-task-card h4 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.agent-task-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.agent-task-card ul li {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* MONTH SELECTOR */
+#monthSelector {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #cbd5f5;
+  margin-left: 10px;
 }
