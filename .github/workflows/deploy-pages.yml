@@ -3,24 +3,18 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # branch that triggers the workflow
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./   # change to ./docs or ./build if your site is in a folder
-
-
-
-
-
-
-
-
+          publish_dir: ./  # folder containing your website files
+          destination_branch: gh-pages  # branch that hosts the Pages site
