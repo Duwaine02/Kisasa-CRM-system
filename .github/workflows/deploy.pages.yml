@@ -1,6 +1,5 @@
 name: Deploy GitHub Pages
 
-# Trigger workflow when code is pushed to main branch
 on:
   push:
     branches:
@@ -10,13 +9,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./  # change if your site files are in a folder like ./docs or ./build
+          publish_dir: ./  # change this if your site files are in /docs or /build
+
