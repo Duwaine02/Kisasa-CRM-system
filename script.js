@@ -1,6 +1,8 @@
 // ======= LOGIN REDIRECT =======
+// CHECK LOGIN
 const loggedInUser = JSON.parse(localStorage.getItem("loggedInAgent"));
 if (!loggedInUser) {
+  // Not logged in → redirect to login page
   window.location.href = "login.html";
 }
 
