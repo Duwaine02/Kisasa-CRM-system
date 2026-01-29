@@ -26,31 +26,88 @@
   </aside>
 
   <!-- ================= AGENT DASHBOARD (UNCHANGED) ================= -->
-  <main class="main" id="agentDashboard" style="display:none">
+  <main class="main agent-ui" id="agentDashboard" style="display:none">
 
-    <header class="header">
-      <h1>Agent Dashboard</h1>
-      <div>Logged in as: <strong id="agentName"></strong></div>
-    </header>
+  <!-- HEADER -->
+  <header class="header agent-header">
+    <h1>Agent Dashboard</h1>
 
-    <section class="stats">
-      <div class="card"><p>New Leads</p><h2 id="newLeads">0</h2></div>
-      <div class="card"><p>In Progress</p><h2 id="inProgress">0</h2></div>
-      <div class="card"><p>Completed</p><h2 id="completedClients">0</h2></div>
-      <div class="card"><p>Win Rate</p><h2 id="winRate">0%</h2></div>
-    </section>
+    <div class="agent-actions">
+      <select class="filter-select">
+        <option>This Month</option>
+        <option>Last Month</option>
+      </select>
+      <button class="primary-btn">+ Add New Lead</button>
+    </div>
+  </header>
 
-    <section>
-      <h3>Tasks</h3>
-      <div id="taskList"></div>
-    </section>
+  <!-- STATS ROW -->
+  <section class="stats agent-stats">
+    <div class="card">
+      <p>New</p>
+      <h2 id="newLeads">0</h2>
+    </div>
+    <div class="card">
+      <p>Deals in progress</p>
+      <h2 id="inProgress">0</h2>
+    </div>
+    <div class="card">
+      <p>Leads converted</p>
+      <h2 id="completedClients">0</h2>
+    </div>
+    <div class="card">
+      <p>Win Rate</p>
+      <h2 id="winRate">0%</h2>
+    </div>
+  </section>
 
-    <section>
-      <h3>Sales Chart</h3>
+  <!-- CONTENT GRID -->
+  <section class="agent-grid">
+
+    <!-- PERFORMANCE -->
+    <div class="panel">
+      <h3>My Performance</h3>
+      <p class="subtext">Last 30 days</p>
       <canvas id="salesChart"></canvas>
-    </section>
+    </div>
 
-  </main>
+    <!-- RECENT LEADS -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Recent Leads</h3>
+        <a href="#" class="link">View All</a>
+      </div>
+
+      <div class="lead-list">
+        <div class="lead-row">
+          <span>Lucas Black</span>
+          <span class="badge warning">Contacted</span>
+        </div>
+        <div class="lead-row">
+          <span>Lucas Black</span>
+          <span class="badge success">Qualified</span>
+        </div>
+        <div class="lead-row">
+          <span>Lucas Black</span>
+          <span class="badge">New</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>My Tasks</h3>
+        <span class="badge count">5</span>
+      </div>
+
+      <div id="taskList" class="task-list"></div>
+    </div>
+
+  </section>
+
+</main>
+
 
   <!-- ================= ADMIN DASHBOARD (UPGRADED) ================= -->
   <main class="main admin" id="adminDashboard" style="display:none">
