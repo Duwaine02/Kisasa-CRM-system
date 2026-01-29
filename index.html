@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kisasa CRM Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="stylesheet.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kisasa CRM Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="stylesheet.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div class="layout">
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <h2>Kisasa CRM</h2>
     <nav>
@@ -22,55 +25,115 @@
     </nav>
   </aside>
 
-  <!-- Agent Dashboard -->
+  <!-- ================= AGENT DASHBOARD (UNCHANGED) ================= -->
   <main class="main" id="agentDashboard" style="display:none">
+
     <header class="header">
       <h1>Agent Dashboard</h1>
       <div>Logged in as: <strong id="agentName"></strong></div>
     </header>
+
     <section class="stats">
-      <div class="card"><p>New Leads</p><h2 id="newLeads"></h2></div>
-      <div class="card"><p>In Progress</p><h2 id="inProgress"></h2></div>
-      <div class="card"><p>Completed</p><h2 id="completedClients"></h2></div>
-      <div class="card"><p>Win Rate</p><h2 id="winRate"></h2></div>
+      <div class="card"><p>New Leads</p><h2 id="newLeads">0</h2></div>
+      <div class="card"><p>In Progress</p><h2 id="inProgress">0</h2></div>
+      <div class="card"><p>Completed</p><h2 id="completedClients">0</h2></div>
+      <div class="card"><p>Win Rate</p><h2 id="winRate">0%</h2></div>
     </section>
+
     <section>
       <h3>Tasks</h3>
       <div id="taskList"></div>
     </section>
+
     <section>
       <h3>Sales Chart</h3>
       <canvas id="salesChart"></canvas>
     </section>
+
   </main>
 
-  <!-- Admin Dashboard -->
-  <main class="main" id="adminDashboard" style="display:none">
-    <header class="header">
-      <h1>Admin Dashboard</h1>
-      <div>Logged in as: <strong id="adminName"></strong></div>
-      <button id="addAgentBtn">+ Add Agent</button>
+  <!-- ================= ADMIN DASHBOARD (UPGRADED) ================= -->
+  <main class="main admin" id="adminDashboard" style="display:none">
+
+    <!-- HEADER -->
+    <header class="header admin-header">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p class="subtext">Overview of agents, sales & performance</p>
+      </div>
+
+      <div class="admin-actions">
+        <span>Logged in as <strong id="adminName"></strong></span>
+        <button id="addAgentBtn" class="primary-btn">+ Add Agent</button>
+      </div>
     </header>
-    <section class="stats" id="adminStats"></section>
-    <section class="team-overview">
-      <h2>Team Overview</h2>
-      <select id="agentSelector"></select>
-      <div id="agentStats" class="stats"></div>
-      <h3>Tasks</h3>
-      <div id="agentTasksContainer"></div>
+
+    <!-- GLOBAL KPIs -->
+    <section class="stats admin-kpis">
+      <div class="card">
+        <p>Total Agents</p>
+        <h2 id="totalAgents">0</h2>
+      </div>
+      <div class="card">
+        <p>Total Leads</p>
+        <h2 id="totalLeads">0</h2>
+      </div>
+      <div class="card">
+        <p>Converted Clients</p>
+        <h2 id="totalConverted">0</h2>
+      </div>
+      <div class="card highlight">
+        <p>Total Revenue</p>
+        <h2 id="totalRevenue">R0</h2>
+      </div>
     </section>
 
-    <!-- Add Agent Modal -->
+    <!-- SALES PIPELINE -->
+    <section class="panel">
+      <h3>Sales Pipeline</h3>
+      <canvas id="pipelineChart"></canvas>
+    </section>
+
+    <!-- AGENT PERFORMANCE -->
+    <section class="panel">
+      <div class="panel-header">
+        <h3>Agent Performance</h3>
+        <select id="agentSelector"></select>
+      </div>
+
+      <div class="stats" id="agentStats">
+        <div class="card"><p>Leads</p><h2 id="agentLeads">0</h2></div>
+        <div class="card"><p>In Progress</p><h2 id="agentProgress">0</h2></div>
+        <div class="card"><p>Completed</p><h2 id="agentCompleted">0</h2></div>
+        <div class="card"><p>Win Rate</p><h2 id="agentWinRate">0%</h2></div>
+      </div>
+    </section>
+
+    <!-- TASK & ACTIVITY -->
+    <section class="panel">
+      <h3>Agent Tasks & Activity</h3>
+      <div id="agentTasksContainer" class="task-list"></div>
+    </section>
+
+    <!-- AGENT MANAGEMENT -->
+    <section class="panel danger">
+      <h3>Agent Management</h3>
+      <div id="agentManagementList"></div>
+    </section>
+
+    <!-- ADD AGENT MODAL -->
     <div id="addAgentModal" class="modal">
       <div class="modal-content">
         <span id="closeAgentModal" class="close">&times;</span>
         <h2>Add Agent</h2>
         <input type="text" id="newAgentName" placeholder="Agent Name">
         <input type="email" id="newAgentEmail" placeholder="Agent Email">
-        <button id="saveAgentBtn">Save Agent</button>
+        <button id="saveAgentBtn" class="primary-btn">Save Agent</button>
       </div>
     </div>
+
   </main>
+
 </div>
 
 <script src="script.js"></script>
