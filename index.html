@@ -6,12 +6,12 @@
   <title>Kisasa CRM Dashboard</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome for ellipsis icon -->
+  <!-- Font Awesome for icons (ellipsis + whatsapp) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="stylesheet.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Inline styles for the menu (you can move to stylesheet.css later) -->
+  <!-- Inline styles -->
   <style>
     .task-row {
       position: relative;
@@ -95,6 +95,60 @@
       background: #ef4444;
       color: white;
     }
+
+    /* WhatsApp chat icon styles */
+    .chat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: #25D366;          /* WhatsApp green */
+      color: white;
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .chat-icon:hover {
+      background: #20b858;
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .chat-icon.no-phone {
+      background: #cbd5e1;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .recent-lead-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .recent-lead-item:last-child {
+      border-bottom: none;
+    }
+
+    .lead-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .lead-info small {
+      color: #6b7280;
+    }
+
+    .lead-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
   </style>
 </head>
 <body>
@@ -103,7 +157,7 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <h2>Kisasa </h2>
+    <h2>Kisasa</h2>
     <nav>
       <a href="index.html" class="active">Dashboard</a>
       <a href="leads.html">Leads</a>
@@ -126,7 +180,7 @@
           <option>Feb</option>
           <option>Mar</option>
           <option>Apr</option>
-          <option>Mei</option>
+          <option>May</option>
         </select>
         <button class="primary-btn" onclick="window.location.href='addNewlead.html'">+ Add New Lead</button>
       </div>
@@ -168,7 +222,8 @@
           <h3>Recent Leads</h3>
           <a href="leads.html" class="link">View All</a>
         </div>
-        <div class="lead-list">
+        <div class="lead-list" id="recentLeadsList">
+          <!-- Recent leads will be inserted here by JavaScript -->
         </div>
       </div>
 
@@ -199,76 +254,65 @@
 
   <!-- ================= ADMIN DASHBOARD ================= -->
   <main class="main admin" id="adminDashboard" style="display:none">
-
+    <!-- Admin content here if needed -->
   </main>
 
 </div>
+
 <script>
-// Handle status selection & move
-document.querySelectorAll('.status-menu button').forEach(option => {
-  option.addEventListener('click', (e) => {
-    const newStatus = e.target.dataset.status;
-    const row = e.target.closest('.task-row');
-    if (!row) return;
+// Example function to render recent leads (replace/merge with your actual code in script.js)
+function renderRecentLeads() {
+  // Dummy data – replace with real data from localStorage
+  const dummyLeads = [
+    { id: "1", firstName: "Marche", lastName: "Claasen", status: "New", email: "marche@example.com", phone: "27831234567" },
+    { id: "2", firstName: "Adam", lastName: "Jon", status: "Contact", email: "adam@example.com", phone: "27841234567" },
+    { id: "3", firstName: "James", lastName: "Bond", status: "Contacted", email: "james@example.com", phone: null },
+  ];
 
-    const badge = row.querySelector('.badge');
-    if (!badge) return;
+  const container = document.getElementById('recentLeadsList');
+  if (!container) return;
 
-    // ────────────────────────────────────────
-    //          REDIRECT WHEN QUALIFIED
-    // ────────────────────────────────────────
-    if (newStatus === 'Qualified') {
-      const id = row.dataset.id || row.dataset.leadId || row.dataset.clientId;
+  container.innerHTML = '';
 
-      if (id) {
-        // Choose ONE of the following lines (uncomment the one you want)
+  dummyLeads.forEach(lead => {
+    const item = document.createElement('div');
+    item.className = 'recent-lead-item';
 
-        window.location.href = `client.html?id=${id}`;
-        // window.location.href = `clients.html?id=${id}`;
-        // window.location.href = `view-client.html?id=${id}`;
-        // window.location.href = `/client/${id}`;
+    const whatsappLink = lead.phone
+      ? `https://wa.me/${lead.phone}?text=Hi%20${encodeURIComponent(lead.firstName)}%2C%20this%20is%20from%20Kisasa%20following%20up%20on%20your%20lead...`
+      : '#';
 
-        // Optional: small delay so user sees the badge update
-        // setTimeout(() => {
-        //   window.location.href = `client.html?id=${id}`;
-        // }, 600);
+    item.innerHTML = `
+      <div class="lead-info">
+        <strong>${lead.firstName} ${lead.lastName}</strong>
+        <div class="badge" data-status="${lead.status}">${lead.status}</div>
+        <small>${lead.email || 'No email'}</small>
+      </div>
 
-        return;   // ← stop here – don't run the rest
-      } else {
-        console.warn("No ID found on task-row → cannot redirect to client");
-        // Optional: alert("Cannot open client page – missing ID");
-      }
-    }
-    // ────────────────────────────────────────
+      <div class="lead-actions">
+        <a href="${whatsappLink}"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="chat-icon ${!lead.phone ? 'no-phone' : ''}"
+           title="${lead.phone ? 'Chat on WhatsApp' : 'No phone number'}">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+      </div>
+    `;
 
-    // Normal status change behavior
-    badge.textContent = newStatus;
-    badge.dataset.status = newStatus;
-
-    // Reset all status classes first (safer)
-    badge.className = 'badge';
-
-    if (newStatus === 'Contact')   badge.classList.add('warning');
-    if (newStatus === 'Qualified') badge.classList.add('Finalise');
-    if (newStatus === 'Done')      badge.classList.add('success');
-    if (newStatus === 'Lost')      badge.classList.add('lost');
-
-    // Move to completed section if Done or Lost
-    if (newStatus === 'Done' || newStatus === 'Lost') {
-      const completedList = document.getElementById('completedList');
-      if (completedList) {
-        completedList.appendChild(row);
-      }
-    }
-
-    // Close the menu
-    const menu = row.querySelector('.status-menu');
-    if (menu) menu.classList.remove('active');
+    container.appendChild(item);
   });
+}
+
+// Run when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  renderRecentLeads();
+  // Add your other dashboard init code here...
 });
 </script>
 
-<!-- Main logic -->
+<!-- Your existing main script -->
 <script src="script.js"></script>
+
 </body>
 </html>
