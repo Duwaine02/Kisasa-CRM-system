@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Quote - Kisasa CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --success: #10b981;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-50);
+      margin: 0;
+      color: var(--gray-900);
+    }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 70px;
+      background: #0f172a;
+      color: white;
+      position: fixed;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1.5rem;
+    }
+
+    .sidebar a {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+      background: #1e293b;
+      color: white;
+    }
+
+    .main {
+      margin-left: 70px;
+      flex: 1;
+      padding: 2rem 2.5rem;
+    }
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin: 0 0 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 2.5rem 0 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .required::after {
+      content: " *";
+      color: #ef4444;
+    }
+
+    input, select {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    /* Line Items Table */
+    .line-items {
+      margin: 1rem 0 2rem;
+      overflow-x: auto;
+    }
+
+    .line-items table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .line-items th,
+    .line-items td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .line-items th {
+      background: var(--gray-100);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--gray-700);
+    }
+
+    .line-items input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .line-items input[readonly] {
+      background: #f8fafc;
+      color: var(--gray-700);
+    }
+
+    /* Totals */
+    .totals {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.75rem;
+      max-width: 420px;
+      margin-left: auto;
+      font-size: 0.95rem;
+    }
+
+    .totals div {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+
+    .totals .grand-total {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      border-top: 2px solid var(--primary);
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel {
+      background: var(--gray-200);
+      color: var(--gray-700);
+    }
+
+    .btn-save {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: var(--primary-dark);
+    }
+
+    @media (max-width: 900px) {
+      .main { padding: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .totals { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <nav>
+      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
+      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
+      <a href="quotes.html" title="Quotes" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
+      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <h1>Create New Quote</h1>
+
+    <div class="card">
+
+      <div class="section-title">Quote Information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="quoteNumber">Quote Number</label>
+          <input type="text" id="quoteNumber" readonly />
+        </div>
+        <div class="form-group">
+          <label for="quoteDate">Quote Date</label>
+          <input type="date" id="quoteDate" value="2026-02-04" />
+        </div>
+        <div class="form-group">
+          <label for="expiryDate">Expiry Date</label>
+          <input type="date" id="expiryDate" value="2026-03-06" />
+        </div>
+        <div class="form-group">
+          <label for="overallDiscount">Overall Discount %</label>
+          <input type="number" id="overallDiscount" step="0.01" min="0" value="0.00" />
+        </div>
+      </div>
+
+      <div class="section-title">Client Details</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="clientName" class="required">Client Name</label>
+          <input type="text" id="clientName" required />
+        </div>
+        <div class="form-group">
+          <label for="clientEmail">Client Email</label>
+          <input type="email" id="clientEmail" />
+        </div>
+      </div>
+
+      <div class="section-title">Services</div>
+      <div class="line-items">
+        <table>
+          <thead>
+            <tr>
+              <th>Service / Description</th>
+              <th>Acc / Ref</th>
+              <th>Price (excl)</th>
+              <th>Disc %</th>
+              <th>VAT %</th>
+              <th>Total (excl)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" placeholder="Debt Review - DR" required /></td>
+              <td><input type="text" placeholder="Mr / ID / Ref" /></td>
+              <td><input type="text" placeholder="R1,000.00" /></td>
+              <td><input type="number" step="0.01" min="0" value="0" /></td>
+              <td><input type="number" step="0.01" min="0" value="0" /></td>
+              <td><input type="text" value="R1,000.00" readonly /></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="Debt Prescription - DP" /></td>
+              <td><input type="text" placeholder="" /></td>
+              <td><input type="text" placeholder="R2,000.00" /></td>
+              <td><input type="number" step="0.01" min="0" value="0" /></td>
+              <td><input type="number" step="0.01" min="0" value="0" /></td>
+              <td><input type="text" value="R2,000.00" readonly /></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="" /></td>
+              <td><input type="text" placeholder="" /></td>
+              <td><input type="text" placeholder="" /></td>
+              <td><input type="number" step="0.01" min="0" value="0" /></td>
+              <td><input type="number" step="0.01" min="0" value="0" /></td>
+              <td><input type="text" value="R0.00" readonly /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="totals">
+        <div><span>Total Discount:</span> <span>R0.00</span></div>
+        <div><span>Total Exclusive:</span> <span>R3,000.00</span></div>
+        <div><span>Total VAT:</span> <span>R0.00</span></div>
+        <div><span>Sub Total:</span> <span>R3,000.00</span></div>
+        <div class="grand-total"><span>Grand Total:</span> <span>R3,000.00</span></div>
+      </div>
+
+      <div class="section-title">Bank Details (for client reference)</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bankName">Bank</label>
+          <input type="text" id="bankName" value="Nedbank" />
+        </div>
+        <div class="form-group">
+          <label for="accountNumber">Account Number</label>
+          <input type="text" id="accountNumber" value="123 456 7890" />
+        </div>
+        <div class="form-group">
+          <label for="branchCode">Branch Code</label>
+          <input type="text" id="branchCode" value="198765" />
+        </div>
+        <div class="form-group">
+          <label for="paymentRef">Payment Reference</label>
+          <input type="text" id="paymentRef" value="ID Number - Kisasa Financial Services" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-cancel">Cancel</button>
+        <button class="btn btn-save">Create Quote & Generate PDF</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+</body>
+<script>
+// Run when page loads
+window.addEventListener('load', function() {
+  // Get the last used quote number or start from 88900
+  let lastId = localStorage.getItem('lastQuoteId') || 88900;
+  let nextId = parseInt(lastId) + 1;
+  
+  // Format like QUO00088904 (pad with zeros to 8 digits after QUO)
+  let padded = nextId.toString().padStart(8, '0');
+  let newQuoteId = `QUO${padded}`;
+  
+  // Set it in the input field
+  document.getElementById('quoteNumber').value = newQuoteId;
+  
+  // Save this as the new last used (so next time it increments)
+  localStorage.setItem('lastQuoteId', nextId);
+});
+
+</script>
+</html>

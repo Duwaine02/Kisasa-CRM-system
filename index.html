@@ -6,8 +6,96 @@
   <title>Kisasa CRM Dashboard</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for ellipsis icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="stylesheet.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Inline styles for the menu (you can move to stylesheet.css later) -->
+  <style>
+    .task-row {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: #f9fafb;
+      border-radius: 10px;
+      font-size: 14px;
+      gap: 12px;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 16px;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .menu-btn:hover,
+    .menu-btn:focus {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+
+    .status-menu {
+      display: none;
+      position: absolute;
+      right: 8px;
+      top: 100%;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      min-width: 140px;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .status-menu.active {
+      display: block;
+    }
+
+    .status-menu button {
+      display: block;
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 13px;
+      color: #1f2937;
+      cursor: pointer;
+    }
+
+    .status-menu button:hover {
+      background: #f1f5f9;
+    }
+
+    .badge[data-status="Contact"] {
+      background: #facc15;
+      color: #1f2937;
+    }
+
+    .badge[data-status="Qualified"] {
+      background: #22c553;
+      color: white;
+    }
+
+    .badge[data-status="Done"] {
+      background: #06b6d4;
+      color: white;
+    }
+
+    .badge[data-status="Lost"] {
+      background: #ef4444;
+      color: white;
+    }
+  </style>
 </head>
 <body>
 
@@ -15,184 +103,169 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <h2>Kisasa CRM</h2>
+    <h2>Kisasa </h2>
     <nav>
-      <a href="#" class="active">Dashboard</a>
-      <a href="#">Leads</a>
-      <a href="#">Clients</a>
-      <a href="#">Quotes</a>
-      <a href="#" id="logoutBtn">Logout</a>
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="leads.html">Leads</a>
+      <a href="clients.html">Clients</a>
+      <a href="quotes.html">Quotes</a>
+      <a href="login.html" id="logoutBtn">Logout</a>
     </nav>
   </aside>
 
-  <!-- ================= AGENT DASHBOARD (UNCHANGED) ================= -->
-  <main class="main agent-ui" id="agentDashboard" style="display:none">
-
-  <!-- HEADER -->
-  <header class="header agent-header">
-    <h1>Agent Dashboard</h1>
-
-    <div class="agent-actions">
-      <select class="filter-select">
-        <option>This Month</option>
-        <option>Last Month</option>
-      </select>
-      <button class="primary-btn">+ Add New Lead</button>
-    </div>
-  </header>
-
-  <!-- STATS ROW -->
-  <section class="stats agent-stats">
-    <div class="card">
-      <p>New</p>
-      <h2 id="newLeads">0</h2>
-    </div>
-    <div class="card">
-      <p>Deals in progress</p>
-      <h2 id="inProgress">0</h2>
-    </div>
-    <div class="card">
-      <p>Leads converted</p>
-      <h2 id="completedClients">0</h2>
-    </div>
-    <div class="card">
-      <p>Win Rate</p>
-      <h2 id="winRate">0%</h2>
-    </div>
-  </section>
-
-  <!-- CONTENT GRID -->
-  <section class="agent-grid">
-
-    <!-- PERFORMANCE -->
-    <div class="panel">
-      <h3>My Performance</h3>
-      <p class="subtext">Last 30 days</p>
-      <canvas id="salesChart"></canvas>
-    </div>
-
-    <!-- RECENT LEADS -->
-    <div class="panel">
-      <div class="panel-header">
-        <h3>Recent Leads</h3>
-        <a href="#" class="link">View All</a>
-      </div>
-
-      <div class="lead-list">
-        <div class="lead-row">
-          <span>Lucas Black</span>
-          <span class="badge warning">Contacted</span>
-        </div>
-        <div class="lead-row">
-          <span>Lucas Black</span>
-          <span class="badge success">Qualified</span>
-        </div>
-        <div class="lead-row">
-          <span>Lucas Black</span>
-          <span class="badge">New</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TASKS -->
-    <div class="panel">
-      <div class="panel-header">
-        <h3>My Tasks</h3>
-        <span class="badge count">5</span>
-      </div>
-
-      <div id="taskList" class="task-list"></div>
-    </div>
-
-  </section>
-
-</main>
-
-
-  <!-- ================= ADMIN DASHBOARD (UPGRADED) ================= -->
-  <main class="main admin" id="adminDashboard" style="display:none">
+  <!-- ================= AGENT DASHBOARD ================= -->
+  <main class="main agent-ui" id="agentDashboard">
 
     <!-- HEADER -->
-    <header class="header admin-header">
-      <div>
-        <h1>Admin Dashboard</h1>
-        <p class="subtext">Overview of agents, sales & performance</p>
-      </div>
+    <header class="header agent-header">
+      <h1>Agent Dashboard</h1>
 
-      <div class="admin-actions">
-        <span>Logged in as <strong id="adminName"></strong></span>
-        <button id="addAgentBtn" class="primary-btn">+ Add Agent</button>
+      <div class="agent-actions">
+        <select class="filter-select">
+          <option>This Month</option>
+          <option>Last Month</option>
+        </select>
+        <button class="primary-btn" onclick="window.location.href='addNewlead.html'">+ Add New Lead</button>
       </div>
     </header>
 
-    <!-- GLOBAL KPIs -->
-    <section class="stats admin-kpis">
+    <!-- STATS ROW -->
+    <section class="stats agent-stats">
       <div class="card">
-        <p>Total Agents</p>
-        <h2 id="totalAgents">0</h2>
-      </div>
-      <div class="card">
-        <p>Total Leads</p>
-        <h2 id="totalLeads">0</h2>
+        <p>New</p>
+        <h2 id="newLeads">0</h2>
       </div>
       <div class="card">
-        <p>Converted Clients</p>
-        <h2 id="totalConverted">0</h2>
+        <p>Deals in progress</p>
+        <h2 id="inProgress">0</h2>
       </div>
-      <div class="card highlight">
-        <p>Total Revenue</p>
-        <h2 id="totalRevenue">R0</h2>
+      <div class="card">
+        <p>Leads converted</p>
+        <h2 id="completedClients">0</h2>
       </div>
-    </section>
-
-    <!-- SALES PIPELINE -->
-    <section class="panel">
-      <h3>Sales Pipeline</h3>
-      <canvas id="pipelineChart"></canvas>
-    </section>
-
-    <!-- AGENT PERFORMANCE -->
-    <section class="panel">
-      <div class="panel-header">
-        <h3>Agent Performance</h3>
-        <select id="agentSelector"></select>
-      </div>
-
-      <div class="stats" id="agentStats">
-        <div class="card"><p>Leads</p><h2 id="agentLeads">0</h2></div>
-        <div class="card"><p>In Progress</p><h2 id="agentProgress">0</h2></div>
-        <div class="card"><p>Completed</p><h2 id="agentCompleted">0</h2></div>
-        <div class="card"><p>Win Rate</p><h2 id="agentWinRate">0%</h2></div>
+      <div class="card">
+        <p>Win Rate</p>
+        <h2 id="winRate">0%</h2>
       </div>
     </section>
 
-    <!-- TASK & ACTIVITY -->
-    <section class="panel">
-      <h3>Agent Tasks & Activity</h3>
-      <div id="agentTasksContainer" class="task-list"></div>
-    </section>
+    <!-- CONTENT GRID -->
+    <section class="agent-grid">
 
-    <!-- AGENT MANAGEMENT -->
-    <section class="panel danger">
-      <h3>Agent Management</h3>
-      <div id="agentManagementList"></div>
-    </section>
-
-    <!-- ADD AGENT MODAL -->
-    <div id="addAgentModal" class="modal">
-      <div class="modal-content">
-        <span id="closeAgentModal" class="close">&times;</span>
-        <h2>Add Agent</h2>
-        <input type="text" id="newAgentName" placeholder="Agent Name">
-        <input type="email" id="newAgentEmail" placeholder="Agent Email">
-        <button id="saveAgentBtn" class="primary-btn">Save Agent</button>
+      <!-- 1. PERFORMANCE -->
+      <div class="panel">
+        <h3>My Performance</h3>
+        <p class="subtext">Last 30 days</p>
+        <canvas id="salesChart"></canvas>
       </div>
-    </div>
+
+      <!-- 2. RECENT LEADS -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Recent Leads</h3>
+          <a href="leads.html" class="link">View All</a>
+        </div>
+        <div class="lead-list">
+        </div>
+      </div>
+
+      <!-- 3. MY TASKS -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>My Tasks</h3>
+          <span class="badge count" id="myTasksCount">0</span>
+        </div>
+        <div class="task-list" id="taskList">
+        </div>
+      </div>
+
+      <!-- 4. COMPLETED -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Completed</h3>
+          <span class="status">Status</span>
+          <span class="badge count" id="completedCount">0</span>
+        </div>
+        <div class="task-list" id="completedList">
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= ADMIN DASHBOARD ================= -->
+  <main class="main admin" id="adminDashboard" style="display:none">
 
   </main>
 
 </div>
+<script>
+// Handle status selection & move
+document.querySelectorAll('.status-menu button').forEach(option => {
+  option.addEventListener('click', (e) => {
+    const newStatus = e.target.dataset.status;
+    const row = e.target.closest('.task-row');
+    if (!row) return;
 
+    const badge = row.querySelector('.badge');
+    if (!badge) return;
+
+    // ────────────────────────────────────────
+    //          REDIRECT WHEN QUALIFIED
+    // ────────────────────────────────────────
+    if (newStatus === 'Qualified') {
+      const id = row.dataset.id || row.dataset.leadId || row.dataset.clientId;
+
+      if (id) {
+        // Choose ONE of the following lines (uncomment the one you want)
+
+        window.location.href = `client.html?id=${id}`;
+        // window.location.href = `clients.html?id=${id}`;
+        // window.location.href = `view-client.html?id=${id}`;
+        // window.location.href = `/client/${id}`;
+
+        // Optional: small delay so user sees the badge update
+        // setTimeout(() => {
+        //   window.location.href = `client.html?id=${id}`;
+        // }, 600);
+
+        return;   // ← stop here – don't run the rest
+      } else {
+        console.warn("No ID found on task-row → cannot redirect to client");
+        // Optional: alert("Cannot open client page – missing ID");
+      }
+    }
+    // ────────────────────────────────────────
+
+    // Normal status change behavior
+    badge.textContent = newStatus;
+    badge.dataset.status = newStatus;
+
+    // Reset all status classes first (safer)
+    badge.className = 'badge';
+
+    if (newStatus === 'Contact')   badge.classList.add('warning');
+    if (newStatus === 'Qualified') badge.classList.add('Finalise');
+    if (newStatus === 'Done')      badge.classList.add('success');
+    if (newStatus === 'Lost')      badge.classList.add('lost');
+
+    // Move to completed section if Done or Lost
+    if (newStatus === 'Done' || newStatus === 'Lost') {
+      const completedList = document.getElementById('completedList');
+      if (completedList) {
+        completedList.appendChild(row);
+      }
+    }
+
+    // Close the menu
+    const menu = row.querySelector('.status-menu');
+    if (menu) menu.classList.remove('active');
+  });
+});
+</script>
+
+<!-- Main logic -->
 <script src="script.js"></script>
 </body>
 </html>

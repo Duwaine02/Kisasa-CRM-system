@@ -1,137 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quotes - CRM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="stylesheet.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotes - Kisasa CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      margin: 0;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Restored compact sidebar */
+    .sidebar {
+      width: 70px;
+      background: #0f172a;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+      position: fixed;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .sidebar nav a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #cbd5f5;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: #1e293b;
+      color: #fff;
+    }
+
+    .main {
+      margin-left: 70px;
+      flex: 1;
+      padding: 24px 32px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .primary-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .primary-btn:hover {
+      background: #2563eb;
+    }
+
+    .table-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #374151;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-sent    { background: #d1fae5; color: #065f46; }
+    .status-approved{ background: #dbeafe; color: #1e40af; }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: #6b7280;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+
+    .action-btn:hover {
+      color: #3b82f6;
+    }
+
+    .generate-pdf-btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .generate-pdf-btn:hover {
+      background: #059669;
+    }
+  </style>
 </head>
 <body>
-    <style>
-/* Compact sidebar */
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 70px;
-  background: #0f172a;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-}
-
-.sidebar nav a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: #cbd5f5;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background: #1e293b;
-  color: #fff;
-}
-
-.main {
-  flex: 1;
-  padding: 24px 32px;
-  background-color: #f7f7f7;
-}
-
-.back-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  background-color: #555;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-.back-btn:hover {
-  background-color: #333;
-}
-
-h1 {
-  margin-bottom: 20px;
-}
-
-.table-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-th {
-  background-color: #4CAF50;
-  color: white;
-}
-
-button {
-  padding: 6px 10px;
-  margin-right: 5px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: #0b7dda;
-}
-</style>
 
 <div class="layout">
 
-  <!-- SIDEBAR -->
+  <!-- Restored compact sidebar -->
   <aside class="sidebar">
     <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="index.html" title="Dashboard" class="active"><i class="fas fa-tachometer-alt"></i></a>
       <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
       <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
       <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
       <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- Main content - more CRM-like -->
   <main class="main">
-    <h1>Quotes</h1>
+    <div class="page-header">
+      <h1>Quotes</h1>
+      <div class="actions">
+        <a href="NewQuote.html" class="primary-btn">+ Create Quote</a>
+      </div>
+    </div>
 
     <div class="table-card">
-      <button onclick="createQuote()" style="margin-bottom:10px;">+ New Quote</button>
       <table id="quotesTable">
         <thead>
           <tr>
+            <th>Quote #</th>
             <th>Client</th>
             <th>Amount</th>
             <th>Status</th>
@@ -146,30 +204,141 @@ button:hover {
 </div>
 
 <script>
+// Dummy quotes data (expand later with real storage)
 const quotes = [
-  {client:"Alice Johnson", amount:"$500", status:"Pending", date:"2026-01-27"},
-  {client:"Bob Smith", amount:"$1200", status:"Sent", date:"2026-01-25"}
+  { id: "QUO00088903", client: "Craig", amount: "R2,000.00", status: "Pending", date: "2026-02-04", email: "dddddd@gmail.com" },
+  { id: "QUO00088902", client: "James", amount: "R1,000.00", status: "Sent", date: "2026-02-03", email: "hhhjjddi@example.com" },
+  { id: "QUO00088901", client: "Alice Johnson", amount: "$500", status: "Approved", date: "2026-01-27" }
 ];
 
-const quotesTable = document.querySelector('#quotesTable tbody');
-quotes.forEach(q => {
-  quotesTable.innerHTML += `
+const tbody = document.querySelector('#quotesTable tbody');
+
+quotes.forEach((q, index) => {
+  const statusClass = q.status.toLowerCase() === 'pending' ? 'status-pending' :
+                      q.status.toLowerCase() === 'sent' ? 'status-sent' : 'status-approved';
+
+  tbody.innerHTML += `
     <tr>
+      <td>${q.id}</td>
       <td>${q.client}</td>
       <td>${q.amount}</td>
-      <td>${q.status}</td>
+      <td><span class="status-badge ${statusClass}">${q.status}</span></td>
       <td>${q.date}</td>
-      <td><button onclick="generatePDF('${q.client}','${q.amount}')">📄 PDF</button></td>
+      <td>
+        <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+        <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="action-btn" title="Send"><i class="fas fa-paper-plane"></i></button>
+        <button class="generate-pdf-btn" onclick="generatePDF(${index})">PDF</button>
+      </td>
     </tr>
   `;
 });
 
-function generatePDF(client, amount){
-  alert(`PDF generated for ${client}, Amount: ${amount}`);
+function generatePDF(index) {
+  const q = quotes[index];
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  doc.setFont('helvetica');
+
+  // Header with logo-like text + QUOTATION
+  doc.setFontSize(24);
+  doc.setTextColor(0, 80, 150); // Kisasa blue-ish
+  doc.text('KISASA', 20, 25);
+  doc.setFontSize(10);
+  doc.setTextColor(100);
+  doc.text('Financial Services', 20, 32);
+
+  doc.setFontSize(18);
+  doc.setTextColor(0);
+  doc.text('QUOTATION', 105, 25, { align: 'center' });
+
+  // Addresses & details (adjusted to match your pasted layout more closely)
+  doc.setFontSize(10);
+  doc.text('50 Long Street', 20, 50);
+  doc.text('Cape Town CBD', 20, 55);
+  doc.text('8001', 20, 60);
+  doc.text('Western Cape', 20, 65);
+
+  doc.text('Spaces 50 Long Street', 120, 50);
+  doc.text('Cape Town Western Cape 8001', 120, 55);
+
+  doc.text(`Number: ${q.id || 'QUO00088903'}`, 120, 75);
+  doc.text(`Date: ${new Date().toLocaleDateString('en-ZA')}`, 120, 80);
+  doc.text('Page: 1', 120, 85);
+  doc.text('Expiry Date: 2026-02-22', 120, 90);
+  doc.text('Overall Discount %: 0.00%', 120, 95);
+
+  // Client
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text(q.client, 20, 115);
+  doc.setFont('helvetica', 'normal');
+  doc.text(q.email || 'client@example.com', 20, 122);
+
+  // Table header
+  doc.setFillColor(240, 240, 240);
+  doc.rect(20, 135, 170, 8, 'F');
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Service', 22, 140);
+  doc.text('Acc', 55, 140);
+  doc.text('Price', 75, 140);
+  doc.text('Disc %', 100, 140);
+  doc.text('VAT %', 120, 140);
+  doc.text('Total', 140, 140);
+  doc.text('Inclusive Total', 160, 140);
+
+  doc.line(20, 143, 190, 143);
+
+  // Services (matching your example)
+  let y = 150;
+  const services = [
+    { service: 'Debt Review - DR', acc: 'Mr', price: 'R1,000.00', disc: '', vat: '', total: 'R2,000.00', incl: 'R2,000.00' },
+    { service: 'Debt Prescription - DP', acc: 'ddddddddd', price: 'R1,000.00', disc: '', vat: '', total: 'R2,000.00', incl: 'R2,000.00' }
+  ];
+
+  doc.setFont('helvetica', 'normal');
+  services.forEach(s => {
+    doc.text(s.service, 22, y);
+    doc.text(s.acc, 55, y);
+    doc.text(s.price, 75, y);
+    doc.text(s.disc, 100, y);
+    doc.text(s.vat, 120, y);
+    doc.text(s.total, 140, y);
+    doc.text(s.incl, 160, y);
+    y += 8;
+  });
+
+  // Totals (right-aligned)
+  y += 12;
+  doc.text('Total Discount:     R2,000.00', 120, y);
+  y += 7;
+  doc.text('Total Exclusive:    R3,000.00', 120, y);
+  y += 7;
+  doc.text('Total VAT:          R0.00', 120, y);
+  y += 7;
+  doc.text('Sub Total:          R3,000.00', 120, y);
+  y += 12;
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Total:              ${q.amount}`, 120, y);
+
+  // Bank details
+  y += 25;
+  doc.setFontSize(10);
+  doc.setFont('ddddddddd', 'normal');
+  doc.text('Bank: ddddddd', 20, y);
+  doc.text('Acc: dddddddddd', 20, y+7);
+  doc.text('Bch: ddddddddd', 20, y+14);
+  doc.text('Code: dddddddd', 20, y+21);
+  doc.text('Ref # ID Number Kisasa Financial Services', 20, y+28);
+
+  doc.save(`Quotation_${q.client.replace(/\s+/g, '_')}_${q.id || 'new'}.pdf`);
 }
 
-function createQuote(){
-  alert("Open new quote modal (to implement)");
+function createQuote() {
+  alert("Create new quote – add modal/form here (client select, services, amounts, etc.)");
 }
 </script>
 </body>

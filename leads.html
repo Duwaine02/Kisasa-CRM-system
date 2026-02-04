@@ -1,162 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leads - CRM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="stylesheet.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads - Kisasa CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --sidebar-bg: #0f172a;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    .layout { display: flex; }
+
+    .sidebar {
+      width: 70px;
+      background: var(--sidebar-bg);
+      color: white;
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+    }
+
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1.25rem;
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: #1e293b;
+      color: white;
+    }
+
+    .main-content {
+      margin-left: 70px;
+      flex: 1;
+      padding: 2rem 2.5rem;
+      max-width: 1400px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .page-header h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-dark);
+    }
+
+    .leads-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      width: 300px;
+      background: white;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+
+    .add-lead-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-lead-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .leads-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .lead-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--gray-200);
+      transition: background 0.15s;
+    }
+
+    .lead-row:hover {
+      background: #f9fafb;
+    }
+
+    .lead-row:last-child {
+      border-bottom: none;
+    }
+
+    .lead-info {
+      flex: 1;
+    }
+
+    .lead-name {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .lead-details {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .lead-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .lead-status {
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .status-new       { background: #dbeafe; color: #1e40af; }
+    .status-contact   { background: #fef3c7; color: #92400e; }
+    .status-contacted { background: #fef3c7; color: #92400e; }
+    .status-qualified { background: #d1fae5; color: #065f46; }
+    .status-done      { background: #dcfce7; color: #166534; }
+    .status-lost      { background: #fee2e2; color: #991b1b; }
+
+    .empty-state {
+      padding: 5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state i {
+      font-size: 3.5rem;
+      color: #cbd5e1;
+      margin-bottom: 1.25rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.4rem;
+      color: #475569;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-content { padding: 1.5rem; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+      .leads-actions { width: 100%; flex-direction: column; }
+      .search-input { width: 100%; }
+      .lead-row { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.25rem; }
+      .lead-actions { width: 100%; justify-content: flex-end; }
+    }
+  </style>
 </head>
-<body><style>
-/* Compact sidebar */
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 70px;
-  background: #0f172a;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-}
-
-.sidebar nav a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: #cbd5f5;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background: #1e293b;
-  color: #fff;
-}
-
-.main {
-  flex: 1;
-  padding: 24px 32px;
-  background-color: #f7f7f7;
-}
-
-.back-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  background-color: #555;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-.back-btn:hover {
-  background-color: #333;
-}
-
-h1 {
-  margin-bottom: 20px;
-}
-
-.table-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-th {
-  background-color: #4CAF50;
-  color: white;
-}
-
-button {
-  padding: 6px 10px;
-  margin-right: 5px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: #0b7dda;
-}
-</style>
+<body>
 
 <div class="layout">
+
   <aside class="sidebar">
+    
     <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
-      <a href="support.html" title="Support"><i class="fas fa-life-ring"></i></a>
+      <a href="index.html"      title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="leads.html"      title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
+      <a href="clients.html"    title="Clients"><i class="fas fa-users"></i></a>
+      <a href="quotes.html"     title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="reports.html"    title="Reports"><i class="fas fa-chart-line"></i></a>
+      <a href="settings.html"   title="Settings"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
-  <main class="main">
-    <h1>Leads</h1>
-    <div class="table-card">
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>John Doe</td>
-            <td>john@example.com</td>
-            <td>0123456789</td>
-            <td>
-              <button onclick="alert('Call 0123456789')">📞</button>
-              <button onclick="alert('Send Email')">✉️</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Jane Smith</td>
-            <td>jane@example.com</td>
-            <td>0987654321</td>
-            <td>
-              <button onclick="alert('Call 0987654321')">📞</button>
-              <button onclick="alert('Send Email')">✉️</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>All Leads</h1>
+      <div class="leads-actions">
+        <input type="text" class="search-input" placeholder="Search leads..." />
+          <a href="addNewlead.html" class="add-lead-btn">+Add Lead</a>
+      </div>
     </div>
+
+    <div class="leads-container">
+      <div class="lead-list" id="leadsList"></div>
+    </div>
+
   </main>
+
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('leadsList');
+    if (!container) return;
+
+    const leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+
+    if (leads.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-user-plus"></i>
+          <h3>No leads yet</h3>
+          <p>Add your first lead to get started.</p>
+        </div>
+      `;
+      return;
+    }
+
+    leads.forEach(lead => {
+      const row = document.createElement('div');
+      row.className = 'lead-row';
+
+      const status = (lead.status || 'New').toLowerCase();
+      let statusClass = 'status-new';
+      if (status.includes('contact')) statusClass = 'status-contact';
+      if (status === 'qualified')   statusClass = 'status-qualified';
+      if (status === 'done')        statusClass = 'status-done';
+      if (status === 'lost')        statusClass = 'status-lost';
+
+      row.innerHTML = `
+        <div class="lead-info">
+          <div class="lead-name">${lead.firstName || ''} ${lead.lastName || ''}</div>
+          <div class="lead-details">
+            ${lead.email || 'No email'} • ${lead.phone || 'No phone'}
+            ${lead.leadSource ? ` • ${lead.leadSource}` : ''}
+          </div>
+        </div>
+
+        <div class="lead-actions">
+          <span class="lead-status ${statusClass}">
+            ${lead.status || 'New'}
+          </span>
+        </div>
+      `;
+
+      container.appendChild(row);
+    });
+  });
+</script>
 
 </body>
 </html>

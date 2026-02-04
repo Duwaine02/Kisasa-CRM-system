@@ -23,6 +23,10 @@ body {
   color: #fff;
   padding: 24px;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar h2 {
@@ -93,7 +97,7 @@ button {
 /* ================= STATS / CARDS ================= */
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 28px;
 }
@@ -104,23 +108,25 @@ button {
   border-radius: 14px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   border: 1px solid #e5e7eb;
+  text-align: center;
 }
 
 .card p {
   font-size: 13px;
   color: #6b7280;
+  margin-bottom: 4px;
 }
 
 .card h2 {
   font-size: 26px;
-  margin-top: 6px;
 }
 
-/* ================= AGENT DASHBOARD LAYOUT ================= */
+/* ================= AGENT HEADER & ACTIONS ================= */
 .agent-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 28px;
 }
 
 .agent-actions {
@@ -133,21 +139,30 @@ button {
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
 }
 
-/* ================= GRID ================= */
+/* ================= MAIN GRID – ALL PANELS ================= */
 .agent-grid {
   display: grid;
-  grid-template-columns: 2fr 1.3fr;
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem 2rem;
+  margin: 2rem 0;
 }
 
-/* ================= PANELS ================= */
+/* All panels behave the same way */
 .panel {
   background: #fff;
   padding: 20px;
   border-radius: 14px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make panels with long lists scrollable internally */
+.panel:has(.lead-list, .task-list) {
+  min-height: 320px;
 }
 
 .panel h3 {
@@ -160,36 +175,57 @@ button {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
+  flex-shrink: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* ================= TASKS ================= */
+/* ================= SCROLLABLE LISTS ================= */
+.lead-list,
 .task-list,
 #taskList,
 #agentTasksContainer {
+  flex: 1 1 auto;
+  max-height: 340px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 14px;
-  background: #f9fafb;
+/* Scrollbar styling */
+.lead-list::-webkit-scrollbar,
+.task-list::-webkit-scrollbar,
+#taskList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lead-list::-webkit-scrollbar-track,
+.task-list::-webkit-scrollbar-track,
+#taskList::-webkit-scrollbar-track {
+  background: #f1f5f9;
   border-radius: 10px;
-  border-left: 4px solid #2563eb;
-  font-size: 14px;
 }
 
-/* ================= LEADS ================= */
-.lead-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.lead-list::-webkit-scrollbar-thumb,
+.task-list::-webkit-scrollbar-thumb,
+#taskList::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 10px;
 }
 
+.lead-list::-webkit-scrollbar-thumb:hover,
+.task-list::-webkit-scrollbar-thumb:hover,
+#taskList::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ================= TASK ROW WITH THREE-DOTS MENU ================= */
+.task-row,
 .lead-row {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -197,6 +233,64 @@ button {
   background: #f9fafb;
   border-radius: 10px;
   font-size: 14px;
+  gap: 12px;
+}
+
+.task-item {
+  border-left: 4px solid #2563eb;
+}
+
+/* Three dots button */
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.menu-btn:hover,
+.menu-btn:focus {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+/* Dropdown menu */
+.status-menu {
+  display: none;
+  position: absolute;
+  right: 8px;
+  top: 100%;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 140px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.status-menu.active {
+  display: block;
+}
+
+.status-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 13px;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.status-menu button:hover {
+  background: #f1f5f9;
 }
 
 /* ================= BADGES ================= */
@@ -204,17 +298,34 @@ button {
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
+  font-weight: 500;
   background: #e5e7eb;
+  color: #1f2937;
 }
 
-.badge.success {
-  background: #22c55e;
-  color: white;
-}
-
+/* Status-specific colors using data-status attribute */
+.badge[data-status="Contact"],
 .badge.warning {
   background: #facc15;
   color: #1f2937;
+}
+
+.badge[data-status="Qualified"],
+.badge.Finalise {
+  background: #226ec5;
+  color: white;
+}
+
+.badge[data-status="Done"],
+.badge.success {
+  background: #22c553;
+  color: white;
+}
+
+.badge[data-status="Lost"],
+.badge.lost {
+  background: #ef4444;
+  color: white;
 }
 
 .badge.count {
@@ -241,31 +352,33 @@ button {
   background: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
-  z-index: 50;
+  z-index: 1000;
 }
 
 .modal-content {
   background: #fff;
   padding: 22px;
   border-radius: 14px;
-  width: 320px;
+  width: 360px;
+  max-width: 90%;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .modal input {
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
 }
 
 .modal button {
   background: #2563eb;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
   font-weight: 600;
 }
@@ -273,19 +386,30 @@ button {
 .close {
   position: absolute;
   top: 12px;
-  right: 14px;
-  font-size: 20px;
+  right: 16px;
+  font-size: 24px;
   cursor: pointer;
+  color: #6b7280;
+}
+
+.close:hover {
+  color: #1f2937;
 }
 
 /* ================= RESPONSIVE ================= */
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .stats {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media (max-width: 992px) {
+  .main {
+    padding: 20px;
+  }
 
   .agent-grid {
-    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 }
 
@@ -296,9 +420,23 @@ button {
 
   .sidebar {
     width: 100%;
+    height: auto;
+    position: relative;
+    padding: 16px;
   }
 
   .stats {
     grid-template-columns: 1fr;
+  }
+
+  .agent-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .agent-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
