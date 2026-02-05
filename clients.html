@@ -1,40 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clients - CRM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="stylesheet.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-.layout { display:flex; min-height:100vh; }
-.sidebar { width:70px; background:#0f172a; display:flex; flex-direction:column; align-items:center; padding-top:20px; }
-.sidebar nav a { display:flex; justify-content:center; align-items:center; width:50px; height:50px; margin-bottom:20px; font-size:20px; color:#cbd5f5; text-decoration:none; border-radius:10px; transition:0.2s;}
-.sidebar nav a.active, .sidebar nav a:hover { background:#1e293b; color:#fff; }
-.main { flex:1; padding:24px 32px; background-color:#f7f7f7; display:flex; gap:20px; }
-.clients-list { flex:2; }
-.client-info { flex:1; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.06); }
-h1 { margin-bottom:20px; }
-.table-card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.06); }
-table { width:100%; border-collapse: collapse; }
-th, td { padding:12px; border-bottom:1px solid #ddd; text-align:left; }
-th { background-color:#4CAF50; color:white; }
-tr:hover { background:#f1f5f9; cursor:pointer; }
-button { padding:6px 10px; margin-right:5px; background-color:#2196F3; color:white; border:none; cursor:pointer; border-radius:4px; font-size:14px; }
-button:hover { background-color:#0b7dda; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clients - Kisasa CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --sidebar-bg: #0f172a;
+      --text-dark: #1e293b;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #f8fafc; 
+      color: var(--text-dark); 
+      min-height: 100vh; 
+    }
+
+    .layout { display: flex; }
+
+    .sidebar {
+      width: 70px;
+      background: var(--sidebar-bg);
+      color: white;
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1.5rem;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1.25rem;
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: #1e293b;
+      color: white;
+    }
+
+    .main-content {
+      margin-left: 70px;
+      flex: 1;
+      padding: 2rem 2.5rem;
+      max-width: 1400px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .page-header h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      background: #e5e7eb;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .filter-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .search-container {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .search-input {
+      padding: 0.55rem 1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      width: 250px;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+
+    .content-wrapper {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .clients-list {
+      flex: 2;
+      min-width: 500px;
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th, td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 0.95rem;
+    }
+
+    th {
+      font-weight: 600;
+      background: #f8fafc;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+      cursor: pointer;
+    }
+
+    .badge {
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .badge.active { background: #d1fae5; color: #065f46; }
+    .badge.inactive { background: #fee2e2; color: #991b1b; }
+
+    .client-info {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      padding: 1.5rem;
+      min-width: 300px;
+      height: fit-content;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .client-info h3 {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+    }
+
+    .client-info p {
+      margin: 0.75rem 0;
+    }
+
+    .client-info strong {
+      display: inline-block;
+      width: 100px;
+    }
+
+    #viewDetailsBtn {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    #viewDetailsBtn:hover {
+      background: #2563eb;
+    }
+    #viewDetailsBtn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 992px) {
+      .content-wrapper { flex-direction: column; }
+      .client-info { position: static; }
+    }
+  </style>
 </head>
 <body>
 
 <div class="layout">
 
-  <!-- SIDEBAR -->
+  <!-- SIDEBAR – Clients icon completely removed -->
   <aside class="sidebar">
+    <h2>Kisasa</h2>
     <nav>
       <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
       <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients" class="active"><i class="fas fa-users"></i></a>
+      <!-- Clients icon is NOT present here -->
       <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
       <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
       <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
@@ -42,57 +237,115 @@ button:hover { background-color:#0b7dda; }
   </aside>
 
   <!-- MAIN CONTENT -->
-  <main class="main">
-    <!-- Clients Table -->
-    <div class="clients-list">
+  <main class="main-content">
+
+    <div class="page-header">
       <h1>Clients</h1>
-      <div class="table-card">
-        <table id="clientsTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
     </div>
 
-    <!-- Selected Client Info -->
-    <div class="client-info">
-      <h3>Client Info</h3>
-      <p><strong>Name:</strong> <span id="clientName">Select a client</span></p>
-      <p><strong>Email:</strong> <span id="clientEmail"></span></p>
-      <p><strong>Phone:</strong> <span id="clientPhone"></span></p>
-      <p><strong>Status:</strong> <span id="clientStatus"></span></p>
-      <button id="viewDetailsBtn" style="margin-top:10px;" disabled>View Full Details</button>
+    <!-- Tabs – Clients tab starts blue/active by default -->
+    <div class="tabs">
+      <div class="filter-tab" data-type="all">All</div>
+      <div class="filter-tab active" data-type="client">Clients</div>
+      <div class="filter-tab" data-type="ex-client">Ex-clients</div>
     </div>
+
+    <!-- Search -->
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search clients..." id="searchInput">
+    </div>
+
+    <div class="content-wrapper">
+
+      <!-- Clients Table -->
+      <div class="clients-list">
+        <div class="table-container">
+          <table id="clientsTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Selected Client Preview -->
+      <div class="client-info">
+        <h3>Client Preview</h3>
+        <p><strong>Name:</strong> <span id="clientName">Select a client</span></p>
+        <p><strong>Email:</strong> <span id="clientEmail">—</span></p>
+        <p><strong>Phone:</strong> <span id="clientPhone">—</span></p>
+        <p><strong>Status:</strong> <span id="clientStatus">—</span></p>
+
+        <button id="viewDetailsBtn" disabled>View Full Details</button>
+      </div>
+
+    </div>
+
   </main>
 </div>
 
 <script>
-const clients = [
-  {name: "Alice Johnson", email: "alice@example.com", phone: "0123456789", status: "Active"},
-  {name: "Bob Smith", email: "bob@example.com", phone: "0987654321", status: "Inactive"}
+// Client data (unchanged)
+const clientsData = [
+  { name: "Lungelo Mthembu",      email: "lungelo.mthembu@gmail.com",       phone: "+27 82 345 6789", status: "Active"   },
+  { name: "Nompumelelo Zulu",      email: "nompumelelo.zulu@webmail.co.za",  phone: "+27 83 901 2345", status: "Active"   },
+  { name: "Siyabonga Khumalo",     email: "siyabonga.khumalo@outlook.com",  phone: "+27 81 567 8901", status: "Inactive" },
+  { name: "Amahle Ngcobo",         email: "amahle.ngcobo@yahoo.co.za",       phone: "+27 76 234 5678", status: "Active"   },
+  { name: "Thabo Lesedi",          email: "thabo.lesedi@enterprise.co.za",   phone: "+27 72 890 1234", status: "Active"   },
+  { name: "Zanele Mbatha",         email: "zanele.mbatha@icloud.com",       phone: "+27 84 678 9012", status: "Inactive" },
+  { name: "Mthokozisi Dlamini",    email: "mthokozisi.dlamini@gmail.com",    phone: "+27 79 345 6780", status: "Active"   }
 ];
 
-const clientsTable = document.querySelector('#clientsTable tbody');
-clients.forEach((client, index) => {
-  clientsTable.innerHTML += `
-    <tr onclick="selectClient(${index})">
+const tableBody = document.getElementById('tableBody');
+const searchInput = document.getElementById('searchInput');
+const filterTabs = document.querySelectorAll('.filter-tab');
+let selectedIndex = -1;
+
+// Render table – show ALL clients by default
+function renderClients(filterType = 'all', search = '') {
+  tableBody.innerHTML = '';
+
+  const filtered = clientsData.filter(client => {
+    // "All" and "Clients" show everything; "Ex-clients" shows inactive only
+    const matchesType = filterType === 'all' || filterType === 'client' ||
+                       (filterType === 'ex-client' && client.status.toLowerCase() === 'inactive');
+    const matchesSearch = 
+      client.name.toLowerCase().includes(search.toLowerCase()) ||
+      client.email.toLowerCase().includes(search.toLowerCase()) ||
+      client.phone.includes(search);
+    return matchesType && matchesSearch;
+  });
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:2rem;">No clients found</td></tr>`;
+    return;
+  }
+
+  filtered.forEach((client, idx) => {
+    const globalIndex = clientsData.indexOf(client);
+    const row = document.createElement('tr');
+    row.innerHTML = `
       <td>${client.name}</td>
       <td>${client.email}</td>
       <td>${client.phone}</td>
-      <td>${client.status}</td>
-    </tr>
-  `;
-});
+      <td><span class="badge ${client.status.toLowerCase()}">${client.status}</span></td>
+    `;
+    row.onclick = () => selectClient(globalIndex);
+    tableBody.appendChild(row);
+  });
+}
 
-function selectClient(index){
-  const client = clients[index];
+// Select client → update preview
+function selectClient(index) {
+  selectedIndex = index;
+  const client = clientsData[index];
+
   document.getElementById('clientName').textContent = client.name;
   document.getElementById('clientEmail').textContent = client.email;
   document.getElementById('clientPhone').textContent = client.phone;
@@ -101,10 +354,29 @@ function selectClient(index){
   const btn = document.getElementById('viewDetailsBtn');
   btn.disabled = false;
   btn.onclick = () => {
-    localStorage.setItem('selectedClient', index);
+    localStorage.setItem('selectedClientIndex', index);
     window.location.href = 'client Detail.html';
   };
 }
+
+// Filter tabs – turn blue when active
+filterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    filterTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderClients(tab.dataset.type, searchInput.value);
+  });
+});
+
+// Search
+searchInput.addEventListener('input', () => {
+  const activeTab = document.querySelector('.filter-tab.active')?.dataset.type || 'all';
+  renderClients(activeTab, searchInput.value);
+});
+
+// Initial load – show ALL clients immediately, Clients tab blue/active
+renderClients('all');  // ← shows all clients right away
+document.querySelector('.filter-tab[data-type="client"]').classList.add('active');
 </script>
 
 </body>

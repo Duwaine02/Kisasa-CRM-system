@@ -1,306 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leads - Kisasa CRM</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leads - Kisasa CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --sidebar-bg: #0f172a;
-      --text-dark: #1e293b;
-      --text-muted: #64748b;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-    }
+<style>
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --sidebar-bg: #0f172a;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Inter', sans-serif; background: #f8fafc; color: var(--text-dark); min-height: 100vh; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f8fafc;
-      color: var(--text-dark);
-      min-height: 100vh;
-    }
+/* Layout */
+.layout { display: flex; }
 
-    .layout { display: flex; }
+/* Sidebar (Dashboard style) */
+.sidebar {
+  width: 70px;
+  background: var(--sidebar-bg);
+  color: white;
+  position: fixed;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.5rem;
+  overflow-y: auto;
+}
 
-    .sidebar {
-      width: 70px;
-      background: var(--sidebar-bg);
-      color: white;
-      position: fixed;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 1.5rem;
-      overflow-y: auto;
-    }
+.sidebar h2 { color: white; font-size: 1.1rem; margin-bottom: 2rem; letter-spacing: 1px; }
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; height: 50px;
+  margin-bottom: 1.25rem;
+  font-size: 1.25rem;
+  color: #cbd5e1;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.sidebar nav a:hover,
+.sidebar nav a.active { background: #1e293b; color: white; }
 
-    .sidebar h2 {
-      color: white;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-    }
+/* Main content */
+.main-content {
+  margin-left: 70px;
+  flex: 1;
+  padding: 2rem 2.5rem;
+  max-width: 1400px;
+}
 
-    .sidebar nav a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      margin-bottom: 1.25rem;
-      font-size: 1.25rem;
-      color: #cbd5e1;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.page-header h1 { font-size: 1.875rem; font-weight: 700; }
 
-    .sidebar nav a:hover,
-    .sidebar nav a.active {
-      background: #1e293b;
-      color: white;
-    }
+/* Tabs */
+.tabs { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+.tab { padding: 0.5rem 1rem; border-radius: 999px; background: #e5e7eb; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+.tab.active { background: var(--primary); color: white; }
 
-    .main-content {
-      margin-left: 70px;
-      flex: 1;
-      padding: 2rem 2.5rem;
-      max-width: 1400px;
-    }
+/* Search Input */
+.search-container { margin-bottom: 1.5rem; display: flex; justify-content: flex-end; }
+.search-input {
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  width: 250px;
+}
+.search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
 
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--gray-200);
-    }
+/* Table */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  overflow-x: auto;
+}
 
-    .page-header h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      margin: 0;
-      color: var(--text-dark);
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
 
-    .leads-actions {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
+th, td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 0.95rem;
+}
 
-    .search-input {
-      padding: 0.65rem 1rem;
-      border: 1px solid var(--gray-200);
-      border-radius: 6px;
-      font-size: 0.95rem;
-      width: 300px;
-      background: white;
-    }
+th { font-weight: 600; color: var(--text-dark); }
+td { color: var(--text-dark); }
 
-    .search-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
-    }
+.badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
 
-    .add-lead-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.65rem 1.25rem;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+.badge.client { background: #dbeafe; color: #1e40af; }
+.badge.lead { background: #fef3c7; color: #92400e; }
+.badge.user { background: #d1fae5; color: #065f46; }
 
-    .add-lead-btn:hover {
-      background: var(--primary-dark);
-    }
+/* Hover row */
+tbody tr:hover { background: #f9fafb; }
 
-    .leads-container {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      overflow: hidden;
-    }
-
-    .lead-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 1.75rem;
-      border-bottom: 1px solid var(--gray-200);
-      transition: background 0.15s;
-    }
-
-    .lead-row:hover {
-      background: #f9fafb;
-    }
-
-    .lead-row:last-child {
-      border-bottom: none;
-    }
-
-    .lead-info {
-      flex: 1;
-    }
-
-    .lead-name {
-      font-weight: 600;
-      font-size: 1.05rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .lead-details {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    .lead-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .lead-status {
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
-
-    .status-new       { background: #dbeafe; color: #1e40af; }
-    .status-contact   { background: #fef3c7; color: #92400e; }
-    .status-contacted { background: #fef3c7; color: #92400e; }
-    .status-qualified { background: #d1fae5; color: #065f46; }
-    .status-done      { background: #dcfce7; color: #166534; }
-    .status-lost      { background: #fee2e2; color: #991b1b; }
-
-    .empty-state {
-      padding: 5rem 2rem;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .empty-state i {
-      font-size: 3.5rem;
-      color: #cbd5e1;
-      margin-bottom: 1.25rem;
-    }
-
-    .empty-state h3 {
-      font-size: 1.4rem;
-      color: #475569;
-      margin-bottom: 0.75rem;
-    }
-
-    @media (max-width: 768px) {
-      .main-content { padding: 1.5rem; }
-      .page-header { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
-      .leads-actions { width: 100%; flex-direction: column; }
-      .search-input { width: 100%; }
-      .lead-row { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.25rem; }
-      .lead-actions { width: 100%; justify-content: flex-end; }
-    }
-  </style>
+@media(max-width: 768px) {
+  .main-content { padding: 1.5rem; }
+  th, td { padding: 0.75rem 1rem; }
+  .search-container { justify-content: center; margin-bottom: 1rem; }
+  .tabs { flex-wrap: wrap; }
+}
+</style>
 </head>
-<body>
 
+<body>
 <div class="layout">
 
+  <!-- Sidebar -->
   <aside class="sidebar">
-    
+    <h2>Kisasa</h2>
     <nav>
-      <a href="index.html"      title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html"      title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html"    title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html"     title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html"    title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html"   title="Settings"><i class="fas fa-cog"></i></a>
+      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="leads.html" title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
+      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
+      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
+      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content">
-
     <div class="page-header">
-      <h1>All Leads</h1>
-      <div class="leads-actions">
-        <input type="text" class="search-input" placeholder="Search leads..." />
-          <a href="addNewlead.html" class="add-lead-btn">+Add Lead</a>
-      </div>
+      <h1>Leads & Clients</h1>
     </div>
 
-    <div class="leads-container">
-      <div class="lead-list" id="leadsList"></div>
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-type="all">All</div>
+
+      <div class="tab" data-type="client">Clients</div>
+      <div class="tab" data-type="ex-client">Ex-clients</div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Email</th>
+            <th>ID Number</th>
+            <th>Cell Number</th>
+            <th>Type</th>
+            <th>Date Registered</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows populated dynamically -->
+        </tbody>
+      </table>
     </div>
 
   </main>
-
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('leadsList');
-    if (!container) return;
+const leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+const tableBody = document.getElementById('tableBody');
+const tabs = document.querySelectorAll('.tab');
+const searchInput = document.getElementById('searchInput');
 
-    const leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+function renderTable(filterType = 'all', search = '') {
+  tableBody.innerHTML = '';
+  const filtered = leads.filter(l => 
+    (filterType === 'all' || l.status === filterType) &&
+    (l.firstName.toLowerCase().includes(search.toLowerCase()) ||
+     l.lastName.toLowerCase().includes(search.toLowerCase()) ||
+     l.email.toLowerCase().includes(search.toLowerCase()))
+  );
 
-    if (leads.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-user-plus"></i>
-          <h3>No leads yet</h3>
-          <p>Add your first lead to get started.</p>
-        </div>
-      `;
-      return;
-    }
+  if(filtered.length === 0){
+    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:1rem;">No records found</td></tr>`;
+    return;
+  }
 
-    leads.forEach(lead => {
-      const row = document.createElement('div');
-      row.className = 'lead-row';
-
-      const status = (lead.status || 'New').toLowerCase();
-      let statusClass = 'status-new';
-      if (status.includes('contact')) statusClass = 'status-contact';
-      if (status === 'qualified')   statusClass = 'status-qualified';
-      if (status === 'done')        statusClass = 'status-done';
-      if (status === 'lost')        statusClass = 'status-lost';
-
-      row.innerHTML = `
-        <div class="lead-info">
-          <div class="lead-name">${lead.firstName || ''} ${lead.lastName || ''}</div>
-          <div class="lead-details">
-            ${lead.email || 'No email'} • ${lead.phone || 'No phone'}
-            ${lead.leadSource ? ` • ${lead.leadSource}` : ''}
-          </div>
-        </div>
-
-        <div class="lead-actions">
-          <span class="lead-status ${statusClass}">
-            ${lead.status || 'New'}
-          </span>
-        </div>
-      `;
-
-      container.appendChild(row);
-    });
+  filtered.forEach(l => {
+    const typeClass = l.status === 'client' ? 'client' : l.status === 'lead' ? 'lead' : 'user';
+    tableBody.innerHTML += `
+      <tr>
+        <td>${l.firstName} ${l.lastName}</td>
+        <td>${l.email}</td>
+        <td>${l.idNumber || ''}</td>
+        <td>${l.phone || ''}</td>
+        <td><span class="badge ${typeClass}">${l.status}</span></td>
+        <td>${l.date || ''}</td>
+      </tr>
+    `;
   });
-</script>
+}
 
+// Tab click
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderTable(tab.dataset.type, searchInput.value);
+  });
+});
+
+// Search input
+searchInput.addEventListener('input', () => {
+  const activeTab = document.querySelector('.tab.active').dataset.type;
+  renderTable(activeTab, searchInput.value);
+});
+
+// Initial render
+renderTable();
+</script>
 </body>
 </html>

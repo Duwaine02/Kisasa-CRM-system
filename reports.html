@@ -1,119 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reports - CRM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="stylesheet.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports - Kisasa CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- WebDataRocks Pivot Table -->
+  <link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+  <script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
+
+  <style>
+    :root {
+      --sidebar-bg: #0f172a;
+      --sidebar-hover: #1e293b;
+      --text-light: #cbd5e1;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #f8fafc; 
+      min-height: 100vh; 
+    }
+
+    .layout { display: flex; }
+
+    /* Sidebar – matched to screenshot / dashboard style */
+    .sidebar {
+      width: 70px;
+      background: var(--sidebar-bg);
+      color: white;
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1.25rem;
+      font-size: 1.25rem;
+      color: var(--text-light);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: var(--sidebar-hover);
+      color: white;
+    }
+
+    /* Main content */
+    .main {
+      margin-left: 70px;
+      flex: 1;
+      padding: 2rem 2.5rem;
+      background-color: #f7f7f7;
+    }
+
+    h1 { 
+      font-size: 1.875rem; 
+      font-weight: 700; 
+      margin-bottom: 1.5rem; 
+    }
+
+    h2 { margin: 2rem 0 1rem; }
+    h3 { margin-bottom: 1rem; }
+
+    #pivot-container { 
+      height: 500px; 
+      margin-bottom: 2rem; 
+      background: white; 
+      border-radius: 12px; 
+      overflow: hidden; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .chart-container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+  </style>
 </head>
 <body>
-    <style>
-/* Compact sidebar */
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 70px;
-  background: #0f172a;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-}
-
-.sidebar nav a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: #cbd5f5;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background: #1e293b;
-  color: #fff;
-}
-
-.main {
-  flex: 1;
-  padding: 24px 32px;
-  background-color: #f7f7f7;
-}
-
-.back-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  background-color: #555;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-.back-btn:hover {
-  background-color: #333;
-}
-
-h1 {
-  margin-bottom: 20px;
-}
-
-.table-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-th {
-  background-color: #4CAF50;
-  color: white;
-}
-
-button {
-  padding: 6px 10px;
-  margin-right: 5px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: #0b7dda;
-}
-</style>
 
 <div class="layout">
 
-  <!-- SIDEBAR -->
+  <!-- Sidebar – now identical in structure & look to the screenshot -->
   <aside class="sidebar">
+    <h2>Kisasa</h2>
     <nav>
       <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
       <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
@@ -128,84 +126,102 @@ button:hover {
   <main class="main">
     <h1>Reports</h1>
 
-    <div class="box">
-      <h3>Monthly Sales</h3>
-      <canvas id="salesChart"></canvas>
-    </div>
+    <h2>Report Builder (Pivot Table)</h2>
+    <div id="pivot-container"></div>
 
-    <div class="box">
-      <h3>Lead Conversion</h3>
-      <canvas id="leadsChart"></canvas>
+    <div class="chart-container">
+      <h3>Dynamic Visualization (Updates with Pivot Changes)</h3>
+      <canvas id="dynamicChart" height="100"></canvas>
     </div>
   </main>
 </div>
 
 <script>
-// Monthly Sales Chart
-const salesCtx = document.getElementById('salesChart').getContext('2d');
-new Chart(salesCtx, {
-  type: 'bar',
-  data: {
-    labels: ['January', 'February', 'March', 'April'],
-    datasets: [{
-      label: 'Sales ($)',
-      data: [5000, 7500, 6000, 9000],
-      backgroundColor: '#2563eb',
-      borderRadius: 6
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: { mode: 'index', intersect: false }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: { color: '#e5e7eb' }
-      },
-      x: {
-        grid: { color: '#f3f4f6' }
-      }
+// Sample CRM data (unchanged)
+const crmData = [
+  { Month: "January", Agent: "Duwaine", LeadStatus: "Converted", DealAmount: 5000, Region: "Cape Town" },
+  { Month: "January", Agent: "Duwaine", LeadStatus: "Hot", DealAmount: 0, Region: "Cape Town" },
+  { Month: "January", Agent: "Sarah", LeadStatus: "Converted", DealAmount: 8000, Region: "Johannesburg" },
+  { Month: "February", Agent: "Duwaine", LeadStatus: "Converted", DealAmount: 12000, Region: "Cape Town" },
+  { Month: "February", Agent: "Duwaine", LeadStatus: "Warm", DealAmount: 0, Region: "Cape Town" },
+  { Month: "February", Agent: "John", LeadStatus: "Converted", DealAmount: 6500, Region: "Durban" },
+  { Month: "March", Agent: "Duwaine", LeadStatus: "Converted", DealAmount: 9000, Region: "Cape Town" },
+  { Month: "March", Agent: "Sarah", LeadStatus: "Hot", DealAmount: 0, Region: "Johannesburg" },
+  { Month: "April", Agent: "Duwaine", LeadStatus: "Converted", DealAmount: 15000, Region: "Cape Town" },
+  { Month: "April", Agent: "John", LeadStatus: "Converted", DealAmount: 7000, Region: "Durban" },
+  { Month: "January", Agent: "Duwaine", LeadStatus: "Cold", DealAmount: 0, Region: "Cape Town" },
+  { Month: "February", Agent: "Sarah", LeadStatus: "Converted", DealAmount: 11000, Region: "Johannesburg" },
+];
+
+// Initialize Pivot Table
+let pivot = new WebDataRocks({
+  container: "#pivot-container",
+  toolbar: true,
+  height: "500px",
+  report: {
+    dataSource: { data: crmData },
+    slice: {
+      rows: [{ uniqueName: "Month" }],
+      columns: [{ uniqueName: "Measures" }],
+      measures: [{ uniqueName: "DealAmount", aggregation: "sum", caption: "Total Sales ($)" }]
     }
   }
 });
 
-// Lead Conversion Chart
-const leadsCtx = document.getElementById('leadsChart').getContext('2d');
-new Chart(leadsCtx, {
-  type: 'line',
-  data: {
-    labels: ['January', 'February', 'March', 'April'],
-    datasets: [{
-      label: 'Leads Converted',
-      data: [12, 18, 15, 22],
-      borderColor: '#10b981',
-      backgroundColor: 'rgba(16,185,129,0.1)',
-      tension: 0.4,
-      fill: true,
-      pointRadius: 5,
-      pointBackgroundColor: '#10b981'
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      tooltip: { mode: 'index', intersect: false }
+// Chart.js dynamic update (unchanged)
+let dynamicChart = null;
+const ctx = document.getElementById('dynamicChart').getContext('2d');
+
+function createOrUpdateChart() {
+  pivot.getData(null, {
+    callbackHandler: function (data) {
+      const labels = data.rows.map(row => row.join(" "));
+      const values = data.data.map(cell => cell.v || 0);
+
+      if (dynamicChart) {
+        dynamicChart.data.labels = labels;
+        dynamicChart.data.datasets[0].data = values;
+        dynamicChart.update();
+      } else {
+        dynamicChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Sales / Metrics',
+              data: values,
+              backgroundColor: '#2563eb',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: true } },
+            scales: {
+              y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
     },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: { color: '#e5e7eb' }
-      },
-      x: {
-        grid: { color: '#f3f4f6' }
+    updateHandler: function (data) {
+      const labels = data.rows.map(row => row.join(" "));
+      const values = data.data.map(cell => cell.v || 0);
+      if (dynamicChart) {
+        dynamicChart.data.labels = labels;
+        dynamicChart.data.datasets[0].data = values;
+        dynamicChart.update();
       }
     }
-  }
+  });
+}
+
+pivot.on("reportcomplete", function () {
+  pivot.off("reportcomplete");
+  createOrUpdateChart();
 });
 </script>
+
 </body>
 </html>

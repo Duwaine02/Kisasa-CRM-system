@@ -3,58 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Title shown in browser tab -->
   <title>Add New Lead - Kisasa CRM</title>
 
-  <!-- Font Awesome for icons (dashboard, leads, users, etc.) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <style>
-    /* === ROOT VARIABLES ===
-       Central place to define colors used across the app.
-       Change values here → affects whole design */
+    /* Your existing styles remain unchanged */
     :root {
-      --sidebar-bg: #0f172a;       /* Dark background for sidebar */
-      --primary: #3b82f6;          /* Main blue color for buttons, focus, etc. */
-      --active-bg: #1E293B;        /* Light blue for active sidebar item (you can change to #2ecc71 for green) */
-      --text: #e2e8f0;             /* Light text color for sidebar */
-      --bg: #f8fafc;               /* Very light gray background for main content */
+      --sidebar-bg: #0f172a;
+      --primary: #3b82f6;
+      --active-bg: #1E293B;
+      --text: #e2e8f0;
+      --bg: #f8fafc;
     }
 
-    /* === GLOBAL / BODY STYLES === */
     body {
-      margin: 0;                   /* Remove default browser margin */
+      margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);       /* Light background for the whole page */
-      color: #1e293b;              /* Dark text color for readability */
+      background: var(--bg);
+      color: #1e293b;
     }
 
-    /* === LAYOUT WRAPPER ===
-       Flex container that holds sidebar + main content side by side */
     .wrapper {
       display: flex;
-      min-height: 100vh;           /* Ensures page fills full viewport height */
+      min-height: 100vh;
     }
 
-    /* === SIDEBAR STYLES ===
-       Narrow, fixed, icon-only sidebar like in your screenshot */
     .sidebar {
-      width: 72px;                    /* Narrow width – typical for icon-only nav */
+      width: 72px;
       background: var(--sidebar-bg);
       color: white;
-      position: fixed;                /* Stays in place when scrolling */
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 100;                   /* Above other content */
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
       display: flex;
       flex-direction: column;
-      align-items: center;            /* Centers icons horizontally */
+      align-items: center;
     }
 
     .sidebar nav {
       width: 100%;
-      margin-top: 1.5rem;             /* Space from top of sidebar */
+      margin-top: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -69,30 +58,26 @@
       align-items: center;
       justify-content: center;
       border-radius: 10px;
-      margin: 0.4rem 0;               /* Vertical spacing between icons */
-      font-size: 1.4rem;              /* Icon size */
-      transition: all 0.2s;           /* Smooth hover/active transitions */
+      margin: 0.4rem 0;
+      font-size: 1.4rem;
+      transition: all 0.2s;
     }
 
     .sidebar a:hover {
-      background: rgba(255,255,255,0.12);   /* Subtle hover effect */
+      background: rgba(255,255,255,0.12);
     }
 
     .sidebar a.active {
-      background: var(--active-bg);   /* Highlight for current page */
+      background: var(--active-bg);
       color: white;
     }
 
-    /* === MAIN CONTENT AREA ===
-       Everything to the right of the sidebar – scrolls normally */
     .main-content {
-      margin-left: 72px;              /* Must match .sidebar width exactly! */
-      flex: 1;                        /* Takes all remaining space */
-      padding: 2rem;                  /* Inner spacing */
+      margin-left: 72px;
+      flex: 1;
+      padding: 2rem;
     }
 
-    /* === PAGE HEADER ===
-       Title area at the top of main content */
     header {
       margin-bottom: 2rem;
     }
@@ -103,32 +88,26 @@
       color: #1e293b;
     }
 
-    /* === FORM CARD ===
-       White card that contains the actual lead creation form */
     .form-card {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);  /* Subtle shadow for depth */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       padding: 2rem;
-      max-width: 720px;               /* Prevents form from becoming too wide */
+      max-width: 720px;
     }
 
-    /* === FORM GRID LAYOUT ===
-       Two-column layout for form fields on larger screens */
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;  /* Two equal columns */
-      gap: 1.5rem;                     /* Space between fields */
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
     }
 
-    /* === INDIVIDUAL FORM FIELD CONTAINER === */
     .form-group {
-      margin-bottom: 1.25rem;          /* Space between rows */
+      margin-bottom: 1.25rem;
     }
 
-    /* Full-width fields (like Notes textarea) */
     .form-group.full {
-      grid-column: 1 / -1;             /* Span both columns */
+      grid-column: 1 / -1;
     }
 
     label {
@@ -138,29 +117,26 @@
       color: #475569;
     }
 
-    /* === INPUT / SELECT / TEXTAREA STYLES === */
     input, select, textarea {
       width: 100%;
       padding: 0.75rem 1rem;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 1rem;
-      box-sizing: border-box;         /* Padding doesn't increase width */
+      box-sizing: border-box;
     }
 
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);  /* Blue focus ring */
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
     }
 
-    /* Red asterisk for required fields */
     .required::after {
       content: " *";
       color: #ef4444;
     }
 
-    /* === BUTTONS === */
     .btn {
       background: var(--primary);
       color: white;
@@ -174,11 +150,11 @@
     }
 
     .btn:hover {
-      background: #2563eb;            /* Darker blue on hover */
+      background: #2563eb;
     }
 
     .btn-cancel {
-      background: #6b7280;            /* Gray for cancel */
+      background: #6b7280;
       margin-right: 1rem;
     }
 
@@ -186,27 +162,17 @@
       background: #4b5563;
     }
 
-    /* Button container – right-aligned */
     .actions {
       margin-top: 2rem;
       display: flex;
       justify-content: flex-end;
     }
 
-    /* === RESPONSIVE DESIGN (mobile/tablet) === */
     @media (max-width: 768px) {
-      .form-grid {
-        grid-template-columns: 1fr;   /* Stack fields vertically */
-      }
-      .main-content {
-        padding: 1.5rem;              /* Less padding on small screens */
-      }
-      .sidebar {
-        width: 64px;                  /* Slightly smaller sidebar on mobile */
-      }
-      .main-content {
-        margin-left: 64px;            /* Match smaller sidebar width */
-      }
+      .form-grid { grid-template-columns: 1fr; }
+      .main-content { padding: 1.5rem; }
+      .sidebar { width: 64px; }
+      .main-content { margin-left: 64px; }
     }
   </style>
 </head>
@@ -214,12 +180,9 @@
 
   <div class="wrapper">
 
-    <!-- === FIXED ICON-ONLY SIDEBAR === -->
     <aside class="sidebar">
       <nav>
-        <!-- Dashboard icon -->
         <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-        <!-- Leads icon – marked active because we're on leads/add page -->
         <a href="leads.html" title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
         <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
         <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
@@ -228,19 +191,15 @@
       </nav>
     </aside>
 
-    <!-- === MAIN SCROLLABLE CONTENT AREA === -->
     <main class="main-content">
-
       <header>
         <h1>Add New Lead</h1>
       </header>
 
-      <!-- White card containing the form -->
       <div class="form-card">
         <form id="addLeadForm">
           <div class="form-grid">
 
-            <!-- First row: First Name & Last Name -->
             <div class="form-group">
               <label for="firstName" class="required">First Name</label>
               <input type="text" id="firstName" name="firstName" required placeholder="e.g. Lucas"/>
@@ -251,7 +210,6 @@
               <input type="text" id="lastName" name="lastName" required placeholder="e.g. Black"/>
             </div>
 
-            <!-- Second row: Email & Phone -->
             <div class="form-group">
               <label for="email" class="required">Email Address</label>
               <input type="email" id="email" name="email" required placeholder="example@company.com"/>
@@ -262,7 +220,6 @@
               <input type="tel" id="phone" name="phone" placeholder="+27 82 123 4567"/>
             </div>
 
-            <!-- Third row: Lead Source & Status -->
             <div class="form-group">
               <label for="leadSource">Lead Source</label>
               <select id="leadSource" name="leadSource">
@@ -278,15 +235,14 @@
             </div>
 
             <div class="form-group">
-              <label for="status">Initial Status</label>
-              <select id="status" name="status">
-                <option value="New">New</option>
-                <option value="Contact">Contact</option>
-                <option value="Qualified">Qualified</option>
+              <label for="temperature" class="required">Temperature</label>
+              <select id="temperature" name="temperature" required>
+                <option value="hot">HOT</option>
+                <option value="warm">WARM</option>
+                <option value="cold">COLD</option>
               </select>
             </div>
 
-            <!-- Full-width Notes field at the bottom -->
             <div class="form-group full">
               <label for="notes">Notes</label>
               <textarea id="notes" name="notes" rows="4" placeholder="Any additional context...."></textarea>
@@ -294,45 +250,54 @@
 
           </div>
 
-          <!-- Submit & Cancel buttons – right aligned -->
           <div class="actions">
-            <button type="button" class="btn btn-cancel">Cancel</button>
+            <button type="button" class="btn btn-cancel" onclick="window.location.href='leads.html'">Cancel</button>
             <button type="submit" class="btn">Create Lead</button>
           </div>
         </form>
       </div>
-
     </main>
   </div>
 
   <script>
     document.getElementById('addLeadForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+      e.preventDefault();
 
-  const lead = {
-    id: 'l' + Date.now(), // unique ID
-    firstName: document.getElementById('firstName').value.trim(),
-    lastName: document.getElementById('lastName').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    phone: document.getElementById('phone').value.trim(),
-    leadSource: document.getElementById('leadSource').value,
-    status: document.getElementById('status').value || 'New',
-    notes: document.getElementById('notes').value.trim(),
-    createdAt: new Date().toISOString()
-  };
+      const lead = {
+        id: 'l' + Date.now(),
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        leadSource: document.getElementById('leadSource').value,
+        status: document.getElementById('temperature').value,  // "hot", "warm" or "cold"
+        notes: document.getElementById('notes').value.trim(),
+        createdAt: new Date().toISOString()
+      };
 
-  // Get existing leads or start with empty array
-  let leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+      // Save to localStorage
+      let leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+      leads.unshift(lead);
+      localStorage.setItem('kisasa_leads', JSON.stringify(leads));
 
-  // Add new lead at the beginning (newest first)
-  leads.unshift(lead);
+      // Redirect to leads page + activate My Tasks tab
+      window.location.href = 'leads.html?tab=tasks';
+      // Auto-activate tab from URL parameter
+window.addEventListener('load', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabFromUrl = urlParams.get('tab');
 
-  // Save back to localStorage
-  localStorage.setItem('kisasa_leads', JSON.stringify(leads));
+  if (tabFromUrl === 'tasks') {
+    // Click the "My Tasks" tab programmatically
+    const tasksTab = document.querySelector('.tab[data-type="tasks"]') 
+                   || document.querySelector('.tab[data-type="user"]'); // adjust selector to match your actual tab
 
-  alert('Lead created successfully!');
-  window.location.href = 'index.html'; // go back to dashboard
+    if (tasksTab) {
+      tasksTab.click();
+    }
+  }
 });
+    });
   </script>
 
 </body>
