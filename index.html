@@ -223,17 +223,28 @@
     /* Stats & Panels */
     .stats.agent-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
       margin-bottom: 2rem;
     }
     .card {
       background: white;
-      padding: 1.25rem;
+      padding: 1rem;
       border-radius: 10px;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      min-width: 140px;
     }
+    .card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+    .card h2 {
+      margin: 0.25rem 0 0;
+      font-size: 1.75rem;
+    }
+
     .panel {
       background: white;
       border-radius: 12px;
@@ -313,7 +324,7 @@
     <!-- TASKS / DRAFTS / COMPLETED -->
     <section class="agent-grid">
 
-      <!-- TASKS - scrollable, shows email/phone/amount -->
+      <!-- TASKS - scrollable, shows email/phone/random amount -->
       <div class="panel" id="tasks-panel">
         <div class="panel-header">
           <h3>My Tasks</h3>
@@ -397,28 +408,31 @@ function moveToCompleted(btn) {
   updateCounts();
 }
 
-// Load Tasks (My Tasks) - from real localStorage data
+// Load Tasks (My Tasks) - real data + random amount
 function loadTasks() {
   const container = document.getElementById("tasks-container");
   container.innerHTML = '';
 
-  // Load real leads from localStorage (no fake data)
+  // Load real leads from localStorage
   const tasks = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
 
   tasks.forEach(task => {
+    // Generate random amount for display (R1,000 – R50,000)
+    const randomAmount = Math.floor(Math.random() * (50000 - 1000 + 1)) + 1000;
+
     const row = document.createElement('div');
     row.className = 'task-row';
     row.dataset.name = `${task.firstName || ''} ${task.lastName || ''}`;
     row.dataset.email = task.email || '';
     row.dataset.phone = task.phone || '';
-    row.dataset.amount = task.saleAmount ? `R ${Number(task.saleAmount).toLocaleString()}` : '—';
+    row.dataset.amount = `R ${randomAmount.toLocaleString()}`;
 
     row.innerHTML = `
       <div class="task-info">
         <span class="name">${task.firstName || ''} ${task.lastName || ''}</span>
         <span class="detail">Email: ${task.email || '—'}</span>
         <span class="detail">Phone: ${task.phone || '—'}</span>
-        <span class="amount">Amount: ${task.saleAmount ? 'R ' + Number(task.saleAmount).toLocaleString() : '—'}</span>
+        <span class="amount">Amount: R ${randomAmount.toLocaleString()}</span>
       </div>
       <span class="status ${task.status || 'hot'}">${(task.status || 'HOT').toUpperCase()}</span>
       <button class="menu-btn" onclick="toggleMenu(this)">
