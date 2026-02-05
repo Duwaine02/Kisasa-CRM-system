@@ -11,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    /* === SIDEBAR STYLE LIKE LEADS PAGE === */
+    /* Your existing styles (unchanged) */
     .layout { display: flex; }
     .sidebar {
       width: 70px;
@@ -50,7 +50,6 @@
       color: white;
     }
 
-    /* === DASHBOARD MAIN CONTENT === */
     .main.agent-ui {
       margin-left: 70px;
       flex: 1;
@@ -58,7 +57,6 @@
       max-width: 1400px;
     }
 
-    /* Header & Actions */
     .agent-header {
       display: flex;
       justify-content: space-between;
@@ -105,7 +103,6 @@
       font-size: 14px;
     }
 
-    /* Task row & panel styling */
     .task-row {
       position: relative;
       display: flex;
@@ -192,7 +189,7 @@
 
     /* Scrollable panels – ~15 items visible before scroll */
     #tasks-container, #drafts-container, #completed-container {
-      max-height: 480px; /* ≈ 15 rows */
+      max-height: 480px;
       overflow-y: auto;
       padding: 8px;
     }
@@ -220,7 +217,6 @@
       background: #64748b;
     }
 
-    /* Stats & Panels */
     .stats.agent-stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -324,7 +320,7 @@
     <!-- TASKS / DRAFTS / COMPLETED -->
     <section class="agent-grid">
 
-      <!-- TASKS - scrollable, shows email/phone/random amount -->
+      <!-- TASKS -->
       <div class="panel" id="tasks-panel">
         <div class="panel-header">
           <h3>My Tasks</h3>
@@ -333,7 +329,7 @@
         <div id="tasks-container"></div>
       </div>
 
-      <!-- DRAFTS - starts empty -->
+      <!-- DRAFTS -->
       <div class="panel" id="drafts-panel">
         <div class="panel-header">
           <h3>Drafts</h3>
@@ -342,7 +338,7 @@
         <div id="drafts-container"></div>
       </div>
 
-      <!-- COMPLETED - starts empty -->
+      <!-- COMPLETED -->
       <div class="panel" id="completed-panel">
         <div class="panel-header">
           <h3>Completed</h3>
@@ -357,7 +353,7 @@
 </div>
 
 <script>
-// Toggle dropdown menu
+// Toggle dropdown
 function toggleMenu(btn) {
   const menu = btn.nextElementSibling;
   menu.style.display = menu.style.display === "block" ? "none" : "block";
@@ -369,27 +365,48 @@ document.addEventListener("click", e => {
   }
 });
 
-// Send Quote
+// Send Quote – opens quote page
 function sendQuote(btn) {
-  const row = btn.closest(".task-row");
-  const name = row.dataset.name;
-  window.location.href = `NewQuote.html?client=${encodeURIComponent(name)}`;
-}
-
-// Move to Draft
-function moveToDraft(btn) {
   const row = btn.closest(".task-row");
   const name = row.dataset.name;
   const email = row.dataset.email;
   const phone = row.dataset.phone;
   const amount = row.dataset.amount;
 
-  row.remove();
+  // Open NewQuote.html in a new tab/window
+  const quoteWindow = window.open(`NewQuote.html?client=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(amount)}`, '_blank');
+
+  // Listen for message from NewQuote.html when quote is sent
+  window.addEventListener('message', function handler(event) {
+    if (event.data.action === "quoteSent" && event.data.clientName === name) {
+      // Quote was sent → move to Drafts
+      moveTaskToDrafts(row);
+      window.removeEventListener('message', handler); // Clean up listener
+    }
+  });
+}
+
+// Helper: Move a task row to Drafts
+function moveTaskToDrafts(row) {
+  const name = row.dataset.name;
+  const email = row.dataset.email;
+  const phone = row.dataset.phone;
+  const amount = row.dataset.amount;
+
+  row.remove(); // Remove from My Tasks
+
   let drafts = JSON.parse(localStorage.getItem('drafts')) || [];
   drafts.push({ name, email, phone, amount });
   localStorage.setItem('drafts', JSON.stringify(drafts));
+
   loadDrafts();
   updateCounts();
+}
+
+// Move to Draft (manual from menu)
+function moveToDraft(btn) {
+  const row = btn.closest(".task-row");
+  moveTaskToDrafts(row);
 }
 
 // Move to Completed
@@ -408,16 +425,14 @@ function moveToCompleted(btn) {
   updateCounts();
 }
 
-// Load Tasks (My Tasks) - real data + random amount
+// Load Tasks - real data + random amount
 function loadTasks() {
   const container = document.getElementById("tasks-container");
   container.innerHTML = '';
 
-  // Load real leads from localStorage
   const tasks = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
 
   tasks.forEach(task => {
-    // Generate random amount for display (R1,000 – R50,000)
     const randomAmount = Math.floor(Math.random() * (50000 - 1000 + 1)) + 1000;
 
     const row = document.createElement('div');
@@ -515,6 +530,35 @@ function updateCounts() {
   document.getElementById("task-count").textContent = document.querySelectorAll("#tasks-container .task-row").length;
   document.getElementById("draft-count").textContent = document.querySelectorAll("#drafts-container .task-row").length;
   document.getElementById("completed-count").textContent = document.querySelectorAll("#completed-container .task-row").length;
+}
+
+// Listen for "quote sent" message from NewQuote.html
+window.addEventListener('message', function(event) {
+  if (event.data.action === "quoteSent") {
+    // Find the row with matching client name
+    const rows = document.querySelectorAll("#tasks-container .task-row");
+    for (let row of rows) {
+      if (row.dataset.name === event.data.clientName) {
+        moveTaskToDrafts(row);
+        break;
+      }
+    }
+  }
+});
+
+// Helper to move row to Drafts (used by both manual and auto)
+function moveTaskToDrafts(row) {
+  const name = row.dataset.name;
+  const email = row.dataset.email;
+  const phone = row.dataset.phone;
+  const amount = row.dataset.amount;
+
+  row.remove();
+  let drafts = JSON.parse(localStorage.getItem('drafts')) || [];
+  drafts.push({ name, email, phone, amount });
+  localStorage.setItem('drafts', JSON.stringify(drafts));
+  loadDrafts();
+  updateCounts();
 }
 
 // Initial load

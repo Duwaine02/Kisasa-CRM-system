@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>New Quote - Kisasa CRM</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <style>
     :root {
@@ -281,6 +281,10 @@
           <label for="clientEmail">Client Email</label>
           <input type="email" id="clientEmail" />
         </div>
+        <div class="form-group">
+          <label for="clientPhone">Client Phone</label>
+          <input type="tel" id="clientPhone" />
+        </div>
       </div>
 
       <div class="section-title">Services</div>
@@ -355,31 +359,69 @@
 
       <div class="actions">
         <button class="btn btn-cancel">Cancel</button>
-        <button class="btn btn-save">Create Quote & Generate PDF</button>
+        <button class="btn btn-save" id="saveQuoteBtn">Create Quote & Generate PDF</button>
       </div>
 
     </div>
   </main>
 </div>
 
-</body>
 <script>
-// Run when page loads
+// === Auto-increment Quote Number ===
 window.addEventListener('load', function() {
-  // Get the last used quote number or start from 88900
+  // Get last used quote number or start from 88900
   let lastId = localStorage.getItem('lastQuoteId') || 88900;
   let nextId = parseInt(lastId) + 1;
   
-  // Format like QUO00088904 (pad with zeros to 8 digits after QUO)
+  // Format: QUO00088904 (8 digits after QUO)
   let padded = nextId.toString().padStart(8, '0');
   let newQuoteId = `QUO${padded}`;
   
-  // Set it in the input field
   document.getElementById('quoteNumber').value = newQuoteId;
-  
-  // Save this as the new last used (so next time it increments)
   localStorage.setItem('lastQuoteId', nextId);
+
+  // === Auto-fill client details from URL params ===
+  const params = new URLSearchParams(window.location.search);
+  const clientName = params.get('client') || '';
+  const clientEmail = params.get('email') || '';
+  const clientPhone = params.get('phone') || '';
+  const amount = params.get('amount') || '';
+
+  if (clientName) document.getElementById('clientName').value = clientName;
+  if (clientEmail) document.getElementById('clientEmail').value = clientEmail;
+  if (clientPhone) document.getElementById('clientPhone').value = clientPhone;
+
+  // Optional: pre-fill first line item with amount if provided
+  if (amount) {
+    const firstPriceInput = document.querySelector('.line-items tbody tr:first-child input[placeholder="R1,000.00"]');
+    if (firstPriceInput) firstPriceInput.value = amount;
+  }
 });
 
+// === Simulate Save & Send Quote (auto-move to Drafts) ===
+document.getElementById('saveQuoteBtn').addEventListener('click', function() {
+  const clientName = document.getElementById('clientName').value.trim();
+
+  if (!clientName) {
+    alert("Please enter a client name before saving.");
+    return;
+  }
+
+  // Simulate quote creation / PDF generation
+  alert(`Quote ${document.getElementById('quoteNumber').value} created for ${clientName}!\n(PDF generation simulated)`);
+
+  // Notify dashboard: quote was sent → move to Drafts
+  if (window.opener) {
+    window.opener.postMessage({
+      action: "quoteSent",
+      clientName: clientName
+    }, "*");
+  }
+
+  // Optional: close this window after sending
+  // window.close();
+});
 </script>
+
+</body>
 </html>
