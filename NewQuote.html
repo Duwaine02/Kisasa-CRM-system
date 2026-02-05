@@ -127,7 +127,6 @@
       box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
     }
 
-    /* Line Items Table */
     .line-items {
       margin: 1rem 0 2rem;
       overflow-x: auto;
@@ -167,7 +166,6 @@
       color: var(--gray-700);
     }
 
-    /* Totals */
     .totals {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -239,15 +237,14 @@
 <body>
 
 <div class="layout">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
+      <a href="/index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="/leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
+      <a href="/clients.html" title="Clients"><i class="fas fa-users"></i></a>
+      <a href="/quotes.html" title="Quotes" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="/reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
+      <a href="/settings.html" title="Settings"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
@@ -372,20 +369,16 @@
 </div>
 
 <script>
-// === Auto-increment Quote Number ===
+// Auto-increment Quote Number
 window.addEventListener('load', function() {
-  // Get last used quote number or start from 88900
   let lastId = localStorage.getItem('lastQuoteId') || 88900;
   let nextId = parseInt(lastId) + 1;
-  
-  // Format: QUO00088904 (8 digits after QUO)
   let padded = nextId.toString().padStart(8, '0');
   let newQuoteId = `QUO${padded}`;
   
   document.getElementById('quoteNumber').value = newQuoteId;
   localStorage.setItem('lastQuoteId', nextId);
 
-  // === Auto-fill client details from URL params ===
   const params = new URLSearchParams(window.location.search);
   const clientName  = params.get('client') || '';
   const clientEmail = params.get('email') || '';
@@ -396,14 +389,13 @@ window.addEventListener('load', function() {
   if (clientEmail) document.getElementById('clientEmail').value = clientEmail;
   if (clientPhone) document.getElementById('clientPhone').value = clientPhone;
 
-  // Optional: pre-fill first line item price with amount
   if (amount && amount !== '—') {
     const firstPriceInput = document.querySelector('.line-items tbody tr:first-child input[placeholder="R1,000.00"]');
     if (firstPriceInput) firstPriceInput.value = amount;
   }
 });
 
-// === Create & Send Quote (notify dashboard + close window) ===
+// Create & Send Quote
 document.getElementById('saveQuoteBtn').addEventListener('click', function() {
   const btn = this;
   const clientName = document.getElementById('clientName').value.trim();
@@ -413,15 +405,12 @@ document.getElementById('saveQuoteBtn').addEventListener('click', function() {
     return;
   }
 
-  // Disable button to prevent double-click
   btn.disabled = true;
   btn.textContent = "Sending...";
 
-  // Simulate quote creation / PDF generation (you can replace with real logic)
   setTimeout(() => {
     alert(`Quote ${document.getElementById('quoteNumber').value} created for ${clientName}!\n(PDF generation simulated)`);
 
-    // Notify parent dashboard: quote was sent → move to Drafts
     if (window.opener && !window.opener.closed) {
       window.opener.postMessage({
         action: "quoteSent",
@@ -429,12 +418,9 @@ document.getElementById('saveQuoteBtn').addEventListener('click', function() {
       }, "*");
     }
 
-    // Give a short delay for the message to be received, then close
-    setTimeout(() => {
-      window.close();
-    }, 800);
-
-  }, 500); // small delay to feel responsive
+    btn.textContent = "Quote Sent!";
+    // No auto-close – user can close tab manually or go back
+  }, 600);
 });
 </script>
 
