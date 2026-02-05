@@ -224,6 +224,11 @@
       background: var(--primary-dark);
     }
 
+    .btn-save:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
     @media (max-width: 900px) {
       .main { padding: 1.5rem; }
       .form-row { grid-template-columns: 1fr; }
@@ -358,7 +363,7 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn-cancel">Cancel</button>
+        <button class="btn btn-cancel" onclick="window.close()">Cancel</button>
         <button class="btn btn-save" id="saveQuoteBtn">Create Quote & Generate PDF</button>
       </div>
 
@@ -382,24 +387,25 @@ window.addEventListener('load', function() {
 
   // === Auto-fill client details from URL params ===
   const params = new URLSearchParams(window.location.search);
-  const clientName = params.get('client') || '';
+  const clientName  = params.get('client') || '';
   const clientEmail = params.get('email') || '';
   const clientPhone = params.get('phone') || '';
-  const amount = params.get('amount') || '';
+  const amount      = params.get('amount') || '';
 
-  if (clientName) document.getElementById('clientName').value = clientName;
+  if (clientName)  document.getElementById('clientName').value  = clientName;
   if (clientEmail) document.getElementById('clientEmail').value = clientEmail;
   if (clientPhone) document.getElementById('clientPhone').value = clientPhone;
 
-  // Optional: pre-fill first line item with amount if provided
-  if (amount) {
+  // Optional: pre-fill first line item price with amount
+  if (amount && amount !== '—') {
     const firstPriceInput = document.querySelector('.line-items tbody tr:first-child input[placeholder="R1,000.00"]');
     if (firstPriceInput) firstPriceInput.value = amount;
   }
 });
 
-// === Simulate Save & Send Quote (auto-move to Drafts) ===
+// === Create & Send Quote (notify dashboard + close window) ===
 document.getElementById('saveQuoteBtn').addEventListener('click', function() {
+  const btn = this;
   const clientName = document.getElementById('clientName').value.trim();
 
   if (!clientName) {
@@ -407,19 +413,28 @@ document.getElementById('saveQuoteBtn').addEventListener('click', function() {
     return;
   }
 
-  // Simulate quote creation / PDF generation
-  alert(`Quote ${document.getElementById('quoteNumber').value} created for ${clientName}!\n(PDF generation simulated)`);
+  // Disable button to prevent double-click
+  btn.disabled = true;
+  btn.textContent = "Sending...";
 
-  // Notify dashboard: quote was sent → move to Drafts
-  if (window.opener) {
-    window.opener.postMessage({
-      action: "quoteSent",
-      clientName: clientName
-    }, "*");
-  }
+  // Simulate quote creation / PDF generation (you can replace with real logic)
+  setTimeout(() => {
+    alert(`Quote ${document.getElementById('quoteNumber').value} created for ${clientName}!\n(PDF generation simulated)`);
 
-  // Optional: close this window after sending
-  // window.close();
+    // Notify parent dashboard: quote was sent → move to Drafts
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage({
+        action: "quoteSent",
+        clientName: clientName
+      }, "*");
+    }
+
+    // Give a short delay for the message to be received, then close
+    setTimeout(() => {
+      window.close();
+    }, 800);
+
+  }, 500); // small delay to feel responsive
 });
 </script>
 
