@@ -63,7 +63,7 @@
     .main.agent-ui {
       margin-left: 70px;
       flex: 1;
-      padding: 2rem 2.5rem;
+      padding: 1.5rem 2rem; /* Slightly reduced top/bottom padding */
       max-width: 1400px;
     }
 
@@ -71,7 +71,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem; /* Reduced */
       flex-wrap: wrap;
       gap: 1rem;
     }
@@ -198,11 +198,12 @@
     }
 
     #tasks-container, #drafts-container, #completed-container {
-      max-height: 480px;
+      max-height: 420px; /* Slightly reduced to help fit more on screen */
       overflow-y: auto;
       padding: 8px;
     }
 
+    /* Scrollbar styles unchanged */
     #tasks-container::-webkit-scrollbar,
     #drafts-container::-webkit-scrollbar,
     #completed-container::-webkit-scrollbar {
@@ -230,7 +231,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem; /* Reduced spacing */
     }
     .card {
       background: white;
@@ -275,7 +276,38 @@
     .agent-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
+      gap: 1.25rem; /* Slightly reduced */
+    }
+
+    /* Performance Chart – made smaller to fit on screen */
+    .performance-section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem; /* Reduced */
+    }
+    .performance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem; /* Reduced */
+    }
+    .performance-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+    .month-select {
+      padding: 0.4rem 0.9rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: white;
+      font-size: 0.9rem;
+    }
+    .chart-container {
+      position: relative;
+      height: 180px; /* ← Made much smaller so everything fits */
     }
   </style>
 </head>
@@ -315,6 +347,7 @@
       </div>
     </header>
 
+    <!-- STATS -->
     <section class="stats agent-stats">
       <div class="card"><p>New</p><h2>3</h2></div>
       <div class="card"><p>Deals in progress</p><h2>2</h2></div>
@@ -322,6 +355,23 @@
       <div class="card"><p>Win Rate</p><h2>33%</h2></div>
     </section>
 
+    <!-- PERFORMANCE CHART – now compact -->
+    <section class="performance-section">
+      <div class="performance-header">
+        <h3>Performance (Last 4 Weeks)</h3>
+        <select class="month-select" id="monthSelect">
+          <option value="jan">Jan 2026</option>
+          <option value="feb" selected>Feb 2026</option>
+          <option value="mar">Mar 2026</option>
+          <option value="apr">Apr 2026</option>
+        </select>
+      </div>
+      <div class="chart-container">
+        <canvas id="performanceChart"></canvas>
+      </div>
+    </section>
+
+    <!-- TASKS / DRAFTS / COMPLETED -->
     <section class="agent-grid">
 
       <div class="panel" id="tasks-panel">
@@ -559,6 +609,98 @@ function updateCounts() {
   document.getElementById("completed-count").textContent = document.querySelectorAll("#completed-container .task-row").length;
 }
 
+// Performance Chart Data (sample real data for months)
+const monthlyData = {
+  jan: {
+    label: 'January 2026',
+    weeklyConverted: [2, 4, 3, 5],
+    weeklyDeals: [1, 2, 1, 3],
+    totalConverted: 14,
+    winRate: 35
+  },
+  feb: {
+    label: 'February 2026',
+    weeklyConverted: [3, 5, 6, 4],
+    weeklyDeals: [2, 3, 4, 2],
+    totalConverted: 18,
+    winRate: 45
+  },
+  mar: {
+    label: 'March 2026',
+    weeklyConverted: [4, 3, 7, 5],
+    weeklyDeals: [2, 2, 5, 3],
+    totalConverted: 19,
+    winRate: 48
+  },
+  apr: {
+    label: 'April 2026',
+    weeklyConverted: [5, 6, 4, 8],
+    weeklyDeals: [3, 4, 2, 5],
+    totalConverted: 23,
+    winRate: 52
+  }
+};
+
+// Initialize Chart
+let performanceChart;
+const ctx = document.getElementById('performanceChart').getContext('2d');
+
+function createChart(month = 'feb') {
+  const data = monthlyData[month];
+
+  if (performanceChart) performanceChart.destroy();
+
+  performanceChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      datasets: [
+        {
+          label: 'Leads Converted',
+          data: data.weeklyConverted,
+          backgroundColor: 'rgba(59, 130, 246, 0.6)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Deals Closed',
+          data: data.weeklyDeals,
+          backgroundColor: 'rgba(16, 185, 129, 0.6)',
+          borderColor: 'rgba(16, 185, 129, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Count', font: { size: 12 } },
+          ticks: { font: { size: 11 } }
+        },
+        x: {
+          ticks: { font: { size: 11 } }
+        }
+      },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 12 } } },
+        title: {
+          display: true,
+          text: `${data.label} (Converted: ${data.totalConverted}, Win: ${data.winRate}%)`,
+          font: { size: 14 }
+        }
+      }
+    }
+  });
+}
+
+// Update chart on month change
+document.getElementById('monthSelect').addEventListener('change', function() {
+  createChart(this.value);
+});
+
 window.addEventListener('message', function(event) {
   if (event.data.action === "quoteSent") {
     const rows = document.querySelectorAll("#tasks-container .task-row");
@@ -575,6 +717,7 @@ window.addEventListener('load', () => {
   loadTasks();
   loadDrafts();
   loadCompleted();
+  createChart(); // Initial chart
 });
 </script>
 
