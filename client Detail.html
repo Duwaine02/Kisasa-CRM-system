@@ -4,215 +4,292 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Client Details - CRM</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-body { margin:0; font-family:'Inter', sans-serif; background:#f4f6f9; color:#1f2937; overflow-x:hidden; }
-.layout { display:flex; min-height:100vh; }
-.sidebar { width:70px; background:#0f172a; display:flex; flex-direction:column; align-items:center; padding-top:20px; }
-.sidebar nav a { display:flex; justify-content:center; align-items:center; width:50px; height:50px; margin-bottom:20px; font-size:20px; color:#cbd5f5; text-decoration:none; border-radius:10px; transition:0.2s; }
-.sidebar nav a.active, .sidebar nav a:hover { background:#1e293b; color:#fff; }
-.main { flex:1; padding:32px; background:#f4f6f9; }
-h1 { margin-bottom:24px; font-size:28px; font-weight:700; }
-.tabs { display:flex; gap:12px; margin-bottom:24px; }
-.tab { padding:10px 18px; background:#e5e7eb; border-radius:8px; cursor:pointer; font-weight:500; transition:0.2s; }
-.tab.active { background:#2563eb; color:#fff; }
-.tab-content { background:#fff; padding:24px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); min-height:250px; }
-.client-info p { margin:10px 0; font-size:15px; line-height:1.5; }
-.client-info strong { color:#2563eb; }
+body {
+  margin:0;
+  font-family:'Inter', sans-serif;
+  background:#f4f6f9;
+  color:#1f2937;
+}
 
-.document-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-.add-doc-btn { padding:8px 16px; background:#2563eb; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:500; transition:0.2s; }
-.add-doc-btn:hover { background:#1e40af; }
+.layout {
+  display:flex;
+  min-height:100vh;
+}
 
-.document-list { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:16px; }
-.document-item { display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; background:#f9fafb; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.08); cursor:pointer; position:relative; transition:0.2s; }
-.document-item:hover { background:#e0f2fe; transform:translateY(-2px); }
-.document-item i { font-size:36px; color:#2563eb; margin-bottom:12px; }
-.document-item span { font-weight:500; text-align:center; font-size:14px; word-break:break-word; }
-.remove-doc-btn { position:absolute; top:8px; right:8px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; font-size:14px; cursor:pointer; display:flex; justify-content:center; align-items:center; }
-.remove-doc-btn:hover { background:#b91c1c; }
+/* FIXED SIDEBAR */
+.sidebar {
+  width:70px;
+  background:#0f172a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:20px;
+  position:fixed;
+  top:0;
+  left:0;
+  height:100vh;
+}
 
-.list-item { padding:12px 16px; background:#f9fafb; border-radius:12px; margin-bottom:12px; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
+.sidebar nav a {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:50px;
+  height:50px;
+  margin-bottom:20px;
+  font-size:20px;
+  color:#cbd5f5;
+  text-decoration:none;
+  border-radius:10px;
+}
 
-.preview-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); opacity:0; pointer-events:none; transition:0.3s; z-index:999; }
-.preview-overlay.active { opacity:1; pointer-events:auto; }
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background:#1e293b;
+  color:#fff;
+}
 
-.preview-sidebar { position:fixed; top:0; right:0; width:450px; max-width:90%; height:100%; background:#fff; box-shadow:-6px 0 18px rgba(0,0,0,0.1); transition:0.3s; padding:24px; z-index:1000; display:flex; flex-direction:column; transform: translateX(100%); }
-.preview-sidebar.active { transform: translateX(0); }
-.preview-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-.preview-header h3 { font-size:18px; font-weight:600; }
-.close-preview { cursor:pointer; font-size:22px; color:#2563eb; transition:0.2s; }
-.close-preview:hover { color:#ef4444; }
-.preview-sidebar iframe { flex:1; width:100%; border:none; border-radius:8px; background:#f9fafb; }
+/* MAIN */
+.main {
+  margin-left:70px;
+  flex:1;
+  padding:32px;
+}
 
-.add-doc-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; visibility:hidden; opacity:0; transition:0.3s; z-index:2000; }
-.add-doc-modal.active { visibility:visible; opacity:1; }
-.add-doc-modal-content { background:#fff; padding:24px; border-radius:12px; width:90%; max-width:400px; box-shadow:0 6px 18px rgba(0,0,0,0.15); }
-.add-doc-modal h3 { margin-bottom:16px; }
-.add-doc-modal input[type="file"] { width:100%; margin-bottom:16px; }
-.add-doc-modal .modal-buttons { text-align:right; }
-.add-doc-modal .modal-buttons button { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; }
-.add-doc-modal .modal-buttons .cancel-btn { margin-right:8px; }
-.add-doc-modal .modal-buttons .cancel-btn:hover { background:#f3f4f6; }
-.add-doc-modal .modal-buttons .upload-btn { background:#2563eb; color:#fff; }
-.add-doc-modal .modal-buttons .upload-btn:hover { background:#1e40af; }
+h1 {
+  margin-bottom:24px;
+  font-size:28px;
+}
 
-@media (max-width:768px){ .document-list { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); } .preview-sidebar { width:100%; } }
+/* TABS */
+.tabs {
+  display:flex;
+  gap:12px;
+  margin-bottom:24px;
+}
+
+.tab {
+  padding:10px 18px;
+  background:#e5e7eb;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.tab.active {
+  background:#2563eb;
+  color:#fff;
+}
+
+.tab-content {
+  background:#fff;
+  padding:24px;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* DRAG & DROP */
+.drop-zone {
+  border:2px dashed #c7d2fe;
+  padding:30px;
+  text-align:center;
+  border-radius:12px;
+  margin-bottom:20px;
+  cursor:pointer;
+}
+
+.drop-zone.dragover {
+  background:#eef2ff;
+}
+
+/* LISTS */
+.list-item {
+  padding:14px 18px;
+  background:#f9fafb;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.meta {
+  font-size:12px;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+/* NOTES */
+textarea {
+  width:100%;
+  min-height:120px;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  margin-bottom:12px;
+}
+
+button {
+  padding:10px 16px;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
 </style>
 </head>
+
 <body>
 
 <div class="layout">
   <aside class="sidebar">
     <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients" class="active"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
+      <a href="index.html"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="leads.html"><i class="fas fa-user-plus"></i></a>
+      <a href="clients.html" class="active"><i class="fas fa-users"></i></a>
+      <a href="quotes.html"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="reports.html"><i class="fas fa-chart-line"></i></a>
+      <a href="settings.html"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
   <main class="main">
-    <h1 id="clientName">Client Name</h1>
+    <h1 id="clientName"></h1>
+
     <div class="tabs">
       <div class="tab active" data-tab="info">Info</div>
       <div class="tab" data-tab="documents">Documents</div>
       <div class="tab" data-tab="emails">Emails</div>
       <div class="tab" data-tab="updates">Updates</div>
+      <div class="tab" data-tab="notes">Notes</div>
     </div>
+
     <div class="tab-content" id="tabContent"></div>
   </main>
 </div>
 
-<div class="preview-overlay" id="previewOverlay" onclick="closePreview()"></div>
-<div class="preview-sidebar" id="previewSidebar">
-  <div class="preview-header">
-    <h3 id="previewTitle">Document Preview</h3>
-    <span class="close-preview" onclick="closePreview()">×</span>
-  </div>
-  <iframe id="previewFrame"></iframe>
-</div>
-
-<div class="add-doc-modal" id="addDocModal">
-  <div class="add-doc-modal-content">
-    <h3>Add New Document</h3>
-    <input type="file" id="newDocumentFile">
-    <div class="modal-buttons">
-      <button class="cancel-btn" onclick="closeAddDocModal()">Cancel</button>
-      <button class="upload-btn" onclick="uploadDocument()">Upload</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// Sample clients
-const clients = [
-  {name: "Alice Johnson", email: "alice@example.com", phone: "0123456789", status: "Active",
-   documents: ["Contract.pdf","Invoice.pdf"], emails:["alice1@example.com","alice2@example.com"], updates:["Called 2026-01-20","Sent Quote 2026-01-25"]},
-  {name: "Bob Smith", email: "bob@example.com", phone: "0987654321", status: "Inactive",
-   documents:["Agreement.pdf"], emails:["bob@example.com"], updates:["Meeting 2026-01-22"]}
-];
+const now = () => new Date().toLocaleString();
 
-const selectedIndex = localStorage.getItem('selectedClient');
-if(selectedIndex === null){ alert("No client selected!"); window.location.href="clients.html"; }
-const client = clients[selectedIndex];
+const client = {
+  name:"Alice Johnson",
+  email:"alice@example.com",
+  phone:"0123456789",
+  status:"Active",
+  documents:[
+    {name:"Contract.pdf", time:now()},
+    {name:"Invoice.pdf", time:now()}
+  ],
+  emails:[
+    {text:"alice@example.com", time:now()}
+  ],
+  updates:[
+    {text:"Called client", time:now()}
+  ],
+  notes:[]
+};
+
+document.getElementById("clientName").textContent = client.name;
 
 function showTab(tab){
-  const content = document.getElementById('tabContent');
-  content.innerHTML = "";
+  const c=document.getElementById("tabContent");
+
+  if(tab==="documents"){
+    c.innerHTML=`
+      <div class="drop-zone" id="dropZone">
+        <strong>Drag & drop documents</strong><br>or click to upload
+        <input type="file" id="fileInput" hidden multiple>
+      </div>
+      ${client.documents.map((d,i)=>`
+        <div class="list-item">
+          📄 ${d.name}
+          <div class="meta">Uploaded: ${d.time}</div>
+        </div>
+      `).join("")}
+    `;
+    initUpload();
+  }
+
+  if(tab==="emails"){
+    c.innerHTML=client.emails.map(e=>`
+      <div class="list-item">
+        ✉️ ${e.text}
+        <div class="meta">Sent: ${e.time}</div>
+      </div>
+    `).join("");
+  }
+
+  if(tab==="updates"){
+    c.innerHTML=client.updates.map(u=>`
+      <div class="list-item">
+        🔔 ${u.text}
+        <div class="meta">Updated: ${u.time}</div>
+      </div>
+    `).join("");
+  }
+
+  if(tab==="notes"){
+    c.innerHTML=`
+      <textarea id="noteInput" placeholder="Write a note..."></textarea>
+      <button onclick="addNote()">Add Note</button>
+      ${client.notes.map(n=>`
+        <div class="list-item">
+          📝 ${n.text}
+          <div class="meta">${n.time}</div>
+        </div>
+      `).join("")}
+    `;
+  }
 
   if(tab==="info"){
-    content.innerHTML = `<div class="client-info">
-      <p><strong>Name:</strong> ${client.name}</p>
+    c.innerHTML=`
       <p><strong>Email:</strong> ${client.email}</p>
       <p><strong>Phone:</strong> ${client.phone}</p>
       <p><strong>Status:</strong> ${client.status}</p>
-    </div>`;
-  } else if(tab==="documents"){
-    content.innerHTML = `<div class="document-header">
-      <h3>Documents</h3>
-      <button class="add-doc-btn" id="addDocBtn">+ Add Document</button>
-    </div>
-    <div class="document-list" id="documentList">
-      ${client.documents.map((doc,index)=>`
-        <div class="document-item" data-index="${index}">
-          <i class="fas fa-file-pdf doc-preview"></i>
-          <span class="doc-preview">${doc}</span>
-          <button class="remove-doc-btn">×</button>
-        </div>`).join('')}
-    </div>`;
-
-    document.getElementById('addDocBtn').addEventListener('click', ()=> document.getElementById('addDocModal').classList.add('active'));
-
-    // Preview click
-    document.querySelectorAll('.doc-preview').forEach(el=>{
-      el.addEventListener('click', (e)=>{
-        const index = e.target.closest('.document-item').dataset.index;
-        openPreview(client.documents[index]);
-      });
-    });
-
-    // Remove click
-    document.querySelectorAll('.remove-doc-btn').forEach(el=>{
-      el.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        const index = e.target.closest('.document-item').dataset.index;
-        if(confirm("Are you sure you want to remove this document?")){
-          client.documents.splice(index,1);
-          showTab("documents");
-        }
-      });
-    });
-  } else if(tab==="emails"){
-    content.innerHTML = client.emails.map(e=>`<div class="list-item">${e}</div>`).join('');
-  } else if(tab==="updates"){
-    content.innerHTML = client.updates.map(u=>`<div class="list-item">${u}</div>`).join('');
+    `;
   }
 }
 
-document.getElementById('clientName').textContent = client.name;
-showTab('info');
+showTab("info");
 
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    showTab(tab.dataset.tab);
-  });
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    showTab(t.dataset.tab);
+  };
 });
 
-function openPreview(docName){
-  const sidebar = document.getElementById('previewSidebar');
-  const overlay = document.getElementById('previewOverlay');
-  const frame = document.getElementById('previewFrame');
-  document.getElementById('previewTitle').textContent = docName;
-  frame.src = `https://example.com/${docName}`;
-  overlay.classList.add('active');
-  sidebar.classList.add('active');
+function initUpload(){
+  const dz=document.getElementById("dropZone");
+  const fi=document.getElementById("fileInput");
+
+  dz.onclick=()=>fi.click();
+  dz.ondragover=e=>{e.preventDefault();dz.classList.add("dragover");};
+  dz.ondragleave=()=>dz.classList.remove("dragover");
+  dz.ondrop=e=>{
+    e.preventDefault();
+    dz.classList.remove("dragover");
+    [...e.dataTransfer.files].forEach(f=>{
+      client.documents.push({name:f.name,time:now()});
+    });
+    showTab("documents");
+  };
+  fi.onchange=e=>{
+    [...e.target.files].forEach(f=>{
+      client.documents.push({name:f.name,time:now()});
+    });
+    showTab("documents");
+  };
 }
 
-function closePreview(){
-  const sidebar = document.getElementById('previewSidebar');
-  const overlay = document.getElementById('previewOverlay');
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-  document.getElementById('previewFrame').src = "";
-}
-
-function closeAddDocModal(){
-  document.getElementById('addDocModal').classList.remove('active');
-}
-
-function uploadDocument(){
-  const fileInput = document.getElementById('newDocumentFile');
-  const file = fileInput.files[0];
-  if(!file){ alert("Please select a document."); return; }
-  client.documents.push(file.name);
-  showTab("documents");
-  closeAddDocModal();
+function addNote(){
+  const val=document.getElementById("noteInput").value.trim();
+  if(!val) return;
+  client.notes.push({text:val,time:now()});
+  showTab("notes");
 }
 </script>
 

@@ -69,16 +69,7 @@
       max-width: 1400px;
     }
 
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-    .page-header h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-    }
+    .page-header { margin-bottom: 1.5rem; }
 
     .tabs {
       display: flex;
@@ -94,6 +85,7 @@
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s;
+      user-select: none;
     }
     .filter-tab.active {
       background: var(--primary);
@@ -148,15 +140,9 @@
       font-size: 0.95rem;
     }
 
-    th {
-      font-weight: 600;
-      background: #f8fafc;
-    }
+    th { font-weight: 600; background: #f8fafc; }
 
-    tr:hover {
-      background: #f9fafb;
-      cursor: pointer;
-    }
+    tr:hover { background: #f9fafb; cursor: pointer; }
 
     .badge {
       padding: 0.35rem 0.75rem;
@@ -180,19 +166,10 @@
       top: 2rem;
     }
 
-    .client-info h3 {
-      margin-top: 0;
-      margin-bottom: 1.25rem;
-    }
+    .client-info h3 { margin-top: 0; margin-bottom: 1.25rem; }
 
-    .client-info p {
-      margin: 0.75rem 0;
-    }
-
-    .client-info strong {
-      display: inline-block;
-      width: 100px;
-    }
+    .client-info p { margin: 0.75rem 0; }
+    .client-info strong { display: inline-block; width: 100px; }
 
     #viewDetailsBtn {
       margin-top: 1.5rem;
@@ -205,13 +182,8 @@
       font-weight: 500;
       cursor: pointer;
     }
-    #viewDetailsBtn:hover {
-      background: #2563eb;
-    }
-    #viewDetailsBtn:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-    }
+    #viewDetailsBtn:hover { background: #2563eb; }
+    #viewDetailsBtn:disabled { background: #9ca3af; cursor: not-allowed; }
 
     @media (max-width: 992px) {
       .content-wrapper { flex-direction: column; }
@@ -223,29 +195,23 @@
 
 <div class="layout">
 
-  <!-- SIDEBAR – Clients icon completely removed -->
   <aside class="sidebar">
     <h2>Kisasa</h2>
     <nav>
       <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
       <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <!-- Clients icon is NOT present here -->
+      <!-- Clients icon removed -->
       <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
       <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
       <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content">
 
-    <div class="page-header">
-      <h1>Clients</h1>
-    </div>
-
-    <!-- Tabs – Clients tab starts blue/active by default -->
+    <!-- Tabs -->
     <div class="tabs">
-      <div class="filter-tab" data-type="all">All</div>
+      <div class="filter-tab" id="allTab">All</div>
       <div class="filter-tab active" data-type="client">Clients</div>
       <div class="filter-tab" data-type="ex-client">Ex-clients</div>
     </div>
@@ -291,15 +257,14 @@
 </div>
 
 <script>
-// Client data (unchanged)
 const clientsData = [
-  { name: "Lungelo Mthembu",      email: "lungelo.mthembu@gmail.com",       phone: "+27 82 345 6789", status: "Active"   },
-  { name: "Nompumelelo Zulu",      email: "nompumelelo.zulu@webmail.co.za",  phone: "+27 83 901 2345", status: "Active"   },
-  { name: "Siyabonga Khumalo",     email: "siyabonga.khumalo@outlook.com",  phone: "+27 81 567 8901", status: "Inactive" },
-  { name: "Amahle Ngcobo",         email: "amahle.ngcobo@yahoo.co.za",       phone: "+27 76 234 5678", status: "Active"   },
-  { name: "Thabo Lesedi",          email: "thabo.lesedi@enterprise.co.za",   phone: "+27 72 890 1234", status: "Active"   },
-  { name: "Zanele Mbatha",         email: "zanele.mbatha@icloud.com",       phone: "+27 84 678 9012", status: "Inactive" },
-  { name: "Mthokozisi Dlamini",    email: "mthokozisi.dlamini@gmail.com",    phone: "+27 79 345 6780", status: "Active"   }
+  { name: "Lungelo Mthembu", email: "lungelo.mthembu@gmail.com", phone: "+27 82 345 6789", status: "Active" },
+  { name: "Nompumelelo Zulu", email: "nompumelelo.zulu@webmail.co.za", phone: "+27 83 901 2345", status: "Active" },
+  { name: "Siyabonga Khumalo", email: "siyabonga.khumalo@outlook.com", phone: "+27 81 567 8901", status: "Inactive" },
+  { name: "Amahle Ngcobo", email: "amahle.ngcobo@yahoo.co.za", phone: "+27 76 234 5678", status: "Active" },
+  { name: "Thabo Lesedi", email: "thabo.lesedi@enterprise.co.za", phone: "+27 72 890 1234", status: "Active" },
+  { name: "Zanele Mbatha", email: "zanele.mbatha@icloud.com", phone: "+27 84 678 9012", status: "Inactive" },
+  { name: "Mthokozisi Dlamini", email: "mthokozisi.dlamini@gmail.com", phone: "+27 79 345 6780", status: "Active" }
 ];
 
 const tableBody = document.getElementById('tableBody');
@@ -307,28 +272,24 @@ const searchInput = document.getElementById('searchInput');
 const filterTabs = document.querySelectorAll('.filter-tab');
 let selectedIndex = -1;
 
-// Render table – show ALL clients by default
+// Render clients
 function renderClients(filterType = 'all', search = '') {
   tableBody.innerHTML = '';
-
   const filtered = clientsData.filter(client => {
-    // "All" and "Clients" show everything; "Ex-clients" shows inactive only
     const matchesType = filterType === 'all' || filterType === 'client' ||
-                       (filterType === 'ex-client' && client.status.toLowerCase() === 'inactive');
-    const matchesSearch = 
-      client.name.toLowerCase().includes(search.toLowerCase()) ||
+      (filterType === 'ex-client' && client.status.toLowerCase() === 'inactive');
+    const matchesSearch = client.name.toLowerCase().includes(search.toLowerCase()) ||
       client.email.toLowerCase().includes(search.toLowerCase()) ||
       client.phone.includes(search);
     return matchesType && matchesSearch;
   });
 
-  if (filtered.length === 0) {
+  if (!filtered.length) {
     tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:2rem;">No clients found</td></tr>`;
     return;
   }
 
-  filtered.forEach((client, idx) => {
-    const globalIndex = clientsData.indexOf(client);
+  filtered.forEach((client) => {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${client.name}</td>
@@ -336,47 +297,46 @@ function renderClients(filterType = 'all', search = '') {
       <td>${client.phone}</td>
       <td><span class="badge ${client.status.toLowerCase()}">${client.status}</span></td>
     `;
-    row.onclick = () => selectClient(globalIndex);
+    row.onclick = () => selectClient(client);
     tableBody.appendChild(row);
   });
 }
 
-// Select client → update preview
-function selectClient(index) {
-  selectedIndex = index;
-  const client = clientsData[index];
-
+// Select client preview
+function selectClient(client) {
   document.getElementById('clientName').textContent = client.name;
   document.getElementById('clientEmail').textContent = client.email;
   document.getElementById('clientPhone').textContent = client.phone;
   document.getElementById('clientStatus').textContent = client.status;
-
   const btn = document.getElementById('viewDetailsBtn');
   btn.disabled = false;
   btn.onclick = () => {
-    localStorage.setItem('selectedClientIndex', index);
+    localStorage.setItem('selectedClient', JSON.stringify(client));
     window.location.href = 'client Detail.html';
   };
 }
 
-// Filter tabs – turn blue when active
+// Tabs click
 filterTabs.forEach(tab => {
   tab.addEventListener('click', () => {
+    if(tab.id === 'allTab'){
+      window.location.href = 'leads.html';
+      return;
+    }
     filterTabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     renderClients(tab.dataset.type, searchInput.value);
   });
 });
 
-// Search
+// Search input
 searchInput.addEventListener('input', () => {
   const activeTab = document.querySelector('.filter-tab.active')?.dataset.type || 'all';
   renderClients(activeTab, searchInput.value);
 });
 
-// Initial load – show ALL clients immediately, Clients tab blue/active
-renderClients('all');  // ← shows all clients right away
-document.querySelector('.filter-tab[data-type="client"]').classList.add('active');
+// Initial load
+renderClients('client'); // show only clients
 </script>
 
 </body>

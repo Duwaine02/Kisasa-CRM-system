@@ -4,10 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>New Quote - Kisasa CRM</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     :root {
       --primary: #3b82f6;
       --primary-dark: #2563eb;
@@ -17,12 +22,21 @@
       --gray-500: #6b7280;
       --gray-700: #374151;
       --gray-900: #111827;
-      --success: #10b981;
       --danger: #ef4444;
     }
 
-    body { font-family: 'Inter', sans-serif; margin:0; background: var(--gray-50); color: var(--gray-900); }
-    .layout { display: flex; min-height: 100vh; }
+    body {
+      font-family: 'Inter', sans-serif;
+      margin:0;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      overflow-x: hidden;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
     /* Sidebar */
     .sidebar {
@@ -33,134 +47,250 @@
       align-items: center;
       padding-top: 1.5rem;
       position: fixed;
-      top:0; left:0; height:100%;
-      z-index:1000;
+      inset: 0 auto 0 0;
     }
+
     .sidebar nav a {
-      width:48px; height:48px;
-      display:flex; align-items:center; justify-content:center;
+      width:48px;
+      height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       margin-bottom:1.25rem;
       font-size:1.25rem;
-      color:#cbd5e1; border-radius:8px; transition: all 0.2s;
+      color:#cbd5e1;
+      border-radius:8px;
+      transition:0.2s;
     }
-    .sidebar nav a:hover, .sidebar nav a.active { background: var(--primary-dark); color:white; }
 
-    /* Main content */
-    .main { margin-left:72px; flex:1; padding:2rem 2.5rem; overflow-y:auto; height:100vh; }
-    h1 { font-size:1.875rem; font-weight:700; margin-bottom:1.5rem; }
-    .card { background:white; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.06); padding:2rem; max-width:1200px; margin:0 auto 2rem; }
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: var(--primary-dark);
+      color:white;
+    }
 
-    .section-title { font-size:1.25rem; font-weight:600; color:var(--primary); margin:2.5rem 0 1rem; border-bottom:2px solid var(--gray-200); padding-bottom:0.25rem; }
+    .main {
+      margin-left:72px;
+      flex:1;
+      padding:1.75rem 2rem;
+      height:100vh;
+      overflow-y:auto;
+      overflow-x:hidden;
+    }
 
-    .form-row { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:1.5rem 2rem; margin-bottom:1.5rem; }
-    .form-group { display:flex; flex-direction:column; gap:0.5rem; }
-    label { font-size:0.875rem; font-weight:500; color:var(--gray-700); }
-    .required::after { content:" *"; color: var(--danger); }
-    input, select { padding:0.75rem 1rem; border:1px solid var(--gray-200); border-radius:6px; font-size:0.95rem; transition: all 0.2s; }
-    input:focus, select:focus { outline:none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+    h1 {
+      font-size:1.75rem;
+      font-weight:700;
+      margin-bottom:1.25rem;
+    }
 
-    .line-items { margin:1rem 0 2rem; overflow-x:auto; }
-    .line-items table { width:100%; border-collapse:collapse; font-size:0.9rem; }
-    .line-items th, .line-items td { padding:0.75rem 1rem; text-align:left; border-bottom:1px solid var(--gray-200); }
-    .line-items th { background: var(--gray-100); font-weight:600; font-size:0.8rem; text-transform:uppercase; color: var(--gray-700); }
-    .line-items input { width:100%; padding:0.5rem 0.75rem; border:1px solid var(--gray-200); border-radius:4px; font-size:0.9rem; }
-    .line-items input[readonly] { background:#f8fafc; color: var(--gray-700); }
+    .card {
+      background:white;
+      border-radius:14px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.08);
+      padding:2rem;
+      max-width:1200px;
+      margin:auto;
+    }
 
-    .totals { display:grid; grid-template-columns:1fr auto; gap:0.75rem; max-width:420px; margin-left:auto; font-size:0.95rem; }
-    .totals div { display:flex; justify-content:space-between; padding:0.5rem 0; }
-    .totals .grand-total { font-size:1.125rem; font-weight:700; color: var(--primary-dark); border-top:2px solid var(--primary); padding-top:1rem; margin-top:0.5rem; }
+    .section-title {
+      font-size:1.15rem;
+      font-weight:600;
+      color:var(--primary);
+      margin:2rem 0 1rem;
+      border-bottom:2px solid var(--gray-200);
+      padding-bottom:0.25rem;
+    }
 
-    .actions { display:flex; justify-content:flex-end; gap:1rem; margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--gray-200); }
-    .btn { padding:0.75rem 1.5rem; border-radius:6px; font-weight:500; cursor:pointer; border:none; transition: all 0.2s; }
-    .btn-cancel { background: var(--gray-200); color: var(--gray-700); }
+    .form-row {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap:1.25rem;
+      margin-bottom:1.25rem;
+    }
+
+    .form-group {
+      display:flex;
+      flex-direction:column;
+      gap:0.4rem;
+    }
+
+    label {
+      font-size:0.8rem;
+      font-weight:500;
+      color:var(--gray-700);
+    }
+
+    input, select {
+      width:100%;
+      padding:0.6rem 0.75rem;
+      border:1px solid var(--gray-200);
+      border-radius:6px;
+      font-size:0.85rem;
+      background:white;
+    }
+
+    input[readonly] {
+      background:#f1f5f9;
+      cursor:not-allowed;
+    }
+
+    /* ===== TABLE FIX ===== */
+    .line-items {
+      width:100%;
+      overflow:hidden;
+    }
+
+    .line-items table {
+      width:100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size:0.8rem;
+    }
+
+    .line-items th,
+    .line-items td {
+      padding:0.5rem;
+      border-bottom:1px solid var(--gray-200);
+      text-align:left;
+    }
+
+    .line-items th {
+      background: var(--gray-100);
+      font-weight:600;
+      text-transform:uppercase;
+      font-size:0.7rem;
+    }
+
+    .line-items input,
+    .line-items select {
+      width:100%;
+      min-width:0;
+      padding:0.45rem 0.5rem;
+      font-size:0.8rem;
+    }
+
+    .totals {
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:0.5rem;
+      max-width:380px;
+      margin-left:auto;
+      font-size:0.9rem;
+      margin-top:1.5rem;
+    }
+
+    .totals div {
+      display:flex;
+      justify-content:space-between;
+    }
+
+    .totals .grand-total {
+      font-size:1.05rem;
+      font-weight:700;
+      color: var(--primary-dark);
+      border-top:2px solid var(--primary);
+      padding-top:0.75rem;
+      margin-top:0.5rem;
+    }
+
+    .actions {
+      display:flex;
+      justify-content:flex-end;
+      gap:0.75rem;
+      margin-top:2rem;
+      padding-top:1.25rem;
+      border-top:1px solid var(--gray-200);
+    }
+
+    .btn {
+      padding:0.6rem 1.25rem;
+      border-radius:6px;
+      font-weight:600;
+      cursor:pointer;
+      border:none;
+      font-size:0.85rem;
+    }
+
+    .btn-cancel { background: var(--gray-200); }
     .btn-save { background: var(--primary); color:white; }
     .btn-save:hover { background: var(--primary-dark); }
-    .btn-save:disabled { background:#9ca3af; cursor:not-allowed; }
 
-    @media (max-width:900px) { .main { padding:1.5rem; } .form-row { grid-template-columns:1fr; } .totals { max-width:100%; } }
+    @media (max-width: 900px) {
+      .main {
+        padding:1.25rem;
+      }
+      h1 {
+        font-size:1.5rem;
+      }
+    }
   </style>
 </head>
+
 <body>
 
 <div class="layout">
   <aside class="sidebar">
     <nav>
-      <a href="/index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="/leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="/clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="/quotes.html" title="Quotes" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="/reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="/settings.html" title="Settings"><i class="fas fa-cog"></i></a>
+      <a href="/index.html"><i class="fas fa-tachometer-alt"></i></a>
+      <a href="/leads.html"><i class="fas fa-user-plus"></i></a>
+      <a href="/clients.html"><i class="fas fa-users"></i></a>
+      <a href="/quotes.html" class="active"><i class="fas fa-file-invoice-dollar"></i></a>
+      <a href="/reports.html"><i class="fas fa-chart-line"></i></a>
+      <a href="/settings.html"><i class="fas fa-cog"></i></a>
     </nav>
   </aside>
 
   <main class="main">
     <h1>Create New Quote</h1>
+
     <div class="card">
-      <!-- Quote Information -->
+      <!-- Quote Info -->
       <div class="section-title">Quote Information</div>
       <div class="form-row">
         <div class="form-group">
-          <label for="quoteNumber">Quote Number</label>
+          <label>Quote Number</label>
           <input type="text" id="quoteNumber" readonly />
         </div>
         <div class="form-group">
-          <label for="quoteDate">Quote Date</label>
-          <input type="date" id="quoteDate" value="2026-02-05"/>
+          <label>Quote Date</label>
+          <input type="date" id="quoteDate" readonly />
         </div>
         <div class="form-group">
-          <label for="expiryDate">Expiry Date</label>
-          <input type="date" id="expiryDate" value="2026-03-05"/>
+          <label>Expiry Date</label>
+          <input type="date" id="expiryDate"/>
         </div>
       </div>
 
-      <!-- Client Details -->
-      <div class="section-title">Client Details</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="clientName" class="required">Client Name</label>
-          <input type="text" id="clientName" required />
-        </div>
-        <div class="form-group">
-          <label for="clientEmail">Client Email</label>
-          <input type="email" id="clientEmail" />
-        </div>
-        <div class="form-group">
-          <label for="clientPhone">Client Phone</label>
-          <input type="tel" id="clientPhone" />
-        </div>
-      </div>
-
-      <!-- Services Table -->
+      <!-- Services -->
       <div class="section-title">Services</div>
       <div class="line-items">
         <table>
           <thead>
             <tr>
-              <th>Service / Description</th>
-              <th>Acc / Ref</th>
-              <th>Price (excl)</th>
+              <th>Service</th>
+              <th>Ref</th>
+              <th>Price</th>
               <th>Disc %</th>
               <th>VAT %</th>
-              <th>Total (excl)</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><input type="text" value="Debt Review - DR" readonly /></td>
-              <td><input type="text" placeholder="Ref"/></td>
+              <td>
+                <select class="service">
+                  <option value="1000">Debt Review (DR)</option>
+                  <option value="1500">Debt Prescription (DP)</option>
+                  <option value="2500">Legal Clearance</option>
+                  <option value="3500">Full Financial Assessment</option>
+                </select>
+              </td>
+              <td><input type="text"/></td>
               <td><input type="number" class="price" value="1000"/></td>
               <td><input type="number" class="discount" value="0"/></td>
               <td><input type="number" class="vat" value="15"/></td>
-              <td><input type="text" class="total" value="1150.00" readonly/></td>
-            </tr>
-            <tr>
-              <td><input type="text" value="Debt Prescription - DP" readonly /></td>
-              <td><input type="text"/></td>
-              <td><input type="number" class="price" value="2000"/></td>
-              <td><input type="number" class="discount" value="0"/></td>
-              <td><input type="number" class="vat" value="15"/></td>
-              <td><input type="text" class="total" value="2300.00" readonly/></td>
+              <td><input type="text" class="total" readonly/></td>
             </tr>
           </tbody>
         </table>
@@ -168,11 +298,10 @@
 
       <!-- Totals -->
       <div class="totals">
-        <div><span>Total Discount:</span> <span id="totalDiscount">0.00</span></div>
-        <div><span>Total Exclusive:</span> <span id="totalExcl">3000.00</span></div>
-        <div><span>Total VAT:</span> <span id="totalVat">450.00</span></div>
-        <div><span>Sub Total:</span> <span id="subTotal">3450.00</span></div>
-        <div class="grand-total"><span>Grand Total:</span> <span id="grandTotal">3450.00</span></div>
+        <div><span>Total Discount</span><span id="totalDiscount">0.00</span></div>
+        <div><span>Total Exclusive</span><span id="totalExcl">0.00</span></div>
+        <div><span>Total VAT</span><span id="totalVat">0.00</span></div>
+        <div class="grand-total"><span>Grand Total</span><span id="grandTotal">0.00</span></div>
       </div>
 
       <div class="actions">
@@ -184,82 +313,50 @@
 </div>
 
 <script>
-// Auto-generate quote number
-window.addEventListener('load', function(){
-  let lastId = localStorage.getItem('lastQuoteId') || 88900;
-  let nextId = parseInt(lastId) + 1;
-  document.getElementById('quoteNumber').value = "QUO" + nextId.toString().padStart(8,'0');
-  localStorage.setItem('lastQuoteId', nextId);
+window.addEventListener('load', () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('quoteDate').value = today;
+
+  let lastId = localStorage.getItem('lastQuoteId') || 90000;
+  lastId++;
+  document.getElementById('quoteNumber').value = "QUO" + lastId;
+  localStorage.setItem('lastQuoteId', lastId);
+
   calculateTotals();
 });
 
-// Calculate totals dynamically
-function calculateTotals(){
-  let prices = document.querySelectorAll('.price');
-  let discounts = document.querySelectorAll('.discount');
-  let vats = document.querySelectorAll('.vat');
-  let totals = document.querySelectorAll('.total');
+document.querySelector('.service').addEventListener('change', function(){
+  this.closest('tr').querySelector('.price').value = this.value;
+  calculateTotals();
+});
 
-  let totalDisc=0, totalExcl=0, totalVat=0;
-
-  for(let i=0;i<prices.length;i++){
-    let price = parseFloat(prices[i].value)||0;
-    let disc = parseFloat(discounts[i].value)||0;
-    let vat = parseFloat(vats[i].value)||0;
-
-    let discounted = price - (price * disc/100);
-    let vatAmount = discounted * vat/100;
-    let total = discounted + vatAmount;
-
-    totals[i].value = total.toFixed(2);
-    totalDisc += price * disc/100;
-    totalExcl += discounted;
-    totalVat += vatAmount;
-  }
-
-  document.getElementById('totalDiscount').textContent = totalDisc.toFixed(2);
-  document.getElementById('totalExcl').textContent = totalExcl.toFixed(2);
-  document.getElementById('totalVat').textContent = totalVat.toFixed(2);
-  document.getElementById('subTotal').textContent = (totalExcl+totalVat).toFixed(2);
-  document.getElementById('grandTotal').textContent = (totalExcl+totalVat).toFixed(2);
-}
-
-// Listen to changes
 document.querySelectorAll('.price, .discount, .vat').forEach(el=>{
   el.addEventListener('input', calculateTotals);
 });
 
-// Send quote → notify dashboard and redirect to quotes.html
-document.getElementById('sendQuoteBtn').addEventListener('click', function(){
-  const btn = this;
-  const clientName = document.getElementById('clientName').value.trim();
+function calculateTotals(){
+  let totalExcl=0, totalVat=0, totalDisc=0;
 
-  if (!clientName) {
-    alert("Please enter a client name before sending.");
-    return;
-  }
+  document.querySelectorAll('tbody tr').forEach(row=>{
+    const price = +row.querySelector('.price').value || 0;
+    const disc = +row.querySelector('.discount').value || 0;
+    const vat = +row.querySelector('.vat').value || 0;
 
-  btn.disabled = true;
-  btn.textContent = "Sending...";
+    const discounted = price - (price*disc/100);
+    const vatAmount = discounted * vat/100;
+    row.querySelector('.total').value = (discounted + vatAmount).toFixed(2);
 
-  setTimeout(() => {
-    alert(`Quote ${document.getElementById('quoteNumber').value} sent to ${clientName}!`);
+    totalDisc += price*disc/100;
+    totalExcl += discounted;
+    totalVat += vatAmount;
+  });
 
-    // Notify dashboard to move task to Drafts
-    if (window.opener && !window.opener.closed) {
-      window.opener.postMessage({
-        action: "quoteSent",
-        clientName: clientName
-      }, "*");
-    }
-
-    // Redirect to quotes.html after short delay
-    setTimeout(() => {
-      window.location.href = "/quotes.html";
-    }, 1000);
-
-  }, 600);
-});
+  document.getElementById('totalDiscount').textContent = totalDisc.toFixed(2);
+  document.getElementById('totalExcl').textContent = totalExcl.toFixed(2);
+  document.getElementById('totalVat').textContent = totalVat.toFixed(2);
+  document.getElementById('grandTotal').textContent = (totalExcl + totalVat).toFixed(2);
+}
 </script>
+
 </body>
 </html>

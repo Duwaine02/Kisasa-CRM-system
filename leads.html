@@ -4,130 +4,142 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leads - Kisasa CRM</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --sidebar-bg: #0f172a;
-  --text-dark: #1e293b;
-  --text-muted: #64748b;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
+  --primary:#3b82f6;
+  --sidebar-bg:#0f172a;
+  --gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;
+  --text:#1e293b;
 }
 
-/* Reset */
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Inter', sans-serif; background: #f8fafc; color: var(--text-dark); min-height: 100vh; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Inter,sans-serif;
+  background:#f8fafc;
+  color:var(--text);
+}
 
 /* Layout */
-.layout { display: flex; }
-
-/* Sidebar (Dashboard style) */
-.sidebar {
-  width: 70px;
-  background: var(--sidebar-bg);
-  color: white;
-  position: fixed;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 1.5rem;
-  overflow-y: auto;
+.layout{display:flex;}
+.sidebar{
+  width:70px;
+  background:var(--sidebar-bg);
+  position:fixed;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:1.5rem;
+}
+.sidebar nav a{
+  width:50px;height:50px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.2rem;
+  color:#cbd5e1;
+  border-radius:8px;
+}
+.sidebar nav a.active,
+.sidebar nav a:hover{
+  background:#1e293b;color:#fff;
 }
 
-.sidebar h2 { color: white; font-size: 1.1rem; margin-bottom: 2rem; letter-spacing: 1px; }
-.sidebar nav a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px; height: 50px;
-  margin-bottom: 1.25rem;
-  font-size: 1.25rem;
-  color: #cbd5e1;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-.sidebar nav a:hover,
-.sidebar nav a.active { background: #1e293b; color: white; }
-
-/* Main content */
-.main-content {
-  margin-left: 70px;
-  flex: 1;
-  padding: 2rem 2.5rem;
-  max-width: 1400px;
+.main{
+  margin-left:70px;
+  padding:2rem 2.5rem;
+  width:100%;
+  max-width:1400px;
 }
 
-/* Page Header */
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-.page-header h1 { font-size: 1.875rem; font-weight: 700; }
-
-/* Tabs */
-.tabs { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
-.tab { padding: 0.5rem 1rem; border-radius: 999px; background: #e5e7eb; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-.tab.active { background: var(--primary); color: white; }
-
-/* Search Input */
-.search-container { margin-bottom: 1.5rem; display: flex; justify-content: flex-end; }
-.search-input {
-  padding: 0.55rem 1rem;
-  border: 1px solid var(--gray-200);
-  border-radius: 6px;
-  width: 250px;
+/* Header */
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.5rem;
 }
-.search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+.page-header h1{font-size:1.8rem;font-weight:700;}
+
+/* Filters */
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.6rem;
+  margin-bottom:1rem;
+}
+.filter{
+  padding:.45rem .9rem;
+  border-radius:999px;
+  background:var(--gray-100);
+  cursor:pointer;
+  font-size:.85rem;
+  font-weight:600;
+  text-decoration:none;
+  color: inherit;
+}
+.filter.active{
+  background:var(--primary);
+  color:#fff;
+}
+
+/* Search */
+.search-box{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:1.25rem;
+}
+.search-box input{
+  width:260px;
+  padding:.55rem 1rem;
+  border:1px solid var(--gray-200);
+  border-radius:6px;
+}
+.search-box input:focus{
+  outline:none;
+  border-color:var(--primary);
+}
 
 /* Table */
-.table-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  overflow-x: auto;
+.table-wrap{
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.06);
+  overflow-x:auto;
 }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 700px;
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:850px;
 }
-
-th, td {
-  padding: 1rem 1.5rem;
-  text-align: left;
-  border-bottom: 1px solid var(--gray-200);
-  font-size: 0.95rem;
+th,td{
+  padding:.9rem 1.2rem;
+  border-bottom:1px solid var(--gray-200);
+  font-size:.9rem;
 }
+th{font-weight:600;text-transform:uppercase;font-size:.75rem;}
 
-th { font-weight: 600; color: var(--text-dark); }
-td { color: var(--text-dark); }
+tbody tr:hover{background:#f9fafb;}
 
-.badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: capitalize;
+.badge{
+  padding:.3rem .7rem;
+  border-radius:999px;
+  font-size:.75rem;
+  font-weight:600;
+  text-transform:capitalize;
 }
+.client{background:#dbeafe;color:#1e40af;}
+.old-client{background:#e5e7eb;color:#374151;}
+.hot{background:#fee2e2;color:#991b1b;}
+.warm{background:#fef3c7;color:#92400e;}
+.cold{background:#e0f2fe;color:#075985;}
 
-.badge.client { background: #dbeafe; color: #1e40af; }
-.badge.lead { background: #fef3c7; color: #92400e; }
-.badge.user { background: #d1fae5; color: #065f46; }
-
-/* Hover row */
-tbody tr:hover { background: #f9fafb; }
-
-@media(max-width: 768px) {
-  .main-content { padding: 1.5rem; }
-  th, td { padding: 0.75rem 1rem; }
-  .search-container { justify-content: center; margin-bottom: 1rem; }
-  .tabs { flex-wrap: wrap; }
+@media(max-width:768px){
+  .main{padding:1.5rem;}
+  .search-box{justify-content:center;}
 }
 </style>
 </head>
@@ -135,112 +147,139 @@ tbody tr:hover { background: #f9fafb; }
 <body>
 <div class="layout">
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <h2>Kisasa</h2>
-    <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
-    </nav>
-  </aside>
+<!-- Sidebar -->
+<aside class="sidebar">
+  <nav>
+    <a href="index.html"><i class="fas fa-tachometer-alt"></i></a>
+    <a href="leads.html" class="active"><i class="fas fa-user-plus"></i></a>
+    <a href="clients.html"><i class="fas fa-users"></i></a>
+    <a href="quotes.html"><i class="fas fa-file-invoice-dollar"></i></a>
+    <a href="reports.html"><i class="fas fa-chart-line"></i></a>
+    <a href="settings.html"><i class="fas fa-cog"></i></a>
+  </nav>
+</aside>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="page-header">
-      <h1>Leads & Clients</h1>
-    </div>
+<!-- Main -->
+<main class="main">
+  <div class="page-header">
+    <h1>Leads & Clients</h1>
+  </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" data-type="all">All</div>
+  <!-- Filters -->
+  <div class="filters">
+    <a href="javascript:void(0)" class="filter" data-status="all">All</a>
+    <!-- Clients link navigates to clients.html -->
+    <a href="clients.html" class="filter">Clients</a>
+    <a href="javascript:void(0)" class="filter" data-status="old-client">Old Clients</a>
+    <a href="javascript:void(0)" class="filter" data-status="hot">Hot</a>
+    <a href="javascript:void(0)" class="filter" data-status="warm">Warm</a>
+    <a href="javascript:void(0)" class="filter" data-status="cold">Cold</a>
+  </div>
 
-      <div class="tab" data-type="client">Clients</div>
-      <div class="tab" data-type="ex-client">Ex-clients</div>
-    </div>
+  <!-- Search -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search name, email, phone, ID or status">
+  </div>
 
-    <!-- Search -->
-    <div class="search-container">
-      <input type="text" class="search-input" placeholder="Search..." id="searchInput">
-    </div>
-
-    <!-- Table -->
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Client</th>
-            <th>Email</th>
-            <th>ID Number</th>
-            <th>Cell Number</th>
-            <th>Type</th>
-            <th>Date Registered</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- Rows populated dynamically -->
-        </tbody>
-      </table>
-    </div>
-
-  </main>
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Email</th>
+          <th>ID Number</th>
+          <th>Cell</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</main>
 </div>
 
 <script>
-const leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-const tableBody = document.getElementById('tableBody');
-const tabs = document.querySelectorAll('.tab');
-const searchInput = document.getElementById('searchInput');
+const data = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+const body = document.getElementById('tableBody');
+const filters = document.querySelectorAll('.filter');
+const search = document.getElementById('searchInput');
 
-function renderTable(filterType = 'all', search = '') {
-  tableBody.innerHTML = '';
-  const filtered = leads.filter(l => 
-    (filterType === 'all' || l.status === filterType) &&
-    (l.firstName.toLowerCase().includes(search.toLowerCase()) ||
-     l.lastName.toLowerCase().includes(search.toLowerCase()) ||
-     l.email.toLowerCase().includes(search.toLowerCase()))
-  );
+// Load last active filter from localStorage
+let currentFilter = localStorage.getItem('activeFilter') || 'all';
 
-  if(filtered.length === 0){
-    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:1rem;">No records found</td></tr>`;
+// Render table
+function render(){
+  body.innerHTML = '';
+  const term = search.value.toLowerCase();
+
+  const rows = data.filter(d => {
+    let matchesFilter = false;
+    if(currentFilter === 'all') matchesFilter = true;
+    else if(currentFilter === 'old-client') matchesFilter = d.status === 'old-client';
+    else if(currentFilter === 'hot') matchesFilter = d.status === 'hot';
+    else if(currentFilter === 'warm') matchesFilter = d.status === 'warm';
+    else if(currentFilter === 'cold') matchesFilter = d.status === 'cold';
+    else if(currentFilter === 'all') matchesFilter = true;
+
+    const matchesSearch =
+      `${d.firstName} ${d.lastName}`.toLowerCase().includes(term) ||
+      d.email?.toLowerCase().includes(term) ||
+      d.phone?.includes(term) ||
+      d.idNumber?.includes(term) ||
+      d.status?.toLowerCase().includes(term);
+
+    return matchesFilter && matchesSearch;
+  });
+
+  if(!rows.length){
+    body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:1rem;">No records found</td></tr>`;
     return;
   }
 
-  filtered.forEach(l => {
-    const typeClass = l.status === 'client' ? 'client' : l.status === 'lead' ? 'lead' : 'user';
-    tableBody.innerHTML += `
+  rows.forEach(d => {
+    body.innerHTML += `
       <tr>
-        <td>${l.firstName} ${l.lastName}</td>
-        <td>${l.email}</td>
-        <td>${l.idNumber || ''}</td>
-        <td>${l.phone || ''}</td>
-        <td><span class="badge ${typeClass}">${l.status}</span></td>
-        <td>${l.date || ''}</td>
-      </tr>
-    `;
+        <td>${d.firstName} ${d.lastName}</td>
+        <td>${d.email || ''}</td>
+        <td>${d.idNumber || ''}</td>
+        <td>${d.phone || ''}</td>
+        <td><span class="badge ${d.status}">${d.status.replace('-',' ')}</span></td>
+        <td>${d.date || ''}</td>
+      </tr>`;
   });
 }
 
-// Tab click
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    renderTable(tab.dataset.type, searchInput.value);
+// Highlight active filter
+function setActiveFilter() {
+  filters.forEach(f => {
+    f.classList.remove('active');
+    // Highlight "All" or other non-navigation filters
+    if(f.dataset.status === currentFilter) f.classList.add('active');
+    // Highlight Clients tab if we are on clients.html
+    if(window.location.pathname.endsWith('clients.html') && f.href.endsWith('clients.html')){
+      f.classList.add('active');
+    }
   });
+}
+
+// Add click events for non-navigation filters
+filters.forEach(f => {
+  if(!f.href || f.href.includes('javascript:void(0)')){
+    f.addEventListener('click', () => {
+      currentFilter = f.dataset.status || 'all';
+      localStorage.setItem('activeFilter', currentFilter);
+      setActiveFilter();
+      render();
+    });
+  }
 });
 
-// Search input
-searchInput.addEventListener('input', () => {
-  const activeTab = document.querySelector('.tab.active').dataset.type;
-  renderTable(activeTab, searchInput.value);
-});
-
-// Initial render
-renderTable();
+// Initialize
+setActiveFilter();
+render();
+search.addEventListener('input', render);
 </script>
 </body>
 </html>
