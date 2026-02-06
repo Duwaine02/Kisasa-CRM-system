@@ -1,153 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leads - Kisasa CRM</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads - Kisasa CRM</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
-:root {
-  --primary:#3b82f6;
-  --sidebar-bg:#0f172a;
-  --gray-100:#f3f4f6;
-  --gray-200:#e5e7eb;
-  --text:#1e293b;
-}
+  <style>
+    :root {
+      --primary:#3b82f6;
+      --sidebar-bg:#0f172a;
+      --gray-100:#f3f4f6;
+      --gray-200:#e5e7eb;
+      --text:#1e293b;
+    }
 
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:Inter,sans-serif;
-  background:#f8fafc;
-  color:var(--text);
-}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:Inter,sans-serif;
+      background:#f8fafc;
+      color:var(--text);
+    }
 
-/* Layout */
-.layout{display:flex;}
-.sidebar{
-  width:70px;
-  background:var(--sidebar-bg);
-  position:fixed;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding-top:1.5rem;
-}
-.sidebar nav a{
-  width:50px;height:50px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:1.2rem;
-  color:#cbd5e1;
-  border-radius:8px;
-}
-.sidebar nav a.active,
-.sidebar nav a:hover{
-  background:#1e293b;color:#fff;
-}
+    /* Layout */
+    .layout{display:flex;}
+    .sidebar{
+      width:70px;
+      background:var(--sidebar-bg);
+      position:fixed;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding-top:1.5rem;
+    }
+    .sidebar nav a{
+      width:50px;height:50px;
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:1.2rem;
+      color:#cbd5e1;
+      border-radius:8px;
+      transition: all 0.2s;
+    }
+    .sidebar nav a.active,
+    .sidebar nav a:hover{
+      background:#1e293b;color:#fff;
+    }
 
-.main{
-  margin-left:70px;
-  padding:2rem 2.5rem;
-  width:100%;
-  max-width:1400px;
-}
+    .main{
+      margin-left:70px;
+      padding:2rem 2.5rem;
+      width:100%;
+      max-width:1400px;
+    }
 
-/* Header */
-.page-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:1.5rem;
-}
-.page-header h1{font-size:1.8rem;font-weight:700;}
+    /* Header */
+    .page-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:1.5rem;
+    }
+    .page-header h1{font-size:1.8rem;font-weight:700;}
 
-/* Filters */
-.filters{
-  display:flex;
-  flex-wrap:wrap;
-  gap:.6rem;
-  margin-bottom:1rem;
-}
-.filter{
-  padding:.45rem .9rem;
-  border-radius:999px;
-  background:var(--gray-100);
-  cursor:pointer;
-  font-size:.85rem;
-  font-weight:600;
-  text-decoration:none;
-  color: inherit;
-}
-.filter.active{
-  background:var(--primary);
-  color:#fff;
-}
+    /* Filters */
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.6rem;
+      margin-bottom:1rem;
+    }
+    .filter{
+      padding:.45rem .9rem;
+      border-radius:999px;
+      background:var(--gray-100);
+      cursor:pointer;
+      font-size:.85rem;
+      font-weight:600;
+      text-decoration:none;
+      color: inherit;
+    }
+    .filter.active{
+      background:var(--primary);
+      color:#fff;
+    }
 
-/* Search */
-.search-box{
-  display:flex;
-  justify-content:flex-end;
-  margin-bottom:1.25rem;
-}
-.search-box input{
-  width:260px;
-  padding:.55rem 1rem;
-  border:1px solid var(--gray-200);
-  border-radius:6px;
-}
-.search-box input:focus{
-  outline:none;
-  border-color:var(--primary);
-}
+    /* Search */
+    .search-box{
+      display:flex;
+      justify-content:flex-end;
+      margin-bottom:1.25rem;
+    }
+    .search-box input{
+      width:260px;
+      padding:.55rem 1rem;
+      border:1px solid var(--gray-200);
+      border-radius:6px;
+    }
+    .search-box input:focus{
+      outline:none;
+      border-color:var(--primary);
+    }
 
-/* Table */
-.table-wrap{
-  background:#fff;
-  border-radius:12px;
-  box-shadow:0 4px 16px rgba(0,0,0,.06);
-  overflow-x:auto;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px;
-}
-th,td{
-  padding:.9rem 1.2rem;
-  border-bottom:1px solid var(--gray-200);
-  font-size:.9rem;
-}
-th{font-weight:600;text-transform:uppercase;font-size:.75rem;}
+    /* Table */
+    .table-wrap{
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 4px 16px rgba(0,0,0,.06);
+      overflow-x:auto;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:850px;
+    }
+    th,td{
+      padding:.9rem 1.2rem;
+      border-bottom:1px solid var(--gray-200);
+      font-size:.9rem;
+    }
+    th{font-weight:600;text-transform:uppercase;font-size:.75rem;}
+    tbody tr:hover{background:#f9fafb;}
 
-tbody tr:hover{background:#f9fafb;}
+    .badge{
+      padding:.3rem .7rem;
+      border-radius:999px;
+      font-size:.75rem;
+      font-weight:600;
+      text-transform:capitalize;
+    }
+    .client{background:#dbeafe;color:#1e40af;}
+    .old-client{background:#e5e7eb;color:#374151;}
+    .hot{background:#fee2e2;color:#991b1b;}
+    .warm{background:#fef3c7;color:#92400e;}
+    .cold{background:#e0f2fe;color:#075985;}
 
-.badge{
-  padding:.3rem .7rem;
-  border-radius:999px;
-  font-size:.75rem;
-  font-weight:600;
-  text-transform:capitalize;
-}
-.client{background:#dbeafe;color:#1e40af;}
-.old-client{background:#e5e7eb;color:#374151;}
-.hot{background:#fee2e2;color:#991b1b;}
-.warm{background:#fef3c7;color:#92400e;}
-.cold{background:#e0f2fe;color:#075985;}
-
-@media(max-width:768px){
-  .main{padding:1.5rem;}
-  .search-box{justify-content:center;}
-}
-</style>
+    @media(max-width:768px){
+      .main{padding:1.5rem;}
+      .search-box{justify-content:center;}
+    }
+  </style>
 </head>
 
 <body>
 <div class="layout">
 
-<!-- Sidebar -->
+<!-- Sidebar – FIXED LINKS (no leading /) -->
 <aside class="sidebar">
   <nav>
     <a href="index.html"><i class="fas fa-tachometer-alt"></i></a>
@@ -168,7 +168,6 @@ tbody tr:hover{background:#f9fafb;}
   <!-- Filters -->
   <div class="filters">
     <a href="javascript:void(0)" class="filter" data-status="all">All</a>
-    <!-- Clients link navigates to clients.html -->
     <a href="clients.html" class="filter">Clients</a>
     <a href="javascript:void(0)" class="filter" data-status="old-client">Old Clients</a>
     <a href="javascript:void(0)" class="filter" data-status="hot">Hot</a>
@@ -201,12 +200,13 @@ tbody tr:hover{background:#f9fafb;}
 </div>
 
 <script>
+// Load leads data from localStorage
 const data = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
 const body = document.getElementById('tableBody');
 const filters = document.querySelectorAll('.filter');
 const search = document.getElementById('searchInput');
 
-// Load last active filter from localStorage
+// Load last active filter
 let currentFilter = localStorage.getItem('activeFilter') || 'all';
 
 // Render table
@@ -221,7 +221,7 @@ function render(){
     else if(currentFilter === 'hot') matchesFilter = d.status === 'hot';
     else if(currentFilter === 'warm') matchesFilter = d.status === 'warm';
     else if(currentFilter === 'cold') matchesFilter = d.status === 'cold';
-    else if(currentFilter === 'all') matchesFilter = true;
+    else matchesFilter = true;
 
     const matchesSearch =
       `${d.firstName} ${d.lastName}`.toLowerCase().includes(term) ||
@@ -255,16 +255,14 @@ function render(){
 function setActiveFilter() {
   filters.forEach(f => {
     f.classList.remove('active');
-    // Highlight "All" or other non-navigation filters
     if(f.dataset.status === currentFilter) f.classList.add('active');
-    // Highlight Clients tab if we are on clients.html
-    if(window.location.pathname.endsWith('clients.html') && f.href.endsWith('clients.html')){
+    if(window.location.pathname.endsWith('clients.html') && f.href && f.href.includes('clients.html')){
       f.classList.add('active');
     }
   });
 }
 
-// Add click events for non-navigation filters
+// Add click events for filters
 filters.forEach(f => {
   if(!f.href || f.href.includes('javascript:void(0)')){
     f.addEventListener('click', () => {
@@ -281,5 +279,6 @@ setActiveFilter();
 render();
 search.addEventListener('input', render);
 </script>
+
 </body>
 </html>
