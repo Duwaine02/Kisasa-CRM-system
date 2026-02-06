@@ -17,8 +17,10 @@
       --text-dark: #1e293b;
       --gray-200: #e5e7eb;
       --gray-100: #f3f4f6;
-      --whatsapp: #25D366; /* Official WhatsApp green */
+      --whatsapp: #25D366;
       --whatsapp-dark: #128C7E;
+      --avatar-bg: #e0f2fe;
+      --avatar-text: #0369a1;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -76,19 +78,26 @@
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
       gap: 1rem;
+      position: relative;
+      z-index: 50;
     }
+
     .agent-actions {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.2rem;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 60;
     }
+
     .filter-select {
       padding: 0.5rem 1rem;
       border: 1px solid #d1d5db;
       border-radius: 6px;
       background: white;
     }
+
     .primary-btn {
       padding: 0.6rem 1.2rem;
       background: #3b82f6;
@@ -100,21 +109,94 @@
       transition: background 0.2s;
       border: none;
       font-size: 0.95rem;
-      display: inline-block;
     }
     .primary-btn:hover {
       background: #2563eb;
     }
-    .agent-info {
+
+    /* Professional Agent Profile */
+    .agent-profile {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 12px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .agent-profile:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--avatar-bg);
+      color: var(--avatar-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+      border: 2px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .agent-details {
+      display: flex;
+      flex-direction: column;
     }
     .agent-name {
       font-weight: 600;
       font-size: 14px;
+      color: var(--text-dark);
+    }
+    .agent-role {
+      font-size: 12px;
+      color: #6b7280;
     }
 
+    /* Dropdown Menu – FIXED POSITIONING */
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 8px); /* Space below profile */
+      right: 0;
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+      min-width: 220px;
+      z-index: 300; /* Very high so it’s always visible */
+      display: none;
+      overflow: visible;
+    }
+    .profile-dropdown.show {
+      display: block;
+    }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #374151;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+    .dropdown-item:hover {
+      background: #f8fafc;
+    }
+    .dropdown-item.logout {
+      color: #ef4444;
+      border-top: 1px solid var(--gray-200);
+      margin-top: 6px;
+    }
+    .dropdown-item i {
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Rest of your existing styles (task-row, whatsapp-btn, performance chart, etc.) */
     .task-row {
       position: relative;
       display: flex;
@@ -283,7 +365,6 @@
       gap: 1.25rem;
     }
 
-    /* WhatsApp Button Style – next to client name */
     .whatsapp-btn {
       display: inline-flex;
       align-items: center;
@@ -313,7 +394,6 @@
       box-shadow: none;
     }
 
-    /* Performance Chart – compact */
     .performance-section {
       background: white;
       border-radius: 12px;
@@ -366,17 +446,28 @@
     <header class="header agent-header">
       <h1>Agent Dashboard</h1>
       <div class="agent-actions">
-        <select class="filter-select">
-          <option>Jan</option>
-          <option>Feb</option>
-          <option>Mar</option>
-        </select>
-
         <a href="addNewlead.html" class="primary-btn">+ Add New Lead</a>
 
-        <div class="agent-info">
-          <span class="agent-name">Agent: Duwaine</span>
-          <a href="login.html" class="menu-btn">Logout</a>
+        <!-- Professional Agent Profile -->
+        <div class="agent-profile" id="agentProfile">
+          <div class="avatar">D</div>
+          <div class="agent-details">
+            <span class="agent-name">Duwaine</span>
+          </div>
+          <i class="fas fa-chevron-down" style="font-size:12px;color:#6b7280;"></i>
+        </div>
+
+        <!-- Dropdown Menu -->
+        <div class="profile-dropdown" id="profileDropdown">
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-user"></i> My Profile
+          </a>
+          <a href="settings.html" class="dropdown-item">
+            <i class="fas fa-cog"></i> Settings
+          </a>
+          <a href="login.html" class="dropdown-item logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
         </div>
       </div>
     </header>
@@ -441,7 +532,7 @@
 // Prevent duplicates / race conditions
 const recentlyMoved = new Set();
 
-// Toggle dropdown
+// Toggle task dropdown
 function toggleMenu(btn) {
   const menu = btn.nextElementSibling;
   menu.style.display = menu.style.display === "block" ? "none" : "block";
@@ -450,6 +541,25 @@ function toggleMenu(btn) {
 document.addEventListener("click", e => {
   if (!e.target.closest(".menu-btn")) {
     document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
+  }
+});
+
+// Profile dropdown toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const profile = document.getElementById('agentProfile');
+  const dropdown = document.getElementById('profileDropdown');
+
+  if (profile && dropdown) {
+    profile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!profile.contains(e.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
   }
 });
 
@@ -540,12 +650,10 @@ function moveToCompleted(btn) {
   updateCounts();
 }
 
-// WhatsApp chat link generator
+// WhatsApp link
 function getWhatsAppLink(phone) {
   if (!phone || phone.trim() === '' || phone === '—') return null;
-  // Clean phone number: remove spaces, +, -, etc., keep only digits
   let cleanPhone = phone.replace(/[^0-9]/g, '');
-  // If starts with 0 (South Africa), replace with 27
   if (cleanPhone.startsWith('0')) {
     cleanPhone = '27' + cleanPhone.substring(1);
   }
