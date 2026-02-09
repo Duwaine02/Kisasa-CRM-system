@@ -471,53 +471,6 @@
     .agents-performance-table tr:hover {
       background: #f8fafc;
     }
-
-    /* ADDED: Modal styling for add agent */
-    #addAgentModal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    #addAgentModal.show {
-      display: flex;
-    }
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      width: 400px;
-      max-width: 90%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .modal-content input {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-    }
-    .modal-buttons {
-      margin-top: 1.5rem;
-      text-align: right;
-    }
-    .modal-buttons button {
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
-    .modal-buttons .cancel {
-      background: #e5e7eb;
-    }
-    .modal-buttons .save {
-      background: var(--primary);
-      color: white;
-    }
   </style>
 </head>
 <body>
@@ -560,7 +513,7 @@
           <a href="settings.html" class="dropdown-item">
             <i class="fas fa-cog"></i> Settings
           </a>
-          <a href="#" id="logoutBtn" class="dropdown-item logout">
+          <a href="login.html" class="dropdown-item logout">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
         </div>
@@ -599,10 +552,10 @@
         <div class="panel-header">
           <h3>My Tasks</h3>
           <span class="badge count" id="task-count">0</span>
-          <span class="badge count" id="myTasksCount">0</span> <!-- ADDED FIX: Added ID for myTasksCount -->
+          <!-- FIXED: Removed duplicate count badge #myTasksCount -->
         </div>
         <div id="tasks-container"></div>
-        <div id="taskList" class="task-list"></div> <!-- ADDED FIX: Added ID/container for taskList in additional script -->
+        <!-- FIXED: Removed duplicate #taskList container to avoid "No tasks yet" when there are tasks -->
       </div>
 
       <div class="panel" id="drafts-panel">
@@ -617,10 +570,10 @@
         <div class="panel-header">
           <h3>Completed</h3>
           <span class="badge count" id="completed-count">0</span>
-          <span class="badge count" id="completedCount">0</span> <!-- ADDED FIX: Added ID for completedCount -->
+          <!-- FIXED: Removed duplicate count badge #completedCount -->
         </div>
         <div id="completed-container"></div>
-        <div id="completedList" class="completed-list"></div> <!-- ADDED FIX: Added ID/container for completedList if needed -->
+        <!-- FIXED: Removed duplicate #completedList container -->
       </div>
 
     </section>
@@ -681,13 +634,6 @@
         </div>
       </section>
 
-      <!-- ADDED: Manage Agents Section -->
-      <section class="performance-section">
-        <h3>Manage Agents</h3>
-        <button id="addAgentBtn" class="primary-btn" style="margin-bottom: 1rem;">+ Add New Agent</button>
-        <div id="agentList" style="margin-top: 1rem;"></div>
-      </section>
-
       <!-- All Tasks / Drafts / Completed Across System -->
       <section class="agent-grid">
         <div class="panel">
@@ -730,19 +676,6 @@
   </main>
 </div>
 
-<!-- ADDED: Simple Modal for Adding Agent -->
-<div id="addAgentModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
-  <div class="modal-content">
-    <h3>Add New Agent</h3>
-    <input type="text" id="newAgentName" placeholder="Full Name" required>
-    <input type="email" id="newAgentEmail" placeholder="Email" required>
-    <div class="modal-buttons">
-      <button class="cancel" id="closeAgentModal">Cancel</button>
-      <button class="save primary-btn" id="saveAgentBtn">Save</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // Prevent duplicates / race conditions
 const recentlyMoved = new Set();
@@ -777,22 +710,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ADDED FIX: Better admin detection using role
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  const isAdmin = currentUser.role === 'admin';
-
+  // Show admin extra content only if admin
+  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
   if (isAdmin) {
     document.getElementById('adminExtraContent').style.display = 'block';
     createAdminChart();
   }
-
-  // Logout handler
-  document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
-  });
 });
 
 // Send Quote
@@ -942,15 +865,23 @@ function loadTasks() {
     container.appendChild(row);
   });
 
+  // FIXED: If no tasks, show "No tasks yet"
+  if (tasks.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">No tasks yet</p>';
+  }
+
   updateCounts();
 }
 
 function loadDrafts() {
   const container = document.getElementById("drafts-container");
   container.innerHTML = '';
-  const drafts = JSON.parse(localStorage.getItem('drafts')) || [];
+  const drafts = JSON.parse(localStorage.getItem('drafts') || '[]');
 
-  drafts.forEach(draft => {
+  // FIXED: Skip invalid drafts (e.g., undefined or empty name)
+  const validDrafts = drafts.filter(draft => draft.name && draft.name !== 'undefined' && draft.name.trim() !== '');
+
+  validDrafts.forEach(draft => {
     const row = document.createElement('div');
     row.className = 'task-row';
     row.dataset.name = draft.name;
@@ -977,6 +908,14 @@ function loadDrafts() {
     container.appendChild(row);
   });
 
+  // FIXED: If no valid drafts, show message
+  if (validDrafts.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">No drafts yet</p>';
+  }
+
+  // FIXED: Update localStorage to remove invalid entries
+  localStorage.setItem('drafts', JSON.stringify(validDrafts));
+
   updateCounts();
 }
 
@@ -999,6 +938,11 @@ function loadCompleted() {
     `;
     container.appendChild(row);
   });
+
+  // FIXED: If no completed, show message
+  if (completed.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">No completed yet</p>';
+  }
 
   document.getElementById("completed-count").textContent = completed.length;
 }
@@ -1143,9 +1087,8 @@ window.addEventListener('load', () => {
   loadCompleted();
   createChart();
 
-  // ADDED FIX: Reliable admin detection + show content
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  const isAdmin = currentUser.role === 'admin';
+  // Show admin extra content only if admin
+  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
   if (isAdmin) {
     document.getElementById('adminExtraContent').style.display = 'block';
     createAdminChart();
@@ -1174,17 +1117,12 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: "Agent Lisa", email: "lisa@kisasa.com", role: "agent" }
   ];
 
-  // ADDED FIX: Standardize storage key - sync 'loggedInUser' to 'currentUser' if mismatch
-  let loggedInUser = JSON.parse(localStorage.getItem("currentUser")); // Use 'currentUser' as primary
-  if (!loggedInUser && localStorage.getItem("loggedInUser")) {
-    loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    localStorage.setItem("currentUser", JSON.stringify(loggedInUser)); // Sync
-  }
+  // ================= LOGIN CHECK =================
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
   if (!loggedInUser) {
     window.location.href = "login.html";
     return;
   }
-  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser)); // Ensure both keys are set for compatibility
 
   console.log("Logged in as:", loggedInUser.name, loggedInUser.role);
 
@@ -1210,27 +1148,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  // ADDED FIX: Merge mock agents with localStorage data if empty
-  const currentLeads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-  if (currentLeads.length === 0) {
-    agents.forEach(agent => {
-      agent.tasks.forEach(task => {
-        currentLeads.push({ firstName: task.client.split(' ')[0], lastName: task.client.split(' ')[1] || '', status: task.status });
-      });
-    });
-    localStorage.setItem('kisasa_leads', JSON.stringify(currentLeads));
-  }
-
   // ================= ELEMENTS =================
   const agentDashboard = document.getElementById("agentDashboard");
   const adminDashboard = document.getElementById("adminDashboard");
-  const logoutBtn = document.getElementById("logoutBtn"); // ADDED FIX: If logoutBtn doesn't exist, skip (no error)
+  const logoutBtn = document.getElementById("logoutBtn");
 
   // ================= LOGOUT =================
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("loggedInUser"); // ADDED FIX: Clear both keys
+      localStorage.removeItem("loggedInUser");
       window.location.href = "login.html";
     });
   }
@@ -1254,7 +1180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render agent list
     const agentList = document.getElementById("agentList");
-    if (agentList) { // ADDED FIX: Check if exists to avoid null error
+    if (agentList) {
       agentList.innerHTML = "<h3>Agents</h3>";
       agents.forEach(a => {
         const div = document.createElement("div");
@@ -1269,40 +1195,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeAgentModal = document.getElementById("closeAgentModal");
     const saveAgentBtn = document.getElementById("saveAgentBtn");
 
-    if (addAgentBtn && addAgentModal) {
-      addAgentBtn.onclick = () => {
-        addAgentModal.style.display = "flex";
-        addAgentModal.classList.add('show');
-      };
-    }
-    if (closeAgentModal && addAgentModal) {
-      closeAgentModal.onclick = () => {
-        addAgentModal.style.display = "none";
-        addAgentModal.classList.remove('show');
-      };
-    }
-    if (saveAgentBtn && addAgentModal) {
-      saveAgentBtn.onclick = () => {
-        const name = document.getElementById("newAgentName").value.trim();
-        const email = document.getElementById("newAgentEmail").value.trim();
-        if (!name || !email) return alert("Please fill all fields");
+    if (addAgentBtn && addAgentModal) addAgentBtn.onclick = () => addAgentModal.style.display = "flex";
+    if (closeAgentModal && addAgentModal) closeAgentModal.onclick = () => addAgentModal.style.display = "none";
+    if (saveAgentBtn && addAgentModal) saveAgentBtn.onclick = () => {
+      const name = document.getElementById("newAgentName").value.trim();
+      const email = document.getElementById("newAgentEmail").value.trim();
+      if (!name || !email) return alert("Please fill all fields");
 
-        agents.push({
-          id: Date.now(),
-          name,
-          email,
-          stats: { leads: 0, inProgress: 0, closed: 0 },
-          tasks: []
-        });
+      agents.push({
+        id: Date.now(),
+        name,
+        email,
+        stats: { leads: 0, inProgress: 0, closed: 0 },
+        tasks: []
+      });
 
-        addAgentModal.style.display = "none";
-        addAgentModal.classList.remove('show');
-        document.getElementById("newAgentName").value = "";
-        document.getElementById("newAgentEmail").value = "";
+      addAgentModal.style.display = "none";
+      document.getElementById("newAgentName").value = "";
+      document.getElementById("newAgentEmail").value = "";
 
-        loadAdmin(); // Refresh list
-      };
-    }
+      loadAdmin();
+    };
   }
 
   // ==================================================
@@ -1320,7 +1233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update stats
     const newLeadsEl = document.getElementById("newLeads");
-    if (newLeadsEl) newLeadsEl.textContent = agent.stats.leads; // ADDED FIX: Check if exists
+    if (newLeadsEl) newLeadsEl.textContent = agent.stats.leads;
 
     const inProgressEl = document.getElementById("inProgress");
     if (inProgressEl) inProgressEl.textContent = agent.stats.inProgress;
@@ -1332,8 +1245,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const winRate = agent.stats.leads ? Math.round((agent.stats.closed / agent.stats.leads) * 100) : 0;
     if (winRateEl) winRateEl.textContent = `${winRate}%`;
 
-    // Render tasks and leads
-    renderMyTasks(agent.tasks);
+    // FIXED: Removed call to renderMyTasks() - use loadTasks() for clients instead
+    // renderMyTasks(agent.tasks);
     renderRecentLeads();
     renderSalesChart();
 
@@ -1354,15 +1267,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== UPDATE COUNTS =====
   function updateTaskCounts() {
-    const myTasksContainer = document.getElementById('taskList');
-    const completedContainer = document.getElementById('completedList');
+    const myTasksContainer = document.getElementById('tasks-container'); // FIXED: Use #tasks-container instead of #taskList
+    const completedContainer = document.getElementById('completed-container'); // FIXED: Use #completed-container instead of #completedList
 
     const myCount = myTasksContainer ? myTasksContainer.querySelectorAll('.task-row').length : 0;
-    const myTasksBadge = document.getElementById('myTasksCount');
+    const myTasksBadge = document.getElementById('task-count'); // FIXED: Use #task-count instead of #myTasksCount
     if (myTasksBadge) myTasksBadge.textContent = myCount;
 
     const completedCountVal = completedContainer ? completedContainer.querySelectorAll('.task-row').length : 0;
-    const completedBadge = document.getElementById('completedCount');
+    const completedBadge = document.getElementById('completed-count'); // FIXED: Use #completed-count instead of #completedCount
     if (completedBadge) completedBadge.textContent = completedCountVal;
   }
 
@@ -1429,13 +1342,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ADDED FIX: Call initial renders and init data
-  initializeMockData();
+  // INITIAL RENDER
   renderRecentLeads();
   console.log("Dashboard fully loaded");
 
 });
-
 </script>
 
 </body>
