@@ -159,13 +159,15 @@
 
       if(email === "admin@kisasa.com" && password === "admin123"){
         localStorage.setItem('currentUser', JSON.stringify({email: "admin@kisasa.com", name: "Admin", role: "admin"}));
-        window.location.href = "dashboard.html";
+        localStorage.setItem('loggedInUser', JSON.stringify({email: "admin@kisasa.com", name: "Admin", role: "admin"}));
+        window.location.href = "index.html";  // FIXED: changed from dashboard.html
         return;
       }
 
       if(email === "agent@kisasa.com" && password === "agent123"){
         localStorage.setItem('currentUser', JSON.stringify({email, name:"Agent Duwaine", role: "agent"}));
-        window.location.href = "dashboard.html";
+        localStorage.setItem('loggedInUser', JSON.stringify({email, name:"Agent Duwaine", role: "agent"}));
+        window.location.href = "index.html";  // FIXED: changed from dashboard.html
         return;
       }
 

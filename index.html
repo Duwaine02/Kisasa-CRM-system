@@ -471,6 +471,53 @@
     .agents-performance-table tr:hover {
       background: #f8fafc;
     }
+
+    /* ADDED: Modal styling for add agent */
+    #addAgentModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #addAgentModal.show {
+      display: flex;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+    }
+    .modal-buttons {
+      margin-top: 1.5rem;
+      text-align: right;
+    }
+    .modal-buttons button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    .modal-buttons .cancel {
+      background: #e5e7eb;
+    }
+    .modal-buttons .save {
+      background: var(--primary);
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -489,7 +536,7 @@
     </nav>
   </aside>
 
-  <main class="main agent-ui">
+  <main class="main agent-ui" id="agentDashboard"> <!-- ADDED FIX: Added ID for agent dashboard section -->
 
     <header class="header agent-header">
       <h1>Agent Dashboard</h1>
@@ -513,7 +560,7 @@
           <a href="settings.html" class="dropdown-item">
             <i class="fas fa-cog"></i> Settings
           </a>
-          <a href="login.html" class="dropdown-item logout">
+          <a href="#" id="logoutBtn" class="dropdown-item logout">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
         </div>
@@ -522,10 +569,10 @@
 
     <!-- STATS -->
     <section class="stats agent-stats">
-      <div class="card"><p>New</p><h2>3</h2></div>
-      <div class="card"><p>Deals in progress</p><h2>2</h2></div>
-      <div class="card"><p>Leads converted</p><h2>1</h2></div>
-      <div class="card"><p>Win Rate</p><h2>33%</h2></div>
+      <div class="card"><p>New</p><h2 id="newLeads">3</h2></div> <!-- ADDED FIX: Added ID for newLeads -->
+      <div class="card"><p>Deals in progress</p><h2 id="inProgress">2</h2></div> <!-- ADDED FIX: Added ID for inProgress -->
+      <div class="card"><p>Leads converted</p><h2 id="completedClients">1</h2></div> <!-- ADDED FIX: Added ID for completedClients -->
+      <div class="card"><p>Win Rate</p><h2 id="winRate">33%</h2></div> <!-- ADDED FIX: Added ID for winRate -->
     </section>
 
     <!-- PERFORMANCE CHART -->
@@ -541,6 +588,7 @@
       </div>
       <div class="chart-container">
         <canvas id="performanceChart"></canvas>
+        <canvas id="salesChart" style="display:none;"></canvas> <!-- ADDED FIX: Added hidden canvas for salesChart to avoid errors in additional script -->
       </div>
     </section>
 
@@ -551,8 +599,10 @@
         <div class="panel-header">
           <h3>My Tasks</h3>
           <span class="badge count" id="task-count">0</span>
+          <span class="badge count" id="myTasksCount">0</span> <!-- ADDED FIX: Added ID for myTasksCount -->
         </div>
         <div id="tasks-container"></div>
+        <div id="taskList" class="task-list"></div> <!-- ADDED FIX: Added ID/container for taskList in additional script -->
       </div>
 
       <div class="panel" id="drafts-panel">
@@ -567,8 +617,10 @@
         <div class="panel-header">
           <h3>Completed</h3>
           <span class="badge count" id="completed-count">0</span>
+          <span class="badge count" id="completedCount">0</span> <!-- ADDED FIX: Added ID for completedCount -->
         </div>
         <div id="completed-container"></div>
+        <div id="completedList" class="completed-list"></div> <!-- ADDED FIX: Added ID/container for completedList if needed -->
       </div>
 
     </section>
@@ -629,6 +681,13 @@
         </div>
       </section>
 
+      <!-- ADDED: Manage Agents Section -->
+      <section class="performance-section">
+        <h3>Manage Agents</h3>
+        <button id="addAgentBtn" class="primary-btn" style="margin-bottom: 1rem;">+ Add New Agent</button>
+        <div id="agentList" style="margin-top: 1rem;"></div>
+      </section>
+
       <!-- All Tasks / Drafts / Completed Across System -->
       <section class="agent-grid">
         <div class="panel">
@@ -664,7 +723,24 @@
       </section>
     </div>
 
+    <div id="adminDashboard" style="display: none;"> <!-- ADDED FIX: Added container for adminDashboard to group admin content and avoid null errors -->
+      <!-- Admin content is already in adminExtraContent, but this wrapper allows script targeting -->
+    </div>
+
   </main>
+</div>
+
+<!-- ADDED: Simple Modal for Adding Agent -->
+<div id="addAgentModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+  <div class="modal-content">
+    <h3>Add New Agent</h3>
+    <input type="text" id="newAgentName" placeholder="Full Name" required>
+    <input type="email" id="newAgentEmail" placeholder="Email" required>
+    <div class="modal-buttons">
+      <button class="cancel" id="closeAgentModal">Cancel</button>
+      <button class="save primary-btn" id="saveAgentBtn">Save</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -701,12 +777,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Show admin extra content only if admin
-  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
+  // ADDED FIX: Better admin detection using role
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const isAdmin = currentUser.role === 'admin';
+
   if (isAdmin) {
     document.getElementById('adminExtraContent').style.display = 'block';
     createAdminChart();
   }
+
+  // Logout handler
+  document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+  });
 });
 
 // Send Quote
@@ -1057,13 +1143,299 @@ window.addEventListener('load', () => {
   loadCompleted();
   createChart();
 
-  // Show admin extra content only if admin
-  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
+  // ADDED FIX: Reliable admin detection + show content
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const isAdmin = currentUser.role === 'admin';
   if (isAdmin) {
     document.getElementById('adminExtraContent').style.display = 'block';
     createAdminChart();
   }
 });
+
+// ADDED FIX: Function to initialize mock data if localStorage is empty (for testing)
+function initializeMockData() {
+  if (!localStorage.getItem('kisasa_leads')) {
+    localStorage.setItem('kisasa_leads', JSON.stringify([])); // Empty array to avoid null errors
+  }
+  if (!localStorage.getItem('drafts')) {
+    localStorage.setItem('drafts', JSON.stringify([]));
+  }
+  if (!localStorage.getItem('completed')) {
+    localStorage.setItem('completed', JSON.stringify([]));
+  }
+}
+
+// ADDED FIX: Wrapped additional script in DOMContentLoaded and integrated it here (moved from end)
+document.addEventListener('DOMContentLoaded', () => {
+  // ================= MOCK USERS =================
+  const users = [
+    { name: "Admin User", email: "admin@kisasa.com", role: "admin" },
+    { name: "Agent John", email: "john@kisasa.com", role: "agent" },
+    { name: "Agent Lisa", email: "lisa@kisasa.com", role: "agent" }
+  ];
+
+  // ADDED FIX: Standardize storage key - sync 'loggedInUser' to 'currentUser' if mismatch
+  let loggedInUser = JSON.parse(localStorage.getItem("currentUser")); // Use 'currentUser' as primary
+  if (!loggedInUser && localStorage.getItem("loggedInUser")) {
+    loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    localStorage.setItem("currentUser", JSON.stringify(loggedInUser)); // Sync
+  }
+  if (!loggedInUser) {
+    window.location.href = "login.html";
+    return;
+  }
+  localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser)); // Ensure both keys are set for compatibility
+
+  console.log("Logged in as:", loggedInUser.name, loggedInUser.role);
+
+  // ================= MOCK DATA =================
+  let agents = [
+    {
+      id: 1,
+      name: "Agent John",
+      email: "john@kisasa.com",
+      stats: { leads: 12, inProgress: 4, closed: 5 },
+      tasks: [
+        { id: "t1", client: "Lucas Black", status: "Contact" },
+        { id: "t2", client: "Sarah Jones", status: "Qualified" },
+        { id: "t3", client: "Mike van der Merwe", status: "New" }
+      ]
+    },
+    {
+      id: 2,
+      name: "Agent Lisa",
+      email: "lisa@kisasa.com",
+      stats: { leads: 20, inProgress: 6, closed: 10 },
+      tasks: []
+    }
+  ];
+
+  // ADDED FIX: Merge mock agents with localStorage data if empty
+  const currentLeads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+  if (currentLeads.length === 0) {
+    agents.forEach(agent => {
+      agent.tasks.forEach(task => {
+        currentLeads.push({ firstName: task.client.split(' ')[0], lastName: task.client.split(' ')[1] || '', status: task.status });
+      });
+    });
+    localStorage.setItem('kisasa_leads', JSON.stringify(currentLeads));
+  }
+
+  // ================= ELEMENTS =================
+  const agentDashboard = document.getElementById("agentDashboard");
+  const adminDashboard = document.getElementById("adminDashboard");
+  const logoutBtn = document.getElementById("logoutBtn"); // ADDED FIX: If logoutBtn doesn't exist, skip (no error)
+
+  // ================= LOGOUT =================
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("loggedInUser"); // ADDED FIX: Clear both keys
+      window.location.href = "login.html";
+    });
+  }
+
+  // ================= ROLE CHECK =================
+  if (loggedInUser.role === "admin") {
+    if (adminDashboard) adminDashboard.style.display = "block";
+    if (agentDashboard) agentDashboard.style.display = "none";
+    loadAdmin();
+  } else {
+    if (agentDashboard) agentDashboard.style.display = "block";
+    if (adminDashboard) adminDashboard.style.display = "none";
+    loadAgent();
+  }
+
+  // ==================================================
+  // ================= ADMIN DASHBOARD =================
+  // ==================================================
+  function loadAdmin() {
+    console.log("Loading admin dashboard");
+
+    // Render agent list
+    const agentList = document.getElementById("agentList");
+    if (agentList) { // ADDED FIX: Check if exists to avoid null error
+      agentList.innerHTML = "<h3>Agents</h3>";
+      agents.forEach(a => {
+        const div = document.createElement("div");
+        div.textContent = `${a.name} (${a.email})`;
+        agentList.appendChild(div);
+      });
+    }
+
+    // Add Agent Modal logic
+    const addAgentBtn = document.getElementById("addAgentBtn");
+    const addAgentModal = document.getElementById("addAgentModal");
+    const closeAgentModal = document.getElementById("closeAgentModal");
+    const saveAgentBtn = document.getElementById("saveAgentBtn");
+
+    if (addAgentBtn && addAgentModal) {
+      addAgentBtn.onclick = () => {
+        addAgentModal.style.display = "flex";
+        addAgentModal.classList.add('show');
+      };
+    }
+    if (closeAgentModal && addAgentModal) {
+      closeAgentModal.onclick = () => {
+        addAgentModal.style.display = "none";
+        addAgentModal.classList.remove('show');
+      };
+    }
+    if (saveAgentBtn && addAgentModal) {
+      saveAgentBtn.onclick = () => {
+        const name = document.getElementById("newAgentName").value.trim();
+        const email = document.getElementById("newAgentEmail").value.trim();
+        if (!name || !email) return alert("Please fill all fields");
+
+        agents.push({
+          id: Date.now(),
+          name,
+          email,
+          stats: { leads: 0, inProgress: 0, closed: 0 },
+          tasks: []
+        });
+
+        addAgentModal.style.display = "none";
+        addAgentModal.classList.remove('show');
+        document.getElementById("newAgentName").value = "";
+        document.getElementById("newAgentEmail").value = "";
+
+        loadAdmin(); // Refresh list
+      };
+    }
+  }
+
+  // ==================================================
+  // ================= AGENT DASHBOARD =================
+  // ==================================================
+  function loadAgent() {
+    console.log("Loading agent dashboard");
+
+    const agent = agents.find(a => a.email === loggedInUser.email) || {
+      stats: { leads: 0, inProgress: 0, closed: 0 },
+      tasks: []
+    };
+
+    console.log("Agent data:", agent);
+
+    // Update stats
+    const newLeadsEl = document.getElementById("newLeads");
+    if (newLeadsEl) newLeadsEl.textContent = agent.stats.leads; // ADDED FIX: Check if exists
+
+    const inProgressEl = document.getElementById("inProgress");
+    if (inProgressEl) inProgressEl.textContent = agent.stats.inProgress;
+
+    const completedEl = document.getElementById("completedClients");
+    if (completedEl) completedEl.textContent = agent.stats.closed;
+
+    const winRateEl = document.getElementById("winRate");
+    const winRate = agent.stats.leads ? Math.round((agent.stats.closed / agent.stats.leads) * 100) : 0;
+    if (winRateEl) winRateEl.textContent = `${winRate}%`;
+
+    // Render tasks and leads
+    renderMyTasks(agent.tasks);
+    renderRecentLeads();
+    renderSalesChart();
+
+    updateTaskCounts();
+  }
+
+  // ===== BADGE CLASS HELPER =====
+  function getStatusClass(status) {
+    switch (status) {
+      case 'Contact':
+      case 'Contacted': return 'warning';
+      case 'Qualified': return 'Finalise';
+      case 'Done': return 'success';
+      case 'Lost': return 'lost';
+      default: return '';
+    }
+  }
+
+  // ===== UPDATE COUNTS =====
+  function updateTaskCounts() {
+    const myTasksContainer = document.getElementById('taskList');
+    const completedContainer = document.getElementById('completedList');
+
+    const myCount = myTasksContainer ? myTasksContainer.querySelectorAll('.task-row').length : 0;
+    const myTasksBadge = document.getElementById('myTasksCount');
+    if (myTasksBadge) myTasksBadge.textContent = myCount;
+
+    const completedCountVal = completedContainer ? completedContainer.querySelectorAll('.task-row').length : 0;
+    const completedBadge = document.getElementById('completedCount');
+    if (completedBadge) completedBadge.textContent = completedCountVal;
+  }
+
+  // ===== RENDER TASKS =====
+  function renderMyTasks(tasks) {
+    const container = document.getElementById("taskList");
+    if (!container) return;
+    container.innerHTML = "";
+    if (!tasks.length) {
+      container.innerHTML = '<p>No tasks yet</p>';
+      return;
+    }
+    tasks.forEach(task => {
+      const row = document.createElement("div");
+      row.className = "task-row";
+      row.dataset.taskId = task.id || 't' + Date.now();
+      row.innerHTML = `
+        <span>${task.client}</span>
+        <span class="badge ${getStatusClass(task.status || 'New')}">${task.status || 'New'}</span>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  // ===== RENDER RECENT LEADS =====
+  function renderRecentLeads() {
+    const leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+    const container = document.querySelector('.lead-list');
+    if (!container) return; // ADDED FIX: Check if exists
+    container.innerHTML = "";
+    if (!leads.length) {
+      container.innerHTML = '<p>No recent leads yet</p>';
+      return;
+    }
+    leads.slice(0, 20).forEach(lead => {
+      const row = document.createElement("div");
+      row.className = "lead-row";
+      row.innerHTML = `<span>${lead.firstName} ${lead.lastName}</span> <span class="badge ${getStatusClass(lead.status || 'New')}">${lead.status || 'New'}</span>`;
+      container.appendChild(row);
+    });
+
+    const newLeadsEl = document.getElementById('newLeads');
+    if (newLeadsEl) newLeadsEl.textContent = leads.filter(l => l.status === 'New').length || 0;
+  }
+
+  // ===== SALES CHART =====
+  function renderSalesChart() {
+    const chartEl = document.getElementById("salesChart");
+    if (!chartEl) return; // ADDED FIX: Check if exists (it's hidden)
+    new Chart(chartEl, {
+      type: "line",
+      data: {
+        labels: ["Week 1","Week 2","Week 3","Week 4"],
+        datasets: [{
+          data: [2,4,6,9],
+          borderWidth:3,
+          fill:true,
+          tension:0.4,
+          borderColor:"#2563eb",
+          backgroundColor:"rgba(37,99,235,0.15)"
+        }]
+      },
+      options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}, responsive:true }
+    });
+  }
+
+  // ADDED FIX: Call initial renders and init data
+  initializeMockData();
+  renderRecentLeads();
+  console.log("Dashboard fully loaded");
+
+});
+
 </script>
 
 </body>
