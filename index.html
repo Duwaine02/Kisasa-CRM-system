@@ -21,6 +21,7 @@
       --whatsapp-dark: #128C7E;
       --avatar-bg: #e0f2fe;
       --avatar-text: #0369a1;
+      --admin-accent: #8b5cf6; /* Purple for admin highlights */
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -423,6 +424,53 @@
       position: relative;
       height: 180px;
     }
+
+    /* ────────────────────────────────────────────────
+       NEW ADMIN STYLES – added only (nothing removed)
+    ──────────────────────────────────────────────── */
+
+    .admin-section-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--admin-accent);
+      margin: 2.5rem 0 1.5rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 3px solid var(--admin-accent);
+    }
+
+    .company-stats .card {
+      border-left: 5px solid var(--admin-accent);
+      transition: transform 0.2s;
+    }
+    .company-stats .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .admin-chart-container {
+      height: 240px; /* Slightly taller for admin overview */
+    }
+
+    .agents-performance-table table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .agents-performance-table th,
+    .agents-performance-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .agents-performance-table th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: #1e293b;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+    .agents-performance-table tr:hover {
+      background: #f8fafc;
+    }
   </style>
 </head>
 <body>
@@ -525,6 +573,97 @@
 
     </section>
 
+    <!-- ────────────────────────────────────────────────
+         ADMIN-ONLY EXTRA CONTENT – added below (nothing removed)
+    ──────────────────────────────────────────────── -->
+
+    <div id="adminExtraContent" style="display: none;">
+      <h2 class="admin-section-title">Admin Overview</h2>
+
+      <!-- Company-wide Stats -->
+      <section class="stats company-stats">
+        <div class="card"><p>Total Leads</p><h2>87</h2></div>
+        <div class="card"><p>Total Agents</p><h2>6</h2></div>
+        <div class="card"><p>Deals Closed This Month</p><h2>19</h2></div>
+        <div class="card"><p>Overall Win Rate</p><h2>41%</h2></div>
+      </section>
+
+      <!-- Admin's Own Performance -->
+      <section class="performance-section">
+        <div class="performance-header">
+          <h3>Admin Personal Performance</h3>
+          <select class="month-select" id="adminMonthSelect">
+            <option value="jan">Jan 2026</option>
+            <option value="feb" selected>Feb 2026</option>
+            <option value="mar">Mar 2026</option>
+            <option value="apr">Apr 2026</option>
+          </select>
+        </div>
+        <div class="chart-container admin-chart-container">
+          <canvas id="adminPerformanceChart"></canvas>
+        </div>
+      </section>
+
+      <!-- All Agents Performance Table -->
+      <section class="performance-section">
+        <h3>Team Performance Overview</h3>
+        <div class="agents-performance-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Leads Converted</th>
+                <th>Deals Closed</th>
+                <th>Win Rate</th>
+                <th>Active Tasks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Duwaine</td><td>18</td><td>8</td><td>44%</td><td>5</td></tr>
+              <tr><td>Sarah</td><td>15</td><td>6</td><td>40%</td><td>4</td></tr>
+              <tr><td>Mike</td><td>12</td><td>4</td><td>33%</td><td>7</td></tr>
+              <tr><td>Lisa</td><td>9</td><td>3</td><td>33%</td><td>2</td></tr>
+              <tr><td>Thabo</td><td>22</td><td>9</td><td>41%</td><td>6</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- All Tasks / Drafts / Completed Across System -->
+      <section class="agent-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>All Active Tasks (All Agents)</h3>
+            <span class="badge count">34</span>
+          </div>
+          <div id="allTasksContainer">
+            <!-- You can load real aggregated data here later -->
+            <p style="padding:1.5rem;text-align:center;color:#64748b;">All active tasks across all agents (expand later)</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>All Drafts (All Agents)</h3>
+            <span class="badge count">11</span>
+          </div>
+          <div id="allDraftsContainer">
+            <p style="padding:1.5rem;text-align:center;color:#64748b;">All drafts across all agents (expand later)</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>All Completed Deals</h3>
+            <span class="badge count">19</span>
+          </div>
+          <div id="allCompletedContainer">
+            <p style="padding:1.5rem;text-align:center;color:#64748b;">All completed deals across all agents (expand later)</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </main>
 </div>
 
@@ -560,6 +699,13 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown.classList.remove('show');
       }
     });
+  }
+
+  // Show admin extra content only if admin
+  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
+  if (isAdmin) {
+    document.getElementById('adminExtraContent').style.display = 'block';
+    createAdminChart();
   }
 });
 
@@ -834,8 +980,63 @@ function createChart(month = 'feb') {
   });
 }
 
+// ────────────────────────────────────────────────
+// ADMIN-ONLY CHART (added – uses same monthlyData)
+// ────────────────────────────────────────────────
+
+let adminChart;
+const adminCtx = document.getElementById('adminPerformanceChart')?.getContext('2d');
+
+function createAdminChart(month = 'feb') {
+  const data = monthlyData[month];
+  if (!adminCtx) return;
+
+  if (adminChart) adminChart.destroy();
+
+  adminChart = new Chart(adminCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      datasets: [
+        {
+          label: 'Leads Converted (Admin)',
+          data: [5, 8, 6, 9],
+          backgroundColor: 'rgba(139, 92, 246, 0.6)',
+          borderColor: 'rgba(139, 92, 246, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Deals Closed (Admin)',
+          data: [3, 5, 4, 6],
+          backgroundColor: 'rgba(34, 197, 94, 0.6)',
+          borderColor: 'rgba(34, 197, 94, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: 'Count' } }
+      },
+      plugins: {
+        legend: { position: 'top' },
+        title: {
+          display: true,
+          text: `${data.label} - Admin Performance`
+        }
+      }
+    }
+  });
+}
+
 document.getElementById('monthSelect')?.addEventListener('change', function() {
   createChart(this.value);
+});
+
+document.getElementById('adminMonthSelect')?.addEventListener('change', function() {
+  createAdminChart(this.value);
 });
 
 window.addEventListener('message', function(event) {
@@ -855,6 +1056,13 @@ window.addEventListener('load', () => {
   loadDrafts();
   loadCompleted();
   createChart();
+
+  // Show admin extra content only if admin
+  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
+  if (isAdmin) {
+    document.getElementById('adminExtraContent').style.display = 'block';
+    createAdminChart();
+  }
 });
 </script>
 
