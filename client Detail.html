@@ -3,144 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Client Details - CRM</title>
-
+<title>Client Details - Kisasa CRM</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 body {
-  margin:0;
-  font-family:'Inter', sans-serif;
-  background:#f4f6f9;
-  color:#1f2937;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f4f6f9;
+  color: #1f2937;
 }
-
 .layout {
-  display:flex;
-  min-height:100vh;
+  display: flex;
+  min-height: 100vh;
 }
-
-/* FIXED SIDEBAR */
 .sidebar {
-  width:70px;
-  background:#0f172a;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding-top:20px;
-  position:fixed;
-  top:0;
-  left:0;
-  height:100vh;
+  width: 70px;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
-
 .sidebar nav a {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  width:50px;
-  height:50px;
-  margin-bottom:20px;
-  font-size:20px;
-  color:#cbd5f5;
-  text-decoration:none;
-  border-radius:10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.2s ease;
 }
-
-.sidebar nav a.active,
 .sidebar nav a:hover {
-  background:#1e293b;
-  color:#fff;
+  background: #1e293b;
+  color: #fff;
 }
-
-/* MAIN */
+.sidebar nav a.active {
+  background: #2563eb;
+  color: #fff;
+}
 .main {
-  margin-left:70px;
-  flex:1;
-  padding:32px;
+  margin-left: 70px;
+  flex: 1;
+  padding: 32px;
 }
-
 h1 {
-  margin-bottom:24px;
-  font-size:28px;
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
 }
-
-/* TABS */
 .tabs {
-  display:flex;
-  gap:12px;
-  margin-bottom:24px;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
 }
-
 .tab {
-  padding:10px 18px;
-  background:#e5e7eb;
-  border-radius:8px;
-  cursor:pointer;
+  padding: 10px 18px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s;
 }
-
+.tab:hover {
+  background: #d1d5db;
+}
 .tab.active {
-  background:#2563eb;
-  color:#fff;
+  background: #2563eb;
+  color: #fff;
 }
-
 .tab-content {
-  background:#fff;
-  padding:24px;
-  border-radius:12px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.08);
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #e5e7eb;
 }
-
-/* DRAG & DROP */
+.section-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+}
+.section-header .count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  background: #3b82f6;
+  padding: 4px 10px;
+  border-radius: 999px;
+  min-width: 20px;
+  text-align: center;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.info-item {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.15s;
+}
+.info-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.info-item strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.info-item p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
 .drop-zone {
-  border:2px dashed #c7d2fe;
-  padding:30px;
-  text-align:center;
-  border-radius:12px;
-  margin-bottom:20px;
-  cursor:pointer;
+  border: 2px dashed #c7d2fe;
+  padding: 40px;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f9fafb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-
+.drop-zone:hover {
+  background: #f1f5f9;
+  border-color: #2563eb;
+}
 .drop-zone.dragover {
-  background:#eef2ff;
+  background: #eef2ff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
 }
-
-/* LISTS */
+.drop-zone i {
+  font-size: 1.8rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+.drop-zone strong {
+  display: block;
+  color: #1f2937;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.drop-zone small {
+  color: #64748b;
+  font-size: 0.9rem;
+}
 .list-item {
-  padding:14px 18px;
-  background:#f9fafb;
-  border-radius:10px;
-  margin-bottom:12px;
+  padding: 14px 18px;
+  background: #f9fafb;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
 }
-
-.meta {
-  font-size:12px;
-  color:#6b7280;
-  margin-top:4px;
+.list-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
-
-/* NOTES */
+.list-item i {
+  font-size: 1.3rem;
+  color: #475569;
+}
+.list-item .content {
+  flex: 1;
+}
+.list-item .content .name {
+  font-weight: 500;
+  color: #1f2937;
+}
+.list-item .meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+.no-items {
+  color: #64748b;
+  text-align: center;
+  padding: 24px 0;
+  font-style: italic;
+}
+.notes-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
 textarea {
-  width:100%;
-  min-height:120px;
-  padding:12px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  margin-bottom:12px;
+  width: 100%;
+  min-height: 110px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  resize: vertical;
+  transition: all 0.2s;
+  font-family: inherit;
 }
-
+textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
 button {
-  padding:10px 16px;
-  background:#2563eb;
-  color:#fff;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }
 </style>
 </head>
-
 <body>
 
 <div class="layout">
@@ -148,7 +254,7 @@ button {
     <nav>
       <a href="index.html"><i class="fas fa-tachometer-alt"></i></a>
       <a href="leads.html"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" class="active"><i class="fas fa-users"></i></a>
+      <a href="leads.html?filter=client" class="active"><i class="fas fa-users"></i></a>
       <a href="quotes.html"><i class="fas fa-file-invoice-dollar"></i></a>
       <a href="reports.html"><i class="fas fa-chart-line"></i></a>
       <a href="settings.html"><i class="fas fa-cog"></i></a>
@@ -156,14 +262,12 @@ button {
   </aside>
 
   <main class="main">
-    <h1 id="clientName"></h1>
+    <h1 id="clientName">Client Details</h1>
 
     <div class="tabs">
       <div class="tab active" data-tab="info">Info</div>
-      <div class="tab" data-tab="documents">Documents</div>
       <div class="tab" data-tab="emails">Emails</div>
       <div class="tab" data-tab="updates">Updates</div>
-      <div class="tab" data-tab="notes">Notes</div>
     </div>
 
     <div class="tab-content" id="tabContent"></div>
@@ -173,125 +277,184 @@ button {
 <script>
 const now = () => new Date().toLocaleString();
 
+const selected = JSON.parse(localStorage.getItem('selectedClient')) || {
+  firstName: 'Unknown',
+  lastName: '',
+  email: '',
+  phone: '',
+  idNumber: 'Not provided',
+  status: 'Unknown',
+  date: '—'
+};
+
 const client = {
-  name:"Alice Johnson",
-  email:"alice@example.com",
-  phone:"0123456789",
-  status:"Active",
-  documents:[
-    {name:"Contract.pdf", time:now()},
-    {name:"Invoice.pdf", time:now()}
-  ],
-  emails:[
-    {text:"alice@example.com", time:now()}
-  ],
-  updates:[
-    {text:"Called client", time:now()}
-  ],
-  notes:[]
+  name: (selected.firstName + ' ' + selected.lastName).trim() || 'Client',
+  email: selected.email || '—',
+  phone: selected.phone || '—',
+  idNumber: selected.idNumber || '—',
+  status: (selected.status || 'Unknown').replace('-', ' '),
+  date: selected.date || '—',
+  documents: [{name:"Contract.pdf", time:now()}, {name:"Invoice.pdf", time:now()}],
+  emails: [{text: selected.email || 'No email', time:now()}],
+  updates: [{text:"Initial contact", time:now()}],
+  notes: []
 };
 
 document.getElementById("clientName").textContent = client.name;
 
 function showTab(tab){
-  const c=document.getElementById("tabContent");
+  const c = document.getElementById("tabContent");
+  c.innerHTML = '';
 
-  if(tab==="documents"){
-    c.innerHTML=`
-      <div class="drop-zone" id="dropZone">
-        <strong>Drag & drop documents</strong><br>or click to upload
-        <input type="file" id="fileInput" hidden multiple>
-      </div>
-      ${client.documents.map((d,i)=>`
-        <div class="list-item">
-          📄 ${d.name}
-          <div class="meta">Uploaded: ${d.time}</div>
+  if(tab === "info"){
+    c.innerHTML = `
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Email</strong>
+          <p>${client.email}</p>
         </div>
-      `).join("")}
+        <div class="info-item">
+          <strong>Phone</strong>
+          <p>${client.phone}</p>
+        </div>
+        <div class="info-item">
+          <strong>ID Number</strong>
+          <p>${client.idNumber}</p>
+        </div>
+        <div class="info-item">
+          <strong>Status</strong>
+          <p>${client.status}</p>
+        </div>
+        <div class="info-item">
+          <strong>Added Date</strong>
+          <p>${client.date}</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:40px;">
+        <div class="section-header">
+          Documents
+          <span class="count">${client.documents.length}</span>
+        </div>
+        <div class="drop-zone" id="dropZone">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <strong>Drag & drop documents here</strong><br>
+          <small>or click to select files</small>
+          <input type="file" id="fileInput" hidden multiple>
+        </div>
+        <div id="documentsList">
+          ${client.documents.length ? client.documents.map(d => `
+            <div class="list-item">
+              <i class="fas fa-file-pdf"></i>
+              <div class="content">
+                <div class="name">${d.name}</div>
+                <div class="meta">Uploaded: ${d.time}</div>
+              </div>
+            </div>
+          `).join("") : '<div class="no-items">No documents uploaded yet</div>'}
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header">
+          Notes
+          <span class="count">${client.notes.length}</span>
+        </div>
+        <div class="notes-form">
+          <textarea id="noteInput" placeholder="Write a note..."></textarea>
+          <button onclick="addNote()">Add Note</button>
+        </div>
+        <div id="notesList">
+          ${client.notes.length ? client.notes.map(n => `
+            <div class="list-item">
+              <i class="fas fa-sticky-note"></i>
+              <div class="content">
+                <div class="name">${n.text}</div>
+                <div class="meta">${n.time}</div>
+              </div>
+            </div>
+          `).join("") : '<div class="no-items">No notes added yet</div>'}
+        </div>
+      </div>
     `;
     initUpload();
   }
 
-  if(tab==="emails"){
-    c.innerHTML=client.emails.map(e=>`
-      <div class="list-item">
-        ✉️ ${e.text}
-        <div class="meta">Sent: ${e.time}</div>
-      </div>
-    `).join("");
-  }
-
-  if(tab==="updates"){
-    c.innerHTML=client.updates.map(u=>`
-      <div class="list-item">
-        🔔 ${u.text}
-        <div class="meta">Updated: ${u.time}</div>
-      </div>
-    `).join("");
-  }
-
-  if(tab==="notes"){
-    c.innerHTML=`
-      <textarea id="noteInput" placeholder="Write a note..."></textarea>
-      <button onclick="addNote()">Add Note</button>
-      ${client.notes.map(n=>`
+  if(tab === "emails"){
+    c.innerHTML = `
+      <div class="section-header">Emails <span class="count">${client.emails.length}</span></div>
+      ${client.emails.map(e => `
         <div class="list-item">
-          📝 ${n.text}
-          <div class="meta">${n.time}</div>
+          <i class="fas fa-envelope"></i>
+          <div class="content">
+            <div class="name">${e.text}</div>
+            <div class="meta">Sent: ${e.time}</div>
+          </div>
         </div>
-      `).join("")}
+      `).join("") || '<div class="no-items">No emails recorded yet</div>'}
     `;
   }
 
-  if(tab==="info"){
-    c.innerHTML=`
-      <p><strong>Email:</strong> ${client.email}</p>
-      <p><strong>Phone:</strong> ${client.phone}</p>
-      <p><strong>Status:</strong> ${client.status}</p>
+  if(tab === "updates"){
+    c.innerHTML = `
+      <div class="section-header">Updates <span class="count">${client.updates.length}</span></div>
+      ${client.updates.map(u => `
+        <div class="list-item">
+          <i class="fas fa-bell"></i>
+          <div class="content">
+            <div class="name">${u.text}</div>
+            <div class="meta">Updated: ${u.time}</div>
+          </div>
+        </div>
+      `).join("") || '<div class="no-items">No updates yet</div>'}
     `;
   }
+}
+
+function initUpload(){
+  const dz = document.getElementById("dropZone");
+  if (!dz) return;
+  const fi = document.getElementById("fileInput");
+
+  dz.onclick = () => fi.click();
+  dz.ondragover = e => { e.preventDefault(); dz.classList.add("dragover"); };
+  dz.ondragleave = () => dz.classList.remove("dragover");
+  dz.ondrop = e => {
+    e.preventDefault();
+    dz.classList.remove("dragover");
+    handleFiles(e.dataTransfer.files);
+  };
+  fi.onchange = e => handleFiles(e.target.files);
+
+  function handleFiles(files) {
+    [...files].forEach(f => {
+      client.documents.push({name: f.name, time: now()});
+    });
+    showTab("info");
+  }
+}
+
+function addNote(){
+  const input = document.getElementById("noteInput");
+  if (!input) return;
+  const val = input.value.trim();
+  if(!val) return;
+  client.notes.push({text: val, time: now()});
+  input.value = '';
+  showTab("info");
 }
 
 showTab("info");
 
-document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+document.querySelectorAll(".tab").forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
     t.classList.add("active");
     showTab(t.dataset.tab);
   };
 });
-
-function initUpload(){
-  const dz=document.getElementById("dropZone");
-  const fi=document.getElementById("fileInput");
-
-  dz.onclick=()=>fi.click();
-  dz.ondragover=e=>{e.preventDefault();dz.classList.add("dragover");};
-  dz.ondragleave=()=>dz.classList.remove("dragover");
-  dz.ondrop=e=>{
-    e.preventDefault();
-    dz.classList.remove("dragover");
-    [...e.dataTransfer.files].forEach(f=>{
-      client.documents.push({name:f.name,time:now()});
-    });
-    showTab("documents");
-  };
-  fi.onchange=e=>{
-    [...e.target.files].forEach(f=>{
-      client.documents.push({name:f.name,time:now()});
-    });
-    showTab("documents");
-  };
-}
-
-function addNote(){
-  const val=document.getElementById("noteInput").value.trim();
-  if(!val) return;
-  client.notes.push({text:val,time:now()});
-  showTab("notes");
-}
 </script>
 
 </body>
+
 </html>

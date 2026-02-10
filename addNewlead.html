@@ -1,99 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add New Lead - Kisasa CRM</title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Your existing styles remain unchanged */
     :root {
-      --sidebar-bg: #0f172a;
-      --primary: #3b82f6;
-      --active-bg: #1E293B;
-      --text: #e2e8f0;
-      --bg: #f8fafc;
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --sidebar-bg: #0b1f3b;
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
     }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: #1e293b;
-    }
-
-    .wrapper {
-      display: flex;
-      min-height: 100vh;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
     .sidebar {
-      width: 72px;
+      width: 76px;
       background: var(--sidebar-bg);
-      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 0;
       position: fixed;
-      top: 0; left: 0; bottom: 0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      height: 100vh;
+      z-index: 1000;
     }
-
-    .sidebar nav {
-      width: 100%;
-      margin-top: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .sidebar .logo {
+      color: #60a5fa;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
     }
-
     .sidebar a {
-      color: var(--text);
-      text-decoration: none;
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
-      margin: 0.4rem 0;
-      font-size: 1.4rem;
-      transition: all 0.2s;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s;
+      text-decoration: none;
     }
+    .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
+    .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-    .sidebar a:hover {
-      background: rgba(255,255,255,0.12);
-    }
-
-    .sidebar a.active {
-      background: var(--active-bg);
-      color: white;
-    }
-
-    .main-content {
-      margin-left: 72px;
+    .main-wrapper {
+      margin-left: 76px;
       flex: 1;
-      padding: 2rem;
+      padding: 2rem 2.5rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    header {
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 2rem;
     }
-
-    h1 {
-      margin: 0;
+    .top-bar h1 {
       font-size: 1.8rem;
-      color: #1e293b;
+      font-weight: 700;
+      color: #0f172a;
     }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+    .logout:hover { color: var(--danger); }
 
     .form-card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-radius: 16px;
       padding: 2rem;
-      max-width: 720px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
     .form-grid {
@@ -101,204 +110,159 @@
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
+    .form-group.full { grid-column: 1 / -1; }
 
     .form-group {
       margin-bottom: 1.25rem;
     }
-
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-
     label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
-      color: #475569;
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
-
     input, select, textarea {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 1rem;
-      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
     }
-
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-    }
-
-    .required::after {
-      content: " *";
-      color: #ef4444;
-    }
-
-    .btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.9rem 1.8rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      background: #2563eb;
-    }
-
-    .btn-cancel {
-      background: #6b7280;
-      margin-right: 1rem;
-    }
-
-    .btn-cancel:hover {
-      background: #4b5563;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
 
     .actions {
-      margin-top: 2rem;
       display: flex;
       justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
     }
+    .btn {
+      padding: 0.8rem 1.6rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--text-main);
+    }
+    .btn-secondary:hover { background: var(--gray-200); }
 
     @media (max-width: 768px) {
       .form-grid { grid-template-columns: 1fr; }
-      .main-content { padding: 1.5rem; }
-      .sidebar { width: 64px; }
-      .main-content { margin-left: 64px; }
+      .main-wrapper { padding: 1.5rem 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="wrapper">
+<aside class="sidebar">
+  <div class="logo">Kisasa</div>
+  <nav>
+    <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+    <a href="leads.html" class="active" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
+    <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
+    <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
+    <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
+  </nav>
+</aside>
 
-    <aside class="sidebar">
-      <nav>
-        <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-        <a href="leads.html" title="Leads" class="active"><i class="fas fa-user-plus"></i></a>
-        <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-        <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-        <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-        <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
-      </nav>
-    </aside>
-
-    <main class="main-content">
-      <header>
-        <h1>Add New Lead</h1>
-      </header>
-
-      <div class="form-card">
-        <form id="addLeadForm">
-          <div class="form-grid">
-
-            <div class="form-group">
-              <label for="firstName" class="required">First Name</label>
-              <input type="text" id="firstName" name="firstName" required placeholder="e.g. Lucas"/>
-            </div>
-
-            <div class="form-group">
-              <label for="lastName" class="required">Last Name</label>
-              <input type="text" id="lastName" name="lastName" required placeholder="e.g. Black"/>
-            </div>
-
-            <div class="form-group">
-              <label for="email" class="required">Email Address</label>
-              <input type="email" id="email" name="email" required placeholder="example@company.com"/>
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone" placeholder="+27 82 123 4567"/>
-            </div>
-
-            <div class="form-group">
-              <label for="leadSource">Lead Source</label>
-              <select id="leadSource" name="leadSource">
-                <option value="">Select source...</option>
-                <option value="website">Website</option>
-                <option value="referral">Referral</option>
-                <option value="cold-call">Cold Call</option>
-                <option value="email-campaign">Email Campaign</option>
-                <option value="social-media">Social Media</option>
-                <option value="event">Event</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="temperature" class="required">Temperature</label>
-              <select id="temperature" name="temperature" required>
-                <option value="hot">HOT</option>
-                <option value="warm">WARM</option>
-                <option value="cold">COLD</option>
-              </select>
-            </div>
-
-            <div class="form-group full">
-              <label for="notes">Notes</label>
-              <textarea id="notes" name="notes" rows="4" placeholder="Any additional context...."></textarea>
-            </div>
-
-          </div>
-
-          <div class="actions">
-            <button type="button" class="btn btn-cancel" onclick="window.location.href='leads.html'">Cancel</button>
-            <button type="submit" class="btn">Create Lead</button>
-          </div>
-        </form>
-      </div>
-    </main>
+<div class="main-wrapper">
+  <div class="top-bar">
+    <h1>Add New Lead</h1>
+    <div class="user-info">
+      <div class="avatar" id="avatarLetter">D</div>
+      <span id="userFullName"></span>
+      <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
+    </div>
   </div>
 
-  <script>
-    document.getElementById('addLeadForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+  <div class="form-card">
+    <form id="leadForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="firstName">First Name <span style="color:var(--danger);">*</span></label>
+          <input type="text" id="firstName" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name <span style="color:var(--danger);">*</span></label>
+          <input type="text" id="lastName" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address <span style="color:var(--danger);">*</span></label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone">
+        </div>
+        <div class="form-group">
+          <label for="idNumber">ID Number</label>
+          <input type="text" id="idNumber">
+        </div>
+        <div class="form-group">
+          <label for="amount">Deal Value (R)</label>
+          <input type="number" id="amount" min="0" step="1">
+        </div>
+        <div class="form-group full">
+          <label for="notes">Notes / Comments</label>
+          <textarea id="notes" rows="4"></textarea>
+        </div>
+      </div>
 
-      const lead = {
-        id: 'l' + Date.now(),
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        leadSource: document.getElementById('leadSource').value,
-        status: document.getElementById('temperature').value,  // "hot", "warm" or "cold"
-        notes: document.getElementById('notes').value.trim(),
-        createdAt: new Date().toISOString()
-      };
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='leads.html'">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create Lead</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-      // Save to localStorage
-      let leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-      leads.unshift(lead);
-      localStorage.setItem('kisasa_leads', JSON.stringify(leads));
+<script>
+const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
+document.getElementById("userFullName").textContent = user.name + " " + user.surname;
+document.getElementById("avatarLetter").textContent = user.name[0];
 
-      // Redirect to leads page + activate My Tasks tab
-      window.location.href = 'leads.html?tab=tasks';
-      // Auto-activate tab from URL parameter
-window.addEventListener('load', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tabFromUrl = urlParams.get('tab');
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
 
-  if (tabFromUrl === 'tasks') {
-    // Click the "My Tasks" tab programmatically
-    const tasksTab = document.querySelector('.tab[data-type="tasks"]') 
-                   || document.querySelector('.tab[data-type="user"]'); // adjust selector to match your actual tab
+document.getElementById("leadForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-    if (tasksTab) {
-      tasksTab.click();
-    }
-  }
+  const lead = {
+    id: "lead-" + Date.now(),
+    firstName: document.getElementById("firstName").value.trim(),
+    lastName: document.getElementById("lastName").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    idNumber: document.getElementById("idNumber").value.trim(),
+    amount: parseFloat(document.getElementById("amount").value) || 0,
+    notes: document.getElementById("notes").value.trim(),
+    status: "draft",
+    date: new Date().toISOString().split("T")[0]
+  };
+
+  let leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
+  leads.unshift(lead);   // ← CHANGED: unshift instead of push → newest at top
+  localStorage.setItem("kisasa_leads", JSON.stringify(leads));
+
+  window.location.href = "leads.html";
 });
-    });
-  </script>
-
+</script>
 </body>
 </html>

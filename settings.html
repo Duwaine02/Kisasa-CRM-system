@@ -1,149 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings - CRM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="stylesheet.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Kisasa CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --sidebar-bg: #0b1f3b;
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
+
+    /* ── SIDEBAR (identical to all other pages) ── */
+    .sidebar {
+      width: 76px;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 0;
+      position: fixed;
+      height: 100vh;
+      z-index: 1000;
+    }
+    .sidebar .logo {
+      color: #60a5fa;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+    .sidebar a {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
+    .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+
+    /* ── MAIN ── */
+    .main-wrapper {
+      margin-left: 76px;
+      flex: 1;
+      padding: 2rem 2.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+    .top-bar h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+    .logout:hover { color: var(--danger); }
+
+    /* ── SETTINGS SECTIONS ── */
+    .settings-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      margin-bottom: 2rem;
+    }
+
+    .settings-card h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #0f172a;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .toggle-label {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    .danger-zone {
+      border: 1px solid #fee2e2;
+      background: #fef2f2;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    .danger-zone h3 {
+      color: var(--danger);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      padding: 0.8rem 1.6rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+
+    @media (max-width: 768px) {
+      .main-wrapper { padding: 1.5rem 1rem; }
+    }
+  </style>
 </head>
 <body>
-    <style>
-/* Compact sidebar */
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
 
-.sidebar {
-  width: 70px;
-  background: #0f172a;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-}
+<aside class="sidebar">
+  <div class="logo">Kisasa</div>
+  <nav>
+    <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+    <a href="leads.html" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
+    <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
+    <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
+    <a href="reports.html" title="Reports"><i class="fa-solid fa-chart-line"></i></a>
+    <a href="settings.html" class="active" title="Settings"><i class="fa-solid fa-gear"></i></a>
+  </nav>
+</aside>
 
-.sidebar nav a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: #cbd5f5;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background: #1e293b;
-  color: #fff;
-}
-
-.main {
-  flex: 1;
-  padding: 24px 32px;
-  background-color: #f7f7f7;
-}
-
-.back-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  background-color: #555;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-.back-btn:hover {
-  background-color: #333;
-}
-
-h1 {
-  margin-bottom: 20px;
-}
-
-.table-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-th {
-  background-color: #4CAF50;
-  color: white;
-}
-
-button {
-  padding: 6px 10px;
-  margin-right: 5px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: #0b7dda;
-}
-</style>
-
-<div class="layout">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings" class="active"><i class="fas fa-cog"></i></a>
-    
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="main">
+<div class="main-wrapper">
+  <div class="top-bar">
     <h1>Settings</h1>
-
-    <div class="table-card">
-      <h3>Profile Settings</h3>
-      <input type="text" placeholder="Name" style="width:30%;padding:8px;margin:8px 0;border-radius:6px;">
-      <input type="email" placeholder="Email" style="width:30%;padding:8px;margin:8px 0;border-radius:6px;">
-      <button style="margin-top:10px;">Save Changes</button>
+    <div class="user-info">
+      <div class="avatar" id="avatarLetter">D</div>
+      <span id="userFullName"></span>
+      <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
     </div>
+  </div>
 
-    <div class="table-card" style="margin-top:20px;">
-      <h3>Change Password</h3>
-      <input type="password" placeholder="Old Password" style="width:30%;padding:8px;margin:8px 0;border-radius:6px;">
-      <input type="password" placeholder="New Password" style="width:30%;padding:8px;margin:8px 0;border-radius:6px;">
-      <button style="margin-top:10px;">Update Password</button>
+  <div class="settings-card">
+    <h2>Profile Settings</h2>
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" value="Duwaine Julies">
     </div>
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" value="duwainewaine02@gmail.com">
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" value="+27621146118">
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary">Save Changes</button>
+    </div>
+  </div>
 
-  </main>
+  <div class="settings-card">
+    <h2>Account Preferences</h2>
+    <div class="toggle-group">
+      <span class="toggle-label">Email Notifications</span>
+      <label class="toggle-switch">
+        <input type="checkbox" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-group">
+      <span class="toggle-label">Dark Mode</span>
+      <label class="toggle-switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-group">
+      <span class="toggle-label">Two-Factor Authentication</span>
+      <label class="toggle-switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="danger-zone">
+    <h3>Danger Zone</h3>
+    <p style="margin-bottom: 1rem; color: var(--text-muted);">Be careful — these actions cannot be undone.</p>
+    <button class="btn btn-danger">Delete Account</button>
+  </div>
 </div>
 
+<script>
+const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
+document.getElementById("userFullName").textContent = user.name + " " + user.surname;
+document.getElementById("avatarLetter").textContent = user.name.charAt(0);
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+// Placeholder save logic (you can expand this later)
+document.querySelectorAll('.btn-primary').forEach(btn => {
+  btn.addEventListener('click', () => {
+    alert("Settings saved successfully!");
+  });
+});
+
+document.querySelector('.btn-danger').addEventListener('click', () => {
+  if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+    alert("Account deletion initiated...");
+    // In real app: clear localStorage and redirect to login
+  }
+});
+</script>
 </body>
 </html>

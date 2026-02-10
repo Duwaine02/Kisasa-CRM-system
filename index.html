@@ -1,1353 +1,479 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kisasa CRM Dashboard</title> 
+<meta charset="UTF-8">
+<title>Kisasa CRM – Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="stylesheet.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --sidebar-bg: #0f172a;
-      --text-dark: #1e293b;
-      --gray-200: #e5e7eb;
-      --gray-100: #f3f4f6;
-      --whatsapp: #25D366;
-      --whatsapp-dark: #128C7E;
-      --avatar-bg: #e0f2fe;
-      --avatar-text: #0369a1;
-      --admin-accent: #8b5cf6; /* Purple for admin highlights */
-    }
+<style>
+:root {
+    --primary: #2563eb;
+    --primary-light: #dbeafe;
+    --sidebar-bg: #0b1f3b;
+    --bg-main: #f1f5f9;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+}
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: var(--text-dark); min-height: 100vh; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-    .layout { display: flex; }
+/* SIDEBAR */
+.sidebar {
+    width: 76px;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 0;
+    position: fixed;
+    height: 100vh;
+    z-index: 1000;
+}
+.sidebar .logo {
+    color: #60a5fa;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 2.5rem;
+}
+.sidebar a {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+.sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
+.sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-    .sidebar {
-      width: 70px;
-      background: var(--sidebar-bg);
-      color: white;
-      position: fixed;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 1.5rem;
-      overflow-y: auto;
-    }
-    .sidebar h2 {
-      color: white;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-    }
-    .sidebar nav a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      margin-bottom: 1.25rem;
-      font-size: 1.25rem;
-      color: #cbd5e1;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .sidebar nav a:hover,
-    .sidebar nav a.active {
-      background: #1e293b;
-      color: white;
-    }
+/* MAIN */
+main { flex: 1; margin-left: 76px; padding: 2rem 2.5rem; }
 
-    .main.agent-ui {
-      margin-left: 70px;
-      flex: 1;
-      padding: 1.5rem 2rem;
-      max-width: 1400px;
-    }
+/* HEADER */
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+.header h1 { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+.user-info { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+.logout:hover { color: var(--danger); }
 
-    .agent-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-      position: relative;
-      z-index: 50;
-    }
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+.stat-card { background: var(--card-bg); border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.stat-card p { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; }
+.stat-card h2 { font-size: 2rem; font-weight: 800; margin: 0; }
+.stat-card.revenue { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; }
+.stat-card.revenue p { color: rgba(255,255,255,0.9); }
 
-    .agent-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 60;
-    }
+/* CHART */
+.chart-container { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); margin-bottom: 2.5rem; height: 320px; }
 
-    .filter-select {
-      padding: 0.5rem 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      background: white;
-    }
+/* PIPELINE */
+.pipeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+.column { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 1.25rem; }
+.column-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-200); }
+.column-header h3 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; color: var(--text-main); }
+.count-badge { background: var(--gray-100); color: var(--text-muted); font-size: 0.8rem; padding: 0.35rem 0.8rem; border-radius: 999px; font-weight: 600; }
 
-    .primary-btn {
-      padding: 0.6rem 1.2rem;
-      background: #3b82f6;
-      color: white;
-      font-weight: 500;
-      border-radius: 6px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background 0.2s;
-      border: none;
-      font-size: 0.95rem;
-    }
-    .primary-btn:hover {
-      background: #2563eb;
-    }
+.lead-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.lead-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+}
+.lead-card .drag-handle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: grab;
+    padding-top: 0.25rem;
+}
+.lead-card .content {
+    flex: 1;
+}
+.lead-card h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: var(--text-main);
+}
+.lead-card .price {
+    color: var(--success);
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 0.9rem;
+    display: block;
+}
 
-    /* Professional Agent Profile */
-    .agent-profile {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
-    .agent-profile:hover {
-      background: rgba(59, 130, 246, 0.1);
-    }
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--avatar-bg);
-      color: var(--avatar-text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 16px;
-      border: 2px solid white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-    .agent-details {
-      display: flex;
-      flex-direction: column;
-    }
-    .agent-name {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text-dark);
-    }
-    .agent-role {
-      font-size: 12px;
-      color: #6b7280;
-    }
+.lead-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-200);
+}
+.contact-icons {
+    display: flex;
+    gap: 1rem;
+}
+.contact-icons i {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.contact-icons i:hover {
+    color: var(--success);
+    transform: scale(1.15);
+}
 
-    /* Dropdown Menu – FIXED POSITIONING */
-    .profile-dropdown {
-      position: absolute;
-      top: calc(100% + 8px); /* Space below profile */
-      right: 0;
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
-      min-width: 220px;
-      z-index: 300; /* Very high so it’s always visible */
-      display: none;
-      overflow: visible;
-    }
-    .profile-dropdown.show {
-      display: block;
-    }
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      color: #374151;
-      text-decoration: none;
-      font-size: 14px;
-      transition: background 0.15s;
-    }
-    .dropdown-item:hover {
-      background: #f8fafc;
-    }
-    .dropdown-item.logout {
-      color: #ef4444;
-      border-top: 1px solid var(--gray-200);
-      margin-top: 6px;
-    }
-    .dropdown-item i {
-      font-size: 16px;
-      width: 20px;
-      text-align: center;
-    }
+.btn-options {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+.btn-options:hover {
+    background: var(--gray-100);
+    color: var(--primary);
+}
 
-    /* Rest of your existing styles (task-row, whatsapp-btn, performance chart, etc.) */
-    .task-row {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 14px;
-      background: #f9fafb;
-      border-radius: 10px;
-      font-size: 14px;
-      gap: 12px;
-      margin-bottom: 6px;
-      flex-wrap: wrap;
-    }
-    .task-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .task-info .name {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .task-info .detail {
-      font-size: 13px;
-      color: #6b7280;
-    }
-    .task-info .amount {
-      font-weight: 600;
-      color: #1e40af;
-    }
+.fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(37,99,235,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+.fab:hover { transform: scale(1.1); background: #1d4ed8; }
 
-    .menu-btn {
-      background: none;
-      border: none;
-      font-size: 16px;
-      color: #6b7280;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-    }
-    .menu-btn:hover {
-      background: #e5e7eb;
-      color: #1f2937;
-    }
+.action-menu {
+    position: absolute;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    width: 220px;
+    z-index: 2000;
+    padding: 0.5rem 0;
+}
+.action-menu button {
+    width: 100%;
+    padding: 0.7rem 1.2rem;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.action-menu button:hover { background: var(--primary-light); color: var(--primary); }
+.hidden { display: none !important; }
 
-    .status {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 999px;
-      margin-left: 8px;
-    }
-    .hot  { background: #fee2e2; color: #991b1b; }
-    .warm { background: #fef3c7; color: #92400e; }
-    .cold { background: #e0f2fe; color: #0369a1; }
-    .draft { background: #fde68a; color: #92400e; }
-    .completed { background: #d1fae5; color: #065f46; }
-
-    .dropdown {
-      position: absolute;
-      right: 10px;
-      top: 40px;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.1);
-      display: none;
-      z-index: 10;
-      min-width: 160px;
-    }
-    .dropdown button {
-      display: block;
-      width: 100%;
-      padding: 10px 14px;
-      background: none;
-      border: none;
-      text-align: left;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .dropdown button:hover {
-      background: #f3f4f6;
-    }
-
-    #tasks-container, #drafts-container, #completed-container {
-      max-height: 420px;
-      overflow-y: auto;
-      padding: 8px;
-    }
-
-    #tasks-container::-webkit-scrollbar,
-    #drafts-container::-webkit-scrollbar,
-    #completed-container::-webkit-scrollbar {
-      width: 6px;
-    }
-    #tasks-container::-webkit-scrollbar-track,
-    #drafts-container::-webkit-scrollbar-track,
-    #completed-container::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 10px;
-    }
-    #tasks-container::-webkit-scrollbar-thumb,
-    #drafts-container::-webkit-scrollbar-thumb,
-    #completed-container::-webkit-scrollbar-thumb {
-      background: #94a3b8;
-      border-radius: 10px;
-    }
-    #tasks-container::-webkit-scrollbar-thumb:hover,
-    #drafts-container::-webkit-scrollbar-thumb:hover,
-    #completed-container::-webkit-scrollbar-thumb:hover {
-      background: #64748b;
-    }
-
-    .stats.agent-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .card {
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      min-width: 140px;
-    }
-    .card p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-    .card h2 {
-      margin: 0.25rem 0 0;
-      font-size: 1.75rem;
-    }
-
-    .panel {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.25rem;
-      background: #f8fafc;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .badge.count {
-      background: #e5e7eb;
-      color: #4b5563;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.875rem;
-      font-weight: 600;
-    }
-    .agent-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .whatsapp-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      background: var(--whatsapp);
-      color: white;
-      border-radius: 50%;
-      font-size: 14px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    .whatsapp-btn:hover {
-      background: var(--whatsapp-dark);
-      transform: scale(1.1);
-      box-shadow: 0 4px 10px rgba(37, 213, 102, 0.4);
-    }
-    .whatsapp-btn i {
-      margin-top: 1px;
-    }
-    .whatsapp-btn.disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-      pointer-events: none;
-      box-shadow: none;
-    }
-
-    .performance-section {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-    .performance-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    .performance-header h3 {
-      margin: 0;
-      font-size: 1.2rem;
-      color: var(--primary);
-    }
-    .month-select {
-      padding: 0.4rem 0.9rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      background: white;
-      font-size: 0.9rem;
-    }
-    .chart-container {
-      position: relative;
-      height: 180px;
-    }
-
-    /* ────────────────────────────────────────────────
-       NEW ADMIN STYLES – added only (nothing removed)
-    ──────────────────────────────────────────────── */
-
-    .admin-section-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--admin-accent);
-      margin: 2.5rem 0 1.5rem;
-      padding-bottom: 0.6rem;
-      border-bottom: 3px solid var(--admin-accent);
-    }
-
-    .company-stats .card {
-      border-left: 5px solid var(--admin-accent);
-      transition: transform 0.2s;
-    }
-    .company-stats .card:hover {
-      transform: translateY(-4px);
-    }
-
-    .admin-chart-container {
-      height: 240px; /* Slightly taller for admin overview */
-    }
-
-    .agents-performance-table table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    .agents-performance-table th,
-    .agents-performance-table td {
-      padding: 14px 16px;
-      text-align: left;
-      border-bottom: 1px solid var(--gray-200);
-    }
-    .agents-performance-table th {
-      background: var(--gray-100);
-      font-weight: 600;
-      color: #1e293b;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-    }
-    .agents-performance-table tr:hover {
-      background: #f8fafc;
-    }
-  </style>
+@media (max-width: 768px) {
+    .pipeline-grid { grid-template-columns: 1fr; }
+    main { padding: 1.5rem 1rem; }
+    .fab { bottom: 20px; right: 20px; width: 56px; height: 56px; font-size: 1.4rem; }
+    .lead-card { padding: 1rem; }
+    .contact-icons { gap: 0.8rem; }
+    .contact-icons i { font-size: 1rem; }
+}
+</style>
 </head>
 <body>
 
-<div class="layout">
-
-  <aside class="sidebar">
-    <h2>Kisasa</h2>
+<aside class="sidebar">
+    <div class="logo">Kisasa</div>
     <nav>
-      <a href="index.html" class="active" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
+        <a href="index.html" class="active"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="leads.html"><i class="fa-solid fa-user-plus"></i></a>
+        <a href="clients.html"><i class="fa-solid fa-users"></i></a>
+        <a href="quotes.html"><i class="fa-solid fa-file-invoice"></i></a>
+        <a href="reports.html"><i class="fa-solid fa-chart-line"></i></a>
+        <a href="settings.html"><i class="fa-solid fa-gear"></i></a>
     </nav>
-  </aside>
+</aside>
 
-  <main class="main agent-ui" id="agentDashboard"> <!-- ADDED FIX: Added ID for agent dashboard section -->
-
-    <header class="header agent-header">
-      <h1>Agent Dashboard</h1>
-      <div class="agent-actions">
-        <a href="addNewlead.html" class="primary-btn">+ Add New Lead</a>
-
-        <!-- Professional Agent Profile -->
-        <div class="agent-profile" id="agentProfile">
-          <div class="avatar">D</div>
-          <div class="agent-details">
-            <span class="agent-name">Duwaine</span>
-          </div>
-          <i class="fas fa-chevron-down" style="font-size:12px;color:#6b7280;"></i>
+<main>
+    <div class="header">
+        <h1>Dashboard</h1>
+        <div class="user-info">
+            <div class="avatar" id="avatarLetter"></div>
+            <span id="userFullName"></span>
+            <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
         </div>
+    </div>
 
-        <!-- Dropdown Menu -->
-        <div class="profile-dropdown" id="profileDropdown">
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-user"></i> My Profile
-          </a>
-          <a href="settings.html" class="dropdown-item">
-            <i class="fas fa-cog"></i> Settings
-          </a>
-          <a href="login.html" class="dropdown-item logout">
-            <i class="fas fa-sign-out-alt"></i> Logout
-          </a>
-        </div>
-      </div>
-    </header>
-
-    <!-- STATS -->
-    <section class="stats agent-stats">
-      <div class="card"><p>New</p><h2 id="newLeads">3</h2></div> <!-- ADDED FIX: Added ID for newLeads -->
-      <div class="card"><p>Deals in progress</p><h2 id="inProgress">2</h2></div> <!-- ADDED FIX: Added ID for inProgress -->
-      <div class="card"><p>Leads converted</p><h2 id="completedClients">1</h2></div> <!-- ADDED FIX: Added ID for completedClients -->
-      <div class="card"><p>Win Rate</p><h2 id="winRate">33%</h2></div> <!-- ADDED FIX: Added ID for winRate -->
+    <section class="stats-grid">
+        <div class="stat-card"><p>New Leads</p><h2 id="newLeadsCount">0</h2></div>
+        <div class="stat-card"><p>In Progress</p><h2 id="inProgressCount">0</h2></div>
+        <div class="stat-card"><p>Converted</p><h2 id="convertedCount">0</h2></div>
+        <div class="stat-card"><p>Win Rate</p><h2 id="winRate">0%</h2></div>
+        <div class="stat-card revenue"><p>Total Revenue</p><h2 id="totalRevenue">R 0</h2></div>
     </section>
 
-    <!-- PERFORMANCE CHART -->
-    <section class="performance-section">
-      <div class="performance-header">
-        <h3>Performance (Last 4 Weeks)</h3>
-        <select class="month-select" id="monthSelect">
-          <option value="jan">Jan 2026</option>
-          <option value="feb" selected>Feb 2026</option>
-          <option value="mar">Mar 2026</option>
-          <option value="apr">Apr 2026</option>
-        </select>
-      </div>
-      <div class="chart-container">
+    <div class="chart-container">
         <canvas id="performanceChart"></canvas>
-        <canvas id="salesChart" style="display:none;"></canvas> <!-- ADDED FIX: Added hidden canvas for salesChart to avoid errors in additional script -->
-      </div>
-    </section>
-
-    <!-- TASKS / DRAFTS / COMPLETED -->
-    <section class="agent-grid">
-
-      <div class="panel" id="tasks-panel">
-        <div class="panel-header">
-          <h3>My Tasks</h3>
-          <span class="badge count" id="task-count">0</span>
-          <!-- FIXED: Removed duplicate count badge #myTasksCount -->
-        </div>
-        <div id="tasks-container"></div>
-        <!-- FIXED: Removed duplicate #taskList container to avoid "No tasks yet" when there are tasks -->
-      </div>
-
-      <div class="panel" id="drafts-panel">
-        <div class="panel-header">
-          <h3>Drafts</h3>
-          <span class="badge count" id="draft-count">0</span>
-        </div>
-        <div id="drafts-container"></div>
-      </div>
-
-      <div class="panel" id="completed-panel">
-        <div class="panel-header">
-          <h3>Completed</h3>
-          <span class="badge count" id="completed-count">0</span>
-          <!-- FIXED: Removed duplicate count badge #completedCount -->
-        </div>
-        <div id="completed-container"></div>
-        <!-- FIXED: Removed duplicate #completedList container -->
-      </div>
-
-    </section>
-
-    <!-- ────────────────────────────────────────────────
-         ADMIN-ONLY EXTRA CONTENT – added below (nothing removed)
-    ──────────────────────────────────────────────── -->
-
-    <div id="adminExtraContent" style="display: none;">
-      <h2 class="admin-section-title">Admin Overview</h2>
-
-      <!-- Company-wide Stats -->
-      <section class="stats company-stats">
-        <div class="card"><p>Total Leads</p><h2>87</h2></div>
-        <div class="card"><p>Total Agents</p><h2>6</h2></div>
-        <div class="card"><p>Deals Closed This Month</p><h2>19</h2></div>
-        <div class="card"><p>Overall Win Rate</p><h2>41%</h2></div>
-      </section>
-
-      <!-- Admin's Own Performance -->
-      <section class="performance-section">
-        <div class="performance-header">
-          <h3>Admin Personal Performance</h3>
-          <select class="month-select" id="adminMonthSelect">
-            <option value="jan">Jan 2026</option>
-            <option value="feb" selected>Feb 2026</option>
-            <option value="mar">Mar 2026</option>
-            <option value="apr">Apr 2026</option>
-          </select>
-        </div>
-        <div class="chart-container admin-chart-container">
-          <canvas id="adminPerformanceChart"></canvas>
-        </div>
-      </section>
-
-      <!-- All Agents Performance Table -->
-      <section class="performance-section">
-        <h3>Team Performance Overview</h3>
-        <div class="agents-performance-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Leads Converted</th>
-                <th>Deals Closed</th>
-                <th>Win Rate</th>
-                <th>Active Tasks</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Duwaine</td><td>18</td><td>8</td><td>44%</td><td>5</td></tr>
-              <tr><td>Sarah</td><td>15</td><td>6</td><td>40%</td><td>4</td></tr>
-              <tr><td>Mike</td><td>12</td><td>4</td><td>33%</td><td>7</td></tr>
-              <tr><td>Lisa</td><td>9</td><td>3</td><td>33%</td><td>2</td></tr>
-              <tr><td>Thabo</td><td>22</td><td>9</td><td>41%</td><td>6</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- All Tasks / Drafts / Completed Across System -->
-      <section class="agent-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <h3>All Active Tasks (All Agents)</h3>
-            <span class="badge count">34</span>
-          </div>
-          <div id="allTasksContainer">
-            <!-- You can load real aggregated data here later -->
-            <p style="padding:1.5rem;text-align:center;color:#64748b;">All active tasks across all agents (expand later)</p>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <h3>All Drafts (All Agents)</h3>
-            <span class="badge count">11</span>
-          </div>
-          <div id="allDraftsContainer">
-            <p style="padding:1.5rem;text-align:center;color:#64748b;">All drafts across all agents (expand later)</p>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <h3>All Completed Deals</h3>
-            <span class="badge count">19</span>
-          </div>
-          <div id="allCompletedContainer">
-            <p style="padding:1.5rem;text-align:center;color:#64748b;">All completed deals across all agents (expand later)</p>
-          </div>
-        </div>
-      </section>
     </div>
 
-    <div id="adminDashboard" style="display: none;"> <!-- ADDED FIX: Added container for adminDashboard to group admin content and avoid null errors -->
-      <!-- Admin content is already in adminExtraContent, but this wrapper allows script targeting -->
-    </div>
+    <section class="pipeline-grid">
+        <div class="column">
+            <div class="column-header">
+                <h3><i class="fa-solid fa-note-sticky"></i> Drafts</h3>
+                <span class="count-badge" id="draftCount">0</span>
+            </div>
+            <div id="draftsList"></div>
+        </div>
 
-  </main>
+        <div class="column">
+            <div class="column-header">
+                <h3><i class="fa-solid fa-list-check"></i> My Tasks</h3>
+                <span class="count-badge" id="taskCount">0</span>
+            </div>
+            <div id="tasksList"></div>
+        </div>
+
+        <div class="column">
+            <div class="column-header">
+                <h3><i class="fa-solid fa-circle-check"></i> Completed</h3>
+                <span class="count-badge" id="completeCount">0</span>
+            </div>
+            <div id="completedList"></div>
+        </div>
+    </section>
+</main>
+
+<button class="fab" onclick="openAddLead()"><i class="fa-solid fa-plus"></i></button>
+
+<div id="actionMenu" class="action-menu hidden">
+    <button onclick="sendQuote()"><i class="fa-solid fa-paper-plane"></i> Send Quote</button>
+    <button onclick="moveLead('tasksList')"><i class="fa-solid fa-arrow-right"></i> Move to Tasks</button>
+    <button onclick="moveLead('completedList')"><i class="fa-solid fa-check-double"></i> Mark Converted</button>
+    <button style="color:var(--danger);" onclick="deleteLead()"><i class="fa-solid fa-trash"></i> Delete</button>
 </div>
 
 <script>
-// Prevent duplicates / race conditions
-const recentlyMoved = new Set();
+// ── User Info ──
+const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
+document.getElementById("userFullName").textContent = user.name + " " + user.surname;
+document.getElementById("avatarLetter").textContent = user.name.charAt(0);
 
-// Toggle task dropdown
-function toggleMenu(btn) {
-  const menu = btn.nextElementSibling;
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
-document.addEventListener("click", e => {
-  if (!e.target.closest(".menu-btn")) {
-    document.querySelectorAll(".dropdown").forEach(d => d.style.display = "none");
-  }
-});
-
-// Profile dropdown toggle
-document.addEventListener('DOMContentLoaded', () => {
-  const profile = document.getElementById('agentProfile');
-  const dropdown = document.getElementById('profileDropdown');
-
-  if (profile && dropdown) {
-    profile.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle('show');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!profile.contains(e.target)) {
-        dropdown.classList.remove('show');
-      }
-    });
-  }
-
-  // Show admin extra content only if admin
-  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
-  if (isAdmin) {
-    document.getElementById('adminExtraContent').style.display = 'block';
-    createAdminChart();
-  }
-});
-
-// Send Quote
-function sendQuote(btn) {
-  const row = btn.closest(".task-row");
-  if (!row) return;
-
-  const name = row.dataset.name;
-  const email = row.dataset.email;
-  const phone = row.dataset.phone;
-  const amount = row.dataset.amount;
-
-  row.dataset.quoteInProgress = "true";
-
-  window.open(
-    `NewQuote.html?client=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(amount)}`,
-    '_blank'
-  );
-
-  const handler = function(event) {
-    if (event.data.action === "quoteSent" && event.data.clientName === name) {
-      if (recentlyMoved.has(name)) return;
-      recentlyMoved.add(name);
-      setTimeout(() => recentlyMoved.delete(name), 5000);
-
-      moveTaskToDrafts(row);
-      window.removeEventListener('message', handler);
-    }
-  };
-  window.addEventListener('message', handler);
-}
-
-// Move to Drafts
-function moveTaskToDrafts(row) {
-  if (!row || row.dataset.moved) return;
-
-  const name = row.dataset.name;
-
-  if (recentlyMoved.has(name)) return;
-
-  recentlyMoved.add(name);
-  setTimeout(() => recentlyMoved.delete(name), 5000);
-
-  row.dataset.moved = "true";
-
-  let drafts = JSON.parse(localStorage.getItem('drafts')) || [];
-  const alreadyExists = drafts.some(d => d.name === name);
-  if (alreadyExists) {
-    row.remove();
-    updateCounts();
-    return;
-  }
-
-  const email = row.dataset.email;
-  const phone = row.dataset.phone;
-  const amount = row.dataset.amount;
-
-  row.remove();
-  drafts.push({ name, email, phone, amount });
-  localStorage.setItem('drafts', JSON.stringify(drafts));
-
-  loadDrafts();
-  updateCounts();
-}
-
-function moveToDraft(btn) {
-  const row = btn.closest(".task-row");
-  if (row.dataset.quoteInProgress === "true") {
-    alert("Quote is being processed — please wait.");
-    return;
-  }
-  moveTaskToDrafts(row);
-}
-
-function moveToCompleted(btn) {
-  const row = btn.closest(".task-row");
-  const name = row.dataset.name;
-  const email = row.dataset.email;
-  const phone = row.dataset.phone;
-  const amount = row.dataset.amount;
-
-  row.remove();
-  let completed = JSON.parse(localStorage.getItem('completed')) || [];
-  completed.push({ name, email, phone, amount });
-  localStorage.setItem('completed', JSON.stringify(completed));
-  loadCompleted();
-  updateCounts();
-}
-
-// WhatsApp link
-function getWhatsAppLink(phone) {
-  if (!phone || phone.trim() === '' || phone === '—') return null;
-  let cleanPhone = phone.replace(/[^0-9]/g, '');
-  if (cleanPhone.startsWith('0')) {
-    cleanPhone = '27' + cleanPhone.substring(1);
-  }
-  return `https://wa.me/${cleanPhone}`;
-}
-
-function loadTasks() {
-  const container = document.getElementById("tasks-container");
-  container.innerHTML = '';
-
-  const tasks = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-
-  tasks.forEach(task => {
-    const randomAmount = Math.floor(Math.random() * (50000 - 1000 + 1)) + 1000;
-    const fullName = `${task.firstName || ''} ${task.lastName || ''}`.trim() || 'Unknown Client';
-    const phone = task.phone || '';
-    const whatsappLink = getWhatsAppLink(phone);
-
-    const row = document.createElement('div');
-    row.className = 'task-row';
-    row.dataset.name = fullName;
-    row.dataset.email = task.email || '';
-    row.dataset.phone = phone;
-    row.dataset.amount = `R ${randomAmount.toLocaleString()}`;
-
-    row.innerHTML = `
-      <div class="task-info">
-        <span class="name">
-          ${fullName}
-          ${whatsappLink ? `
-            <a href="${whatsappLink}" target="_blank" class="whatsapp-btn" title="Chat on WhatsApp">
-              <i class="fab fa-whatsapp"></i>
-            </a>
-          ` : `
-            <span class="whatsapp-btn disabled" title="No phone number">
-              <i class="fab fa-whatsapp"></i>
-            </span>
-          `}
-        </span>
-        <span class="detail">Email: ${task.email || '—'}</span>
-        <span class="detail">Phone: ${phone || '—'}</span>
-        <span class="amount">Amount: R ${randomAmount.toLocaleString()}</span>
-      </div>
-      <span class="status ${task.status || 'hot'}">${(task.status || 'HOT').toUpperCase()}</span>
-      <button class="menu-btn" onclick="toggleMenu(this)">
-        <i class="fas fa-ellipsis-v"></i>
-      </button>
-      <div class="dropdown">
-        <button onclick="sendQuote(this)">Send Quote</button>
-        <button onclick="moveToDraft(this)">Move to Draft</button>
-        <button onclick="moveToCompleted(this)">Mark Completed</button>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-
-  // FIXED: If no tasks, show "No tasks yet"
-  if (tasks.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">No tasks yet</p>';
-  }
-
-  updateCounts();
-}
-
-function loadDrafts() {
-  const container = document.getElementById("drafts-container");
-  container.innerHTML = '';
-  const drafts = JSON.parse(localStorage.getItem('drafts') || '[]');
-
-  // FIXED: Skip invalid drafts (e.g., undefined or empty name)
-  const validDrafts = drafts.filter(draft => draft.name && draft.name !== 'undefined' && draft.name.trim() !== '');
-
-  validDrafts.forEach(draft => {
-    const row = document.createElement('div');
-    row.className = 'task-row';
-    row.dataset.name = draft.name;
-    row.dataset.email = draft.email || '';
-    row.dataset.phone = draft.phone || '';
-    row.dataset.amount = draft.amount || '—';
-
-    row.innerHTML = `
-      <div class="task-info">
-        <span class="name">${draft.name}</span>
-        <span class="detail">Email: ${draft.email || '—'}</span>
-        <span class="detail">Phone: ${draft.phone || '—'}</span>
-        <span class="amount">${draft.amount || '—'}</span>
-      </div>
-      <span class="status draft">DRAFT</span>
-      <button class="menu-btn" onclick="toggleMenu(this)">
-        <i class="fas fa-ellipsis-v"></i>
-      </button>
-      <div class="dropdown">
-        <button onclick="sendQuote(this)">Send Quote</button>
-        <button onclick="moveToCompleted(this)">Move to Completed</button>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-
-  // FIXED: If no valid drafts, show message
-  if (validDrafts.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">No drafts yet</p>';
-  }
-
-  // FIXED: Update localStorage to remove invalid entries
-  localStorage.setItem('drafts', JSON.stringify(validDrafts));
-
-  updateCounts();
-}
-
-function loadCompleted() {
-  const container = document.getElementById("completed-container");
-  container.innerHTML = '';
-  const completed = JSON.parse(localStorage.getItem('completed')) || [];
-
-  completed.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'task-row';
-    row.innerHTML = `
-      <div class="task-info">
-        <span class="name">${item.name}</span>
-        <span class="detail">Email: ${item.email || '—'}</span>
-        <span class="detail">Phone: ${item.phone || '—'}</span>
-        <span class="amount">${item.amount || '—'}</span>
-      </div>
-      <span class="status completed">COMPLETED</span>
-    `;
-    container.appendChild(row);
-  });
-
-  // FIXED: If no completed, show message
-  if (completed.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#64748b; padding:1rem;">No completed yet</p>';
-  }
-
-  document.getElementById("completed-count").textContent = completed.length;
-}
-
-function updateCounts() {
-  document.getElementById("task-count").textContent = document.querySelectorAll("#tasks-container .task-row").length;
-  document.getElementById("draft-count").textContent = document.querySelectorAll("#drafts-container .task-row").length;
-  document.getElementById("completed-count").textContent = document.querySelectorAll("#completed-container .task-row").length;
-}
-
-// Performance Chart Data
-const monthlyData = {
-  jan: { label: 'January 2026', weeklyConverted: [2, 4, 3, 5], weeklyDeals: [1, 2, 1, 3], totalConverted: 14, winRate: 35 },
-  feb: { label: 'February 2026', weeklyConverted: [3, 5, 6, 4], weeklyDeals: [2, 3, 4, 2], totalConverted: 18, winRate: 45 },
-  mar: { label: 'March 2026', weeklyConverted: [4, 3, 7, 5], weeklyDeals: [2, 2, 5, 3], totalConverted: 19, winRate: 48 },
-  apr: { label: 'April 2026', weeklyConverted: [5, 6, 4, 8], weeklyDeals: [3, 4, 2, 5], totalConverted: 23, winRate: 52 }
-};
-
-let performanceChart;
-const ctx = document.getElementById('performanceChart')?.getContext('2d');
-
-function createChart(month = 'feb') {
-  const data = monthlyData[month];
-  if (!ctx) return;
-
-  if (performanceChart) performanceChart.destroy();
-
-  performanceChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [
-        {
-          label: 'Leads Converted',
-          data: data.weeklyConverted,
-          backgroundColor: 'rgba(59, 130, 246, 0.6)',
-          borderColor: 'rgba(59, 130, 246, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'Deals Closed',
-          data: data.weeklyDeals,
-          backgroundColor: 'rgba(16, 185, 129, 0.6)',
-          borderColor: 'rgba(16, 185, 129, 1)',
-          borderWidth: 1
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, title: { display: true, text: 'Count', font: { size: 12 } }, ticks: { font: { size: 11 } } },
-        x: { ticks: { font: { size: 11 } } }
-      },
-      plugins: {
-        legend: { position: 'top', labels: { font: { size: 12 } } },
-        title: {
-          display: true,
-          text: `${data.label} (Converted: ${data.totalConverted}, Win: ${data.winRate}%)`,
-          font: { size: 14 }
-        }
-      }
-    }
-  });
-}
-
-// ────────────────────────────────────────────────
-// ADMIN-ONLY CHART (added – uses same monthlyData)
-// ────────────────────────────────────────────────
-
-let adminChart;
-const adminCtx = document.getElementById('adminPerformanceChart')?.getContext('2d');
-
-function createAdminChart(month = 'feb') {
-  const data = monthlyData[month];
-  if (!adminCtx) return;
-
-  if (adminChart) adminChart.destroy();
-
-  adminChart = new Chart(adminCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [
-        {
-          label: 'Leads Converted (Admin)',
-          data: [5, 8, 6, 9],
-          backgroundColor: 'rgba(139, 92, 246, 0.6)',
-          borderColor: 'rgba(139, 92, 246, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'Deals Closed (Admin)',
-          data: [3, 5, 4, 6],
-          backgroundColor: 'rgba(34, 197, 94, 0.6)',
-          borderColor: 'rgba(34, 197, 94, 1)',
-          borderWidth: 1
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, title: { display: true, text: 'Count' } }
-      },
-      plugins: {
-        legend: { position: 'top' },
-        title: {
-          display: true,
-          text: `${data.label} - Admin Performance`
-        }
-      }
-    }
-  });
-}
-
-document.getElementById('monthSelect')?.addEventListener('change', function() {
-  createChart(this.value);
-});
-
-document.getElementById('adminMonthSelect')?.addEventListener('change', function() {
-  createAdminChart(this.value);
-});
-
-window.addEventListener('message', function(event) {
-  if (event.data.action === "quoteSent") {
-    const rows = document.querySelectorAll("#tasks-container .task-row");
-    for (let row of rows) {
-      if (row.dataset.name === event.data.clientName) {
-        moveTaskToDrafts(row);
-        break;
-      }
-    }
-  }
-});
-
-window.addEventListener('load', () => {
-  loadTasks();
-  loadDrafts();
-  loadCompleted();
-  createChart();
-
-  // Show admin extra content only if admin
-  const isAdmin = localStorage.getItem('currentUser')?.includes('"admin@kisasa.com"');
-  if (isAdmin) {
-    document.getElementById('adminExtraContent').style.display = 'block';
-    createAdminChart();
-  }
-});
-
-// ADDED FIX: Function to initialize mock data if localStorage is empty (for testing)
-function initializeMockData() {
-  if (!localStorage.getItem('kisasa_leads')) {
-    localStorage.setItem('kisasa_leads', JSON.stringify([])); // Empty array to avoid null errors
-  }
-  if (!localStorage.getItem('drafts')) {
-    localStorage.setItem('drafts', JSON.stringify([]));
-  }
-  if (!localStorage.getItem('completed')) {
-    localStorage.setItem('completed', JSON.stringify([]));
-  }
-}
-
-// ADDED FIX: Wrapped additional script in DOMContentLoaded and integrated it here (moved from end)
-document.addEventListener('DOMContentLoaded', () => {
-  // ================= MOCK USERS =================
-  const users = [
-    { name: "Admin User", email: "admin@kisasa.com", role: "admin" },
-    { name: "Agent John", email: "john@kisasa.com", role: "agent" },
-    { name: "Agent Lisa", email: "lisa@kisasa.com", role: "agent" }
-  ];
-
-  // ================= LOGIN CHECK =================
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  if (!loggedInUser) {
+function logout() {
+    localStorage.removeItem("loggedInUser");
     window.location.href = "login.html";
+}
+
+function openAddLead() {
+    window.location.href = "addNewlead.html";
+}
+
+// ── Leads Management ──
+let leads = [];
+
+try {
+    leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
+    if (!Array.isArray(leads)) leads = [];
+} catch (e) {
+    console.error("Invalid leads data in localStorage", e);
+    leads = [];
+}
+
+function loadLeads() {
+    const lists = {
+        draftsList: document.getElementById("draftsList"),
+        tasksList: document.getElementById("tasksList"),
+        completedList: document.getElementById("completedList")
+    };
+
+    if (!lists.draftsList || !lists.tasksList || !lists.completedList) {
+        console.warn("One or more list containers missing");
+        return;
+    }
+
+    Object.values(lists).forEach(list => list.innerHTML = "");
+
+    let newCount = 0, progressCount = 0, closedCount = 0, revenue = 0;
+
+    leads.forEach(lead => {
+        const card = document.createElement("div");
+        card.className = "lead-card";
+        card.id = lead.id || `lead-${Date.now()}`;
+        card.innerHTML = `
+            <div class="drag-handle"><i class="fa-solid fa-grip-lines"></i></div>
+            <div class="content">
+                <h4>${lead.firstName || ''} ${lead.lastName || ''}</h4>
+                <span class="price">R ${(Number(lead.amount) || 0).toLocaleString()}</span>
+                <div class="lead-footer">
+                    <div class="contact-icons">
+                        <i class="fa-solid fa-phone" title="Call" onclick="window.open('tel:${lead.phone || ''}')"></i>
+                        <i class="fa-solid fa-envelope" title="Email" onclick="window.open('mailto:${lead.email || ''}')"></i>
+                        <i class="fa-brands fa-whatsapp" title="WhatsApp" onclick="window.open('https://wa.me/${(lead.phone || '').replace('+','')}')"></i>
+                    </div>
+                    <button class="btn-options" title="Options" onclick="openMenu(event,this)"><i class="fa-solid fa-ellipsis-v"></i></button>
+                </div>
+            </div>
+        `;
+
+        if (lead.status === "draft") {
+            lists.draftsList.appendChild(card);
+            newCount++;
+        } else if (lead.status === "in-progress") {
+            lists.tasksList.appendChild(card);
+            progressCount++;
+        } else if (lead.status === "completed") {
+            card.classList.add("completed");
+            lists.completedList.appendChild(card);
+            closedCount++;
+            revenue += Number(lead.amount) || 0;
+        }
+    });
+
+    document.getElementById("newLeadsCount").textContent = newCount + progressCount + closedCount;
+    document.getElementById("inProgressCount").textContent = progressCount;
+    document.getElementById("convertedCount").textContent = closedCount;
+    document.getElementById("winRate").textContent = (newCount + progressCount > 0 ? Math.round((closedCount / (newCount + progressCount)) * 100) : 0) + "%";
+    document.getElementById("totalRevenue").textContent = "R " + revenue.toLocaleString();
+
+    document.getElementById("draftCount").textContent = newCount;
+    document.getElementById("taskCount").textContent = progressCount;
+    document.getElementById("completeCount").textContent = closedCount;
+}
+
+// ── Menu Positioning ──
+let selectedLead = null;
+const actionMenu = document.getElementById("actionMenu");
+
+function openMenu(e, btn) {
+    e.stopPropagation();
+    selectedLead = btn.closest(".lead-card");
+
+    const rect = selectedLead.getBoundingClientRect();
+    let top = rect.bottom + window.scrollY + 8;
+    let left = rect.right + window.scrollX - 220;
+
+    // Flip if off-screen right
+    if (left + 220 > window.innerWidth) left = rect.left + window.scrollX;
+
+    // Flip above if bottom is off-screen
+    if (top + 180 > window.innerHeight + window.scrollY) top = rect.top + window.scrollY - 180 - 8;
+
+    actionMenu.style.top = top + "px";
+    actionMenu.style.left = left + "px";
+    actionMenu.classList.remove("hidden");
+}
+
+document.addEventListener("click", () => actionMenu.classList.add("hidden"));
+
+function moveLead(targetId) {
+    if (!selectedLead) return;
+    const id = selectedLead.id;
+    const lead = leads.find(l => l.id === id);
+    if (lead) {
+        lead.status = targetId === "completedList" ? "completed" : "in-progress";
+        localStorage.setItem("kisasa_leads", JSON.stringify(leads));
+    }
+    document.getElementById(targetId).appendChild(selectedLead);
+    loadLeads();
+}
+
+function deleteLead() {
+    if (!selectedLead) return;
+    const id = selectedLead.id;
+    leads = leads.filter(l => l.id !== id);
+    localStorage.setItem("kisasa_leads", JSON.stringify(leads));
+    selectedLead.remove();
+    loadLeads();
+}
+
+function sendQuote() {
+    alert("Quote generation started...");
+}
+
+// ── Chart ──
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById('performanceChart');
+  if (!canvas) {
+    console.warn("Canvas #performanceChart not found");
     return;
   }
 
-  console.log("Logged in as:", loggedInUser.name, loggedInUser.role);
+  const ctx = canvas.getContext('2d');
+  const rootStyle = getComputedStyle(document.documentElement);
+  const primaryColor = rootStyle.getPropertyValue('--primary').trim() || '#2563eb';
+  const borderColor = rootStyle.getPropertyValue('--border').trim() || '#e2e8f0';
 
-  // ================= MOCK DATA =================
-  let agents = [
-    {
-      id: 1,
-      name: "Agent John",
-      email: "john@kisasa.com",
-      stats: { leads: 12, inProgress: 4, closed: 5 },
-      tasks: [
-        { id: "t1", client: "Lucas Black", status: "Contact" },
-        { id: "t2", client: "Sarah Jones", status: "Qualified" },
-        { id: "t3", client: "Mike van der Merwe", status: "New" }
-      ]
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      datasets: [{
+        label: 'Revenue',
+        data: [12000, 19000, 15000, 22000, 28000, 34000],
+        borderColor: primaryColor,
+        backgroundColor: 'rgba(37,99,235,0.15)',
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: primaryColor,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
     },
-    {
-      id: 2,
-      name: "Agent Lisa",
-      email: "lisa@kisasa.com",
-      stats: { leads: 20, inProgress: 6, closed: 10 },
-      tasks: []
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: borderColor } },
+        x: { grid: { display: false } }
+      }
     }
-  ];
-
-  // ================= ELEMENTS =================
-  const agentDashboard = document.getElementById("agentDashboard");
-  const adminDashboard = document.getElementById("adminDashboard");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  // ================= LOGOUT =================
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("loggedInUser");
-      window.location.href = "login.html";
-    });
-  }
-
-  // ================= ROLE CHECK =================
-  if (loggedInUser.role === "admin") {
-    if (adminDashboard) adminDashboard.style.display = "block";
-    if (agentDashboard) agentDashboard.style.display = "none";
-    loadAdmin();
-  } else {
-    if (agentDashboard) agentDashboard.style.display = "block";
-    if (adminDashboard) adminDashboard.style.display = "none";
-    loadAgent();
-  }
-
-  // ==================================================
-  // ================= ADMIN DASHBOARD =================
-  // ==================================================
-  function loadAdmin() {
-    console.log("Loading admin dashboard");
-
-    // Render agent list
-    const agentList = document.getElementById("agentList");
-    if (agentList) {
-      agentList.innerHTML = "<h3>Agents</h3>";
-      agents.forEach(a => {
-        const div = document.createElement("div");
-        div.textContent = `${a.name} (${a.email})`;
-        agentList.appendChild(div);
-      });
-    }
-
-    // Add Agent Modal logic
-    const addAgentBtn = document.getElementById("addAgentBtn");
-    const addAgentModal = document.getElementById("addAgentModal");
-    const closeAgentModal = document.getElementById("closeAgentModal");
-    const saveAgentBtn = document.getElementById("saveAgentBtn");
-
-    if (addAgentBtn && addAgentModal) addAgentBtn.onclick = () => addAgentModal.style.display = "flex";
-    if (closeAgentModal && addAgentModal) closeAgentModal.onclick = () => addAgentModal.style.display = "none";
-    if (saveAgentBtn && addAgentModal) saveAgentBtn.onclick = () => {
-      const name = document.getElementById("newAgentName").value.trim();
-      const email = document.getElementById("newAgentEmail").value.trim();
-      if (!name || !email) return alert("Please fill all fields");
-
-      agents.push({
-        id: Date.now(),
-        name,
-        email,
-        stats: { leads: 0, inProgress: 0, closed: 0 },
-        tasks: []
-      });
-
-      addAgentModal.style.display = "none";
-      document.getElementById("newAgentName").value = "";
-      document.getElementById("newAgentEmail").value = "";
-
-      loadAdmin();
-    };
-  }
-
-  // ==================================================
-  // ================= AGENT DASHBOARD =================
-  // ==================================================
-  function loadAgent() {
-    console.log("Loading agent dashboard");
-
-    const agent = agents.find(a => a.email === loggedInUser.email) || {
-      stats: { leads: 0, inProgress: 0, closed: 0 },
-      tasks: []
-    };
-
-    console.log("Agent data:", agent);
-
-    // Update stats
-    const newLeadsEl = document.getElementById("newLeads");
-    if (newLeadsEl) newLeadsEl.textContent = agent.stats.leads;
-
-    const inProgressEl = document.getElementById("inProgress");
-    if (inProgressEl) inProgressEl.textContent = agent.stats.inProgress;
-
-    const completedEl = document.getElementById("completedClients");
-    if (completedEl) completedEl.textContent = agent.stats.closed;
-
-    const winRateEl = document.getElementById("winRate");
-    const winRate = agent.stats.leads ? Math.round((agent.stats.closed / agent.stats.leads) * 100) : 0;
-    if (winRateEl) winRateEl.textContent = `${winRate}%`;
-
-    // FIXED: Removed call to renderMyTasks() - use loadTasks() for clients instead
-    // renderMyTasks(agent.tasks);
-    renderRecentLeads();
-    renderSalesChart();
-
-    updateTaskCounts();
-  }
-
-  // ===== BADGE CLASS HELPER =====
-  function getStatusClass(status) {
-    switch (status) {
-      case 'Contact':
-      case 'Contacted': return 'warning';
-      case 'Qualified': return 'Finalise';
-      case 'Done': return 'success';
-      case 'Lost': return 'lost';
-      default: return '';
-    }
-  }
-
-  // ===== UPDATE COUNTS =====
-  function updateTaskCounts() {
-    const myTasksContainer = document.getElementById('tasks-container'); // FIXED: Use #tasks-container instead of #taskList
-    const completedContainer = document.getElementById('completed-container'); // FIXED: Use #completed-container instead of #completedList
-
-    const myCount = myTasksContainer ? myTasksContainer.querySelectorAll('.task-row').length : 0;
-    const myTasksBadge = document.getElementById('task-count'); // FIXED: Use #task-count instead of #myTasksCount
-    if (myTasksBadge) myTasksBadge.textContent = myCount;
-
-    const completedCountVal = completedContainer ? completedContainer.querySelectorAll('.task-row').length : 0;
-    const completedBadge = document.getElementById('completed-count'); // FIXED: Use #completed-count instead of #completedCount
-    if (completedBadge) completedBadge.textContent = completedCountVal;
-  }
-
-  // ===== RENDER TASKS =====
-  function renderMyTasks(tasks) {
-    const container = document.getElementById("taskList");
-    if (!container) return;
-    container.innerHTML = "";
-    if (!tasks.length) {
-      container.innerHTML = '<p>No tasks yet</p>';
-      return;
-    }
-    tasks.forEach(task => {
-      const row = document.createElement("div");
-      row.className = "task-row";
-      row.dataset.taskId = task.id || 't' + Date.now();
-      row.innerHTML = `
-        <span>${task.client}</span>
-        <span class="badge ${getStatusClass(task.status || 'New')}">${task.status || 'New'}</span>
-      `;
-      container.appendChild(row);
-    });
-  }
-
-  // ===== RENDER RECENT LEADS =====
-  function renderRecentLeads() {
-    const leads = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-    const container = document.querySelector('.lead-list');
-    if (!container) return; // ADDED FIX: Check if exists
-    container.innerHTML = "";
-    if (!leads.length) {
-      container.innerHTML = '<p>No recent leads yet</p>';
-      return;
-    }
-    leads.slice(0, 20).forEach(lead => {
-      const row = document.createElement("div");
-      row.className = "lead-row";
-      row.innerHTML = `<span>${lead.firstName} ${lead.lastName}</span> <span class="badge ${getStatusClass(lead.status || 'New')}">${lead.status || 'New'}</span>`;
-      container.appendChild(row);
-    });
-
-    const newLeadsEl = document.getElementById('newLeads');
-    if (newLeadsEl) newLeadsEl.textContent = leads.filter(l => l.status === 'New').length || 0;
-  }
-
-  // ===== SALES CHART =====
-  function renderSalesChart() {
-    const chartEl = document.getElementById("salesChart");
-    if (!chartEl) return; // ADDED FIX: Check if exists (it's hidden)
-    new Chart(chartEl, {
-      type: "line",
-      data: {
-        labels: ["Week 1","Week 2","Week 3","Week 4"],
-        datasets: [{
-          data: [2,4,6,9],
-          borderWidth:3,
-          fill:true,
-          tension:0.4,
-          borderColor:"#2563eb",
-          backgroundColor:"rgba(37,99,235,0.15)"
-        }]
-      },
-      options: { plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}, responsive:true }
-    });
-  }
-
-  // INITIAL RENDER
-  renderRecentLeads();
-  console.log("Dashboard fully loaded");
-
+  });
 });
-</script>
 
+// ── Initialize ──
+loadLeads();
+</script>
 </body>
 </html>

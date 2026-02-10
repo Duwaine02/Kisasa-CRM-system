@@ -5,139 +5,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reports - Kisasa CRM</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   
-  <!-- WebDataRocks Pivot Table -->
   <link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet">
-  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
   <script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
 
   <style>
     :root {
-      --sidebar-bg: #0f172a;
-      --sidebar-hover: #1e293b;
-      --text-light: #cbd5e1;
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --sidebar-bg: #0b1f3b;
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { 
-      font-family: 'Inter', sans-serif; 
-      background: #f8fafc; 
-      min-height: 100vh; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-    .layout { display: flex; }
+    .sidebar { width: 76px; background: var(--sidebar-bg); display: flex; flex-direction: column; align-items: center; padding: 1.5rem 0; position: fixed; height: 100vh; z-index: 1000; }
+    .sidebar .logo { color: #60a5fa; font-weight: 800; font-size: 1.2rem; margin-bottom: 2.5rem; }
+    .sidebar a { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; margin-bottom: 0.75rem; transition: all 0.3s; text-decoration: none; }
+    .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
+    .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-    /* Sidebar – matched to screenshot / dashboard style */
-    .sidebar {
-      width: 70px;
-      background: var(--sidebar-bg);
-      color: white;
-      position: fixed;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 1.5rem;
-      overflow-y: auto;
-    }
+    .main-wrapper { margin-left: 76px; flex: 1; padding: 2rem 2.5rem; max-width: 1400px; margin: 0 auto; }
 
-    .sidebar h2 {
-      color: white;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-      font-weight: 600;
-    }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .top-bar h1 { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+    .user-info { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; border: 1px solid var(--border); }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+    .logout:hover { color: var(--danger); }
 
-    .sidebar nav a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      margin-bottom: 1.25rem;
-      font-size: 1.25rem;
-      color: var(--text-light);
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
+    h2 { font-size: 1.4rem; font-weight: 700; margin: 2.5rem 0 1.25rem; color: #0f172a; }
 
-    .sidebar nav a:hover,
-    .sidebar nav a.active {
-      background: var(--sidebar-hover);
-      color: white;
-    }
-
-    /* Main content */
-    .main {
-      margin-left: 70px;
-      flex: 1;
-      padding: 2rem 2.5rem;
-      background-color: #f7f7f7;
-    }
-
-    h1 { 
-      font-size: 1.875rem; 
-      font-weight: 700; 
-      margin-bottom: 1.5rem; 
-    }
-
-    h2 { margin: 2rem 0 1rem; }
-    h3 { margin-bottom: 1rem; }
-
-    #pivot-container { 
-      height: 500px; 
-      margin-bottom: 2rem; 
-      background: white; 
-      border-radius: 12px; 
-      overflow: hidden; 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    .pivot-container {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      height: 600px;
+      margin-bottom: 2.5rem;
     }
 
     .chart-container {
       background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      height: 400px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-wrapper { padding: 1.5rem 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="layout">
+<aside class="sidebar">
+  <div class="logo">Kisasa</div>
+  <nav>
+    <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+    <a href="leads.html" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
+    <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
+    <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
+    <a href="reports.html" class="active" title="Reports"><i class="fa-solid fa-chart-line"></i></a>
+    <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
+  </nav>
+</aside>
 
-  <!-- Sidebar – now identical in structure & look to the screenshot -->
-  <aside class="sidebar">
-    <h2>Kisasa</h2>
-    <nav>
-      <a href="index.html" title="Dashboard"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html" title="Leads"><i class="fas fa-user-plus"></i></a>
-      <a href="clients.html" title="Clients"><i class="fas fa-users"></i></a>
-      <a href="quotes.html" title="Quotes"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html" title="Reports" class="active"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html" title="Settings"><i class="fas fa-cog"></i></a>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="main">
-    <h1>Reports</h1>
-
-    <h2>Report Builder (Pivot Table)</h2>
-    <div id="pivot-container"></div>
-
-    <div class="chart-container">
-      <h3>Dynamic Visualization (Updates with Pivot Changes)</h3>
-      <canvas id="dynamicChart" height="100"></canvas>
+<div class="main-wrapper">
+  <div class="top-bar">
+    <h1>Reports & Analytics</h1>
+    <div class="user-info">
+      <div class="avatar" id="avatarLetter">D</div>
+      <span id="userFullName"></span>
+      <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
     </div>
-  </main>
+  </div>
+
+  <h2>Interactive Report Builder</h2>
+  <div id="pivot-container" class="pivot-container"></div>
+
+  <h2>Visual Summary</h2>
+  <div class="chart-container">
+    <canvas id="dynamicChart"></canvas>
+  </div>
 </div>
 
 <script>
-// Sample CRM data (unchanged)
+// User info
+const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
+document.getElementById("userFullName").textContent = user.name + " " + user.surname;
+document.getElementById("avatarLetter").textContent = user.name.charAt(0);
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+// Sample data
 const crmData = [
   { Month: "January", Agent: "Duwaine", LeadStatus: "Converted", DealAmount: 5000, Region: "Cape Town" },
   { Month: "January", Agent: "Duwaine", LeadStatus: "Hot", DealAmount: 0, Region: "Cape Town" },
@@ -149,79 +126,67 @@ const crmData = [
   { Month: "March", Agent: "Sarah", LeadStatus: "Hot", DealAmount: 0, Region: "Johannesburg" },
   { Month: "April", Agent: "Duwaine", LeadStatus: "Converted", DealAmount: 15000, Region: "Cape Town" },
   { Month: "April", Agent: "John", LeadStatus: "Converted", DealAmount: 7000, Region: "Durban" },
-  { Month: "January", Agent: "Duwaine", LeadStatus: "Cold", DealAmount: 0, Region: "Cape Town" },
-  { Month: "February", Agent: "Sarah", LeadStatus: "Converted", DealAmount: 11000, Region: "Johannesburg" },
 ];
 
-// Initialize Pivot Table
+// Pivot Table
 let pivot = new WebDataRocks({
   container: "#pivot-container",
   toolbar: true,
-  height: "500px",
+  height: "100%",
   report: {
     dataSource: { data: crmData },
     slice: {
       rows: [{ uniqueName: "Month" }],
       columns: [{ uniqueName: "Measures" }],
-      measures: [{ uniqueName: "DealAmount", aggregation: "sum", caption: "Total Sales ($)" }]
+      measures: [
+        { uniqueName: "DealAmount", aggregation: "sum", caption: "Total Sales (R)" },
+        { uniqueName: "Agent", aggregation: "count", caption: "Number of Deals" }
+      ]
     }
   }
 });
 
-// Chart.js dynamic update (unchanged)
+// Dynamic Chart
 let dynamicChart = null;
 const ctx = document.getElementById('dynamicChart').getContext('2d');
 
-function createOrUpdateChart() {
-  pivot.getData(null, {
-    callbackHandler: function (data) {
-      const labels = data.rows.map(row => row.join(" "));
-      const values = data.data.map(cell => cell.v || 0);
+function createOrUpdateChart(data) {
+  const labels = data.rows.map(row => row.join(" "));
+  const values = data.data.map(cell => cell.v || 0);
 
-      if (dynamicChart) {
-        dynamicChart.data.labels = labels;
-        dynamicChart.data.datasets[0].data = values;
-        dynamicChart.update();
-      } else {
-        dynamicChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Sales / Metrics',
-              data: values,
-              backgroundColor: '#2563eb',
-              borderRadius: 6
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: { display: true } },
-            scales: {
-              y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
-              x: { grid: { display: false } }
-            }
-          }
-        });
+  if (dynamicChart) {
+    dynamicChart.data.labels = labels;
+    dynamicChart.data.datasets[0].data = values;
+    dynamicChart.update();
+  } else {
+    dynamicChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Total Sales (R)',
+          data: values,
+          backgroundColor: '#2563eb',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
+          x: { grid: { display: false } }
+        }
       }
-    },
-    updateHandler: function (data) {
-      const labels = data.rows.map(row => row.join(" "));
-      const values = data.data.map(cell => cell.v || 0);
-      if (dynamicChart) {
-        dynamicChart.data.labels = labels;
-        dynamicChart.data.datasets[0].data = values;
-        dynamicChart.update();
-      }
-    }
-  });
+    });
+  }
 }
 
 pivot.on("reportcomplete", function () {
   pivot.off("reportcomplete");
-  createOrUpdateChart();
+  pivot.getData(null, { callbackHandler: createOrUpdateChart });
 });
 </script>
-
 </body>
 </html>
