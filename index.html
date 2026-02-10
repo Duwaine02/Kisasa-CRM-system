@@ -61,12 +61,17 @@ body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(
 .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
 .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-/* MAIN */
-main { flex: 1; margin-left: 76px; padding: 2rem 2.5rem; }
+/* MAIN – fluid & responsive */
+main { 
+    flex: 1; 
+    margin-left: 76px; 
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem); 
+    overflow-x: hidden; /* prevent horizontal overflow */
+}
 
 /* HEADER */
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
-.header h1 { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+.header h1 { font-size: clamp(1.6rem, 4vw, 1.8rem); font-weight: 700; color: #0f172a; }
 .user-info { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: center; }
 .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
@@ -81,10 +86,25 @@ main { flex: 1; margin-left: 76px; padding: 2rem 2.5rem; }
 .stat-card.revenue p { color: rgba(255,255,255,0.9); }
 
 /* CHART */
-.chart-container { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); margin-bottom: 2.5rem; height: 320px; }
+.chart-container { 
+    background: white; 
+    border-radius: 16px; 
+    padding: 1.5rem; 
+    border: 1px solid var(--border); 
+    margin-bottom: 2.5rem; 
+    height: clamp(280px, 45vh, 320px); 
+    width: 100%; 
+    overflow-x: auto; 
+}
 
 /* PIPELINE */
-.pipeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+.pipeline-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
+    gap: 1.5rem; 
+    overflow-x: auto; /* scroll if columns overflow on zoom/small screen */
+    padding-bottom: 1rem;
+}
 .column { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 1.25rem; }
 .column-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-200); }
 .column-header h3 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; color: var(--text-main); }
@@ -170,8 +190,8 @@ main { flex: 1; margin-left: 76px; padding: 2rem 2.5rem; }
 
 .fab {
     position: fixed;
-    bottom: 32px;
-    right: 32px;
+    bottom: clamp(20px, 5vw, 32px);
+    right: clamp(20px, 5vw, 32px);
     width: 60px;
     height: 60px;
     background: var(--primary);
@@ -185,6 +205,7 @@ main { flex: 1; margin-left: 76px; padding: 2rem 2.5rem; }
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
+    z-index: 999;
 }
 .fab:hover { transform: scale(1.1); background: #1d4ed8; }
 
@@ -211,13 +232,17 @@ main { flex: 1; margin-left: 76px; padding: 2rem 2.5rem; }
 .action-menu button:hover { background: var(--primary-light); color: var(--primary); }
 .hidden { display: none !important; }
 
+@media (max-width: 1024px) {
+    main { padding: clamp(1.5rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem); }
+    .pipeline-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+}
+
 @media (max-width: 768px) {
-    .pipeline-grid { grid-template-columns: 1fr; }
-    main { padding: 1.5rem 1rem; }
-    .fab { bottom: 20px; right: 20px; width: 56px; height: 56px; font-size: 1.4rem; }
-    .lead-card { padding: 1rem; }
-    .contact-icons { gap: 0.8rem; }
-    .contact-icons i { font-size: 1rem; }
+    .sidebar { width: 70px; }
+    main { margin-left: 70px; padding: 1.5rem 1rem; }
+    .fab { width: 56px; height: 56px; font-size: 1.4rem; bottom: 20px; right: 20px; }
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .chart-container { height: 260px; }
 }
 </style>
 </head>
@@ -392,10 +417,8 @@ function openMenu(e, btn) {
     let top = rect.bottom + window.scrollY + 8;
     let left = rect.right + window.scrollX - 220;
 
-    // Flip if off-screen right
     if (left + 220 > window.innerWidth) left = rect.left + window.scrollX;
 
-    // Flip above if bottom is off-screen
     if (top + 180 > window.innerHeight + window.scrollY) top = rect.top + window.scrollY - 180 - 8;
 
     actionMenu.style.top = top + "px";
