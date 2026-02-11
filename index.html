@@ -59,9 +59,60 @@
         /* MAIN LAYOUT */
         main { flex: 1; margin-left: 76px; padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem); overflow-x: hidden; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 2.5rem; 
+        }
         .header h1 { font-size: clamp(1.6rem, 4vw, 1.8rem); font-weight: 700; color: #0f172a; }
-        
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .bell-icon {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .bell-icon:hover, .bell-overdue { color: var(--danger) !important; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+        .notification-popup {
+            position: absolute;
+            right: 0;
+            top: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 320px;
+            padding: 1.2rem;
+            z-index: 2000;
+            display: none;
+        }
+        .notification-popup h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.8rem; }
+        .notification-item { padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.9rem; }
+        .notification-item:last-child { border-bottom: none; }
+
+        .search-bar {
+            margin-bottom: 2rem;
+            max-width: 400px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .search-bar input:focus { outline: none; border-color: var(--primary); }
+
         .user-info { 
             display: flex; align-items: center; gap: 1rem; 
             background: white; padding: 0.6rem 1.2rem; 
@@ -128,114 +179,175 @@
         }
         .count-badge:not(:empty):not([data-count="0"]) { transform: scale(1.08); }
 
-        /* LEAD CARDS – compact */
+        /* LEAD CARDS – very simple now */
         .lead-card {
             background: #ffffff; 
             border-radius: 12px; 
             padding: 1rem;
-            margin-bottom: 0.9rem;
+            margin-bottom: 1rem;
             border: 1px solid var(--gray-200); 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-            transition: all 0.2s ease; 
-            position: relative;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04); 
+            transition: all 0.2s ease;
         }
         .lead-card:hover { 
             transform: translateY(-3px); 
             box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
             border-color: var(--primary); 
         }
-        
-        .status-indicator {
-            position: absolute; left: 0; top: 15%; height: 70%; width: 4px; border-radius: 0 4px 4px 0;
+
+        .lead-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .lead-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .lead-name-line {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
         }
 
         .status-badge {
-            display: inline-block;
             padding: 3px 10px;
             border-radius: 6px;
             font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.05em;
         }
-        .badge-cold { background: var(--cold-bg); color: var(--cold-text); border: 1px solid var(--cold-border); }
-        .badge-warm { background: var(--warm-bg); color: var(--warm-text); border: 1px solid var(--warm-border); }
-        .badge-hot { background: var(--hot-bg); color: var(--hot-text); border: 1px solid var(--hot-border); }
+        .badge-hot { background: var(--hot-bg); color: var(--hot-text); }
+        .badge-warm { background: var(--warm-bg); color: var(--warm-text); }
+        .badge-cold { background: var(--cold-bg); color: var(--cold-text); }
 
-        .lead-card .content { position: relative; }
-
-        .lead-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.6rem;
+        .lead-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
         }
 
-        .lead-info { flex: 1; }
-
-        .lead-card h4 { 
-            font-size: 1rem; 
-            font-weight: 600; 
-            margin-bottom: 0.2rem; 
-            color: var(--text-main); 
-        }
-
-        .price { 
+        .lead-amount {
+            font-size: 1.1rem;
+            font-weight: 700;
             color: #334155;
-            font-weight: 700; 
-            font-size: 1.05rem;
-            margin-bottom: 0.4rem; 
-            display: block; 
         }
 
-        .card-actions {
+        .follow-up-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+        .follow-up-overdue {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .lead-consent {
+            font-size: 0.9rem;
+            color: var(--success);
             display: flex;
             align-items: center;
-            gap: 0.9rem;
+            gap: 0.4rem;
         }
 
-        .contact-icons { 
-            display: flex; 
-            gap: 0.9rem; 
+        .lead-notes-preview {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            max-height: 3.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .contact-icons i { 
-            font-size: 1.1rem; 
-            cursor: pointer; 
-            transition: transform 0.2s; 
-        }
-        .contact-icons .fa-phone { color: #000000; }
-        .contact-icons .fa-envelope { color: #ef4444; }
-        .contact-icons .fa-whatsapp { color: var(--whatsapp); }
-        .contact-icons i:hover { transform: scale(1.2); }
 
-        .lead-footer { 
-            display: flex; 
+        .lead-footer {
+            display: flex;
             justify-content: flex-end;
-            padding-top: 0.6rem; 
-            border-top: 1px solid var(--gray-200); 
+            margin-top: 0.6rem;
         }
 
-        .btn-options { 
-            background: none; 
-            border: none; 
-            color: #000000; 
-            font-size: 1.1rem; 
-            cursor: pointer; 
-            padding: 0.3rem; 
-            border-radius: 50%; 
+        .btn-options {
+            background: none;
+            border: none;
+            color: #000000;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 50%;
             transition: all 0.2s;
         }
-        .btn-options:hover { 
-            background: var(--gray-100); 
-            color: var(--primary); 
+        .btn-options:hover {
+            background: var(--gray-100);
+            color: var(--primary);
         }
 
-        /* POPUP STYLES – clean & professional */
+        /* FAB – solid black with glow */
+        .fab {
+            position: fixed; bottom: 32px; right: 32px; width: 64px; height: 64px;
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .fab:hover {
+            background: #111111;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 0 8px rgba(255,255,255,0.15);
+            transform: translateY(-4px);
+        }
+
+        /* ACTION MENU */
+        .action-menu {
+            position: fixed;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 240px;
+            z-index: 2000;
+            padding: 0.5rem 0;
+        }
+        .action-menu button {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .action-menu button i { font-size: 1.1rem; }
+        .action-menu button:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(37,99,235,0.2);
+        }
+        .action-menu button.green-btn {
+            background: var(--success);
+            color: white;
+        }
+        .action-menu button.green-btn:hover {
+            background: #059669;
+        }
+
+        /* POPUPS */
         .popup-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0,0,0,0.6);
             display: none;
             align-items: center;
             justify-content: center;
@@ -244,65 +356,47 @@
         .popup-content {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.8rem;
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             position: relative;
-            text-align: center;
         }
         .popup-close {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.5rem;
+            top: 12px;
+            right: 16px;
+            font-size: 1.6rem;
             color: var(--text-muted);
             cursor: pointer;
-            transition: color 0.2s;
         }
         .popup-close:hover { color: var(--danger); }
         .popup-title {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             color: var(--text-main);
         }
-        .popup-value {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            word-break: break-all;
+        .popup-input, .popup-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
         }
+        .popup-textarea { height: 120px; resize: vertical; }
         .popup-btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 0.9rem 1.6rem;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            width: 100%;
         }
-        .popup-btn:hover { background: #1d4ed8; }
-
-        /* FAB & ACTION MENU */
-        .fab {
-            position: fixed; bottom: 32px; right: 32px; width: 60px; height: 60px; 
-            background: var(--primary); color: white; border: none; border-radius: 50%;
-            font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 20px rgba(37,99,235,0.3);
-            display: flex; align-items: center; justify-content: center; z-index: 999;
-        }
-
-        .action-menu {
-            position: fixed;
-            background: white; border-radius: 12px; border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 200px; z-index: 2000; padding: 0.5rem 0;
-        }
-        .action-menu button { 
-            width: 100%; padding: 0.8rem 1.2rem; text-align: left; background: none; border: none; 
-            cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; 
-        }
-        .action-menu button:hover { background: var(--primary-light); color: var(--primary); }
+        .popup-btn.green { background: var(--success); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -323,11 +417,25 @@
 <main>
     <div class="header">
         <h1>Dashboard</h1>
-        <div class="user-info">
-            <div class="avatar" id="avatarLetter">D</div>
-            <span id="userFullName">Duwaine Julies</span>
-            <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
+        <div class="header-right">
+            <div class="notifications">
+                <i class="fa-solid fa-bell bell-icon" onclick="toggleNotifications()"></i>
+                <div id="notificationPopup" class="notification-popup">
+                    <h4>Notifications</h4>
+                    <div id="hotLeadsList"></div>
+                    <div id="followUpList"></div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="avatar" id="avatarLetter">D</div>
+                <span id="userFullName">Duwaine Julies</span>
+                <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
+            </div>
         </div>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search leads by name, email or phone..." oninput="filterLeads()">
     </div>
 
     <section class="stats-grid">
@@ -353,7 +461,7 @@
 
         <div class="column">
             <div class="column-header">
-                <h3><i class="fa-solid fa-list-check"></i> My Tasks</h3>
+                <h3><i class="fa-solid fa-list-check"></i> Tasks</h3>
                 <span class="count-badge" id="taskCount">0</span>
             </div>
             <div id="tasksList"></div>
@@ -369,60 +477,47 @@
     </section>
 </main>
 
-<button class="fab" onclick="window.location.href='addNewlead.html'"><i class="fa-solid fa-plus"></i></button>
+<button class="fab" onclick="window.location.href='addNewlead.html'">
+    <i class="fa-solid fa-plus"></i>
+</button>
 
 <div id="actionMenu" class="action-menu hidden">
+    <button onclick="callLead()"><i class="fa-solid fa-phone"></i> Call</button>
+    <button onclick="emailLead()"><i class="fa-solid fa-envelope"></i> Email</button>
+    <button onclick="whatsappLead()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
     <button onclick="sendQuote()"><i class="fa-solid fa-paper-plane"></i> Send Quote</button>
     <button onclick="moveLead('tasksList')"><i class="fa-solid fa-arrow-right"></i> Move to Tasks</button>
-    <button onclick="moveLead('completedList')"><i class="fa-solid fa-check-double"></i> Mark Converted</button>
+    <button class="green-btn" onclick="markConverted()"><i class="fa-solid fa-check-double"></i> Mark Converted</button>
+    <button onclick="showNotePopup()"><i class="fa-solid fa-note-sticky"></i> Add Note</button>
+    <button onclick="toggleConsent()"><i class="fa-solid fa-file-signature"></i> Mark Consent Signed</button>
+    <button onclick="showFollowUpPopup()"><i class="fa-solid fa-calendar-alt"></i> Set Follow-up</button>
 </div>
 
-<!-- Popups -->
-<div id="phonePopup" class="popup-overlay">
+<!-- Note Popup -->
+<div id="notePopup" class="popup-overlay">
     <div class="popup-content">
-        <span class="popup-close" onclick="closePopup('phonePopup')">×</span>
-        <div class="popup-title">Phone Number</div>
-        <div class="popup-value" id="phoneValue"></div>
-        <button class="popup-btn" id="callBtn">Call Now</button>
+        <span class="popup-close" onclick="closePopup('notePopup')">×</span>
+        <div class="popup-title">Add Note</div>
+        <textarea id="noteText" class="popup-textarea" placeholder="e.g. Client agreed, follow up in 3 days..."></textarea>
+        <button class="popup-btn" onclick="saveNote()">Save Note</button>
     </div>
 </div>
 
-<div id="emailPopup" class="popup-overlay">
+<!-- Follow-up Popup -->
+<div id="followUpPopup" class="popup-overlay">
     <div class="popup-content">
-        <span class="popup-close" onclick="closePopup('emailPopup')">×</span>
-        <div class="popup-title">Email Address</div>
-        <div class="popup-value" id="emailValue"></div>
-        <button class="popup-btn" id="emailBtn">Send Email</button>
+        <span class="popup-close" onclick="closePopup('followUpPopup')">×</span>
+        <div class="popup-title">Set Follow-up Date</div>
+        <input type="date" id="followUpDate" class="popup-input">
+        <button class="popup-btn" onclick="saveFollowUp()">Save</button>
     </div>
 </div>
 
 <script>
 let leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
-let currentLead = null;
+let selectedLeadId = null;
 
-// Popup functions
-function showPhonePopup(phone) {
-    document.getElementById("phoneValue").textContent = phone || "No phone number available";
-    document.getElementById("callBtn").onclick = () => {
-        if (phone) window.open(`tel:${phone}`);
-    };
-    document.getElementById("phonePopup").style.display = "flex";
-}
-
-function showEmailPopup(email) {
-    document.getElementById("emailValue").textContent = email || "No email available";
-    document.getElementById("emailBtn").onclick = () => {
-        if (email) window.open(`mailto:${email}`);
-    };
-    document.getElementById("emailPopup").style.display = "flex";
-}
-
-function closePopup(id) {
-    document.getElementById(id).style.display = "none";
-}
-
-function loadLeads() {
-    leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
+function loadLeads(filter = '') {
     const lists = {
         drafts: document.getElementById("draftsList"),
         tasks: document.getElementById("tasksList"),
@@ -431,7 +526,17 @@ function loadLeads() {
     Object.values(lists).forEach(l => l.innerHTML = "");
     let counts = { draft: 0, task: 0, complete: 0, revenue: 0 };
 
-    leads.forEach(lead => {
+    const filteredLeads = leads.filter(lead => {
+        const search = filter.toLowerCase();
+        return (
+            (lead.firstName || '').toLowerCase().includes(search) ||
+            (lead.lastName || '').toLowerCase().includes(search) ||
+            (lead.email || '').toLowerCase().includes(search) ||
+            (lead.phone || '').toLowerCase().includes(search)
+        );
+    });
+
+    filteredLeads.forEach(lead => {
         const flowStatus = (lead.status || 'draft').toLowerCase();
         let leadTemp = lead.leadStatus || "Cold";
 
@@ -439,30 +544,34 @@ function loadLeads() {
         card.className = "lead-card";
         card.id = lead.id;
 
-        const cleanPhone = (lead.phone || "").replace(/\D/g, '');
-        let colorCode = '#94a3b8'; let badgeClass = 'badge-cold';
-        if (leadTemp.toLowerCase() === 'hot') { colorCode = '#ef4444'; badgeClass = 'badge-hot'; }
-        else if (leadTemp.toLowerCase() === 'warm') { colorCode = '#f59e0b'; badgeClass = 'badge-warm'; }
+        let consentIcon = lead.consentSigned ? '<i class="fa-solid fa-check-circle" style="color:var(--success); font-size:0.9rem;"></i>' : '';
+
+        let notesPreview = '';
+        if (lead.notes && lead.notes.length > 0) {
+            notesPreview = `<div class="lead-notes-preview">Last note: ${lead.notes[lead.notes.length-1].substring(0,50)}${lead.notes[lead.notes.length-1].length > 50 ? '...' : ''}</div>`;
+        }
+
+        let followUpDisplay = '';
+        if (lead.followUpDate) {
+            const today = new Date().toISOString().split('T')[0];
+            const isOverdue = lead.followUpDate < today;
+            followUpDisplay = `<div class="follow-up-text ${isOverdue ? 'follow-up-overdue' : ''}">
+                Follow-up: ${lead.followUpDate} ${isOverdue ? '(Overdue)' : ''}
+            </div>`;
+        }
 
         card.innerHTML = `
-            <div class="status-indicator" style="background:${colorCode}"></div>
-            <div class="content">
-                <div class="lead-header">
-                    <div class="lead-info">
-                        <span class="status-badge ${badgeClass}">${leadTemp}</span>
-                        <h4>${lead.firstName || lead.client || 'Unknown'} ${lead.lastName || ''}</h4>
-                        <span class="price">R ${(Number(lead.amount) || 0).toLocaleString()}</span>
+            <div class="lead-content">
+                <div class="lead-top">
+                    <div class="lead-name-line">
+                        <span class="status-badge badge-${leadTemp.toLowerCase()}">${leadTemp}</span>
+                        <span class="lead-name">${lead.firstName || lead.client || 'Unknown'} ${lead.lastName || ''} ${consentIcon}</span>
                     </div>
-                    <div class="card-actions">
-                        <div class="contact-icons">
-                            <i class="fa-solid fa-phone" title="Call" onclick="showPhonePopup('${lead.phone || ''}')"></i>
-                            <i class="fa-solid fa-envelope" title="Email" onclick="showEmailPopup('${lead.email || ''}')"></i>
-                            <i class="fa-brands fa-whatsapp" title="WhatsApp" onclick="window.open('https://wa.me/${cleanPhone}')"></i>
-                        </div>
-                    </div>
+                    <div class="lead-amount">R ${(Number(lead.amount) || 0).toLocaleString()}</div>
                 </div>
+                ${followUpDisplay}
+                ${notesPreview}
                 <div class="lead-footer">
-                    <div class="footer-content"></div>
                     <button class="btn-options" onclick="openMenu(event,this)"><i class="fa-solid fa-ellipsis-v"></i></button>
                 </div>
             </div>
@@ -478,7 +587,7 @@ function loadLeads() {
         }
     });
 
-    document.getElementById("newLeadsCount").textContent = leads.length;
+    document.getElementById("newLeadsCount").textContent = filteredLeads.length;
     document.getElementById("inProgressCount").textContent = counts.task;
     document.getElementById("convertedCount").textContent = counts.complete;
     document.getElementById("totalRevenue").textContent = "R " + counts.revenue.toLocaleString();
@@ -490,12 +599,16 @@ function loadLeads() {
     document.getElementById("taskCount").setAttribute("data-count", counts.task);
     document.getElementById("completeCount").setAttribute("data-count", counts.complete);
 
-    const winRate = leads.length > 0 ? Math.round((counts.complete / leads.length) * 100) : 0;
+    const winRate = filteredLeads.length > 0 ? Math.round((counts.complete / filteredLeads.length) * 100) : 0;
     document.getElementById("winRate").textContent = winRate + "%";
+
+    updateNotifications();
 }
 
-let selectedLeadId = null;
-const actionMenu = document.getElementById("actionMenu");
+function filterLeads() {
+    const search = document.getElementById("searchInput").value;
+    loadLeads(search);
+}
 
 function openMenu(e, btn) {
     e.stopPropagation();
@@ -503,22 +616,27 @@ function openMenu(e, btn) {
     selectedLeadId = card.id;
     
     const rect = btn.getBoundingClientRect();
-    const menuWidth = 200;
-    const menuHeight = 150;
+    const menuWidth = 240;
+    const menuHeight = 300;
     
     let topPosition = rect.bottom + 5;
     if (window.innerHeight - rect.bottom < menuHeight) {
         topPosition = rect.top - menuHeight - 5;
     }
 
-    actionMenu.style.top = topPosition + "px";
-    actionMenu.style.left = (rect.left - menuWidth + rect.width) + "px";
-    actionMenu.classList.remove("hidden");
+    document.getElementById("actionMenu").style.top = topPosition + "px";
+    document.getElementById("actionMenu").style.left = (rect.left - menuWidth + rect.width) + "px";
+    document.getElementById("actionMenu").classList.remove("hidden");
 }
 
 function moveLead(target) {
     const statusMap = { 'tasksList': 'in-progress', 'completedList': 'completed' };
     leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: statusMap[target] } : l);
+    saveAndRefresh();
+}
+
+function markConverted() {
+    leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: 'completed' } : l);
     saveAndRefresh();
 }
 
@@ -530,13 +648,108 @@ function sendQuote() {
     }
 }
 
-function saveAndRefresh() {
-    localStorage.setItem("kisasa_leads", JSON.stringify(leads));
-    loadLeads();
-    actionMenu.classList.add("hidden");
+function showNotePopup() {
+    document.getElementById("noteText").value = "";
+    document.getElementById("notePopup").style.display = "flex";
 }
 
-document.addEventListener("click", () => actionMenu.classList.add("hidden"));
+function saveNote() {
+    const note = document.getElementById("noteText").value.trim();
+    if (!note) return alert("Please enter a note");
+
+    leads = leads.map(l => {
+        if (l.id.toString() === selectedLeadId.toString()) {
+            if (!l.notes) l.notes = [];
+            l.notes.push(note);
+            return l;
+        }
+        return l;
+    });
+    saveAndRefresh();
+    closePopup("notePopup");
+}
+
+function toggleConsent() {
+    leads = leads.map(l => {
+        if (l.id.toString() === selectedLeadId.toString()) {
+            l.consentSigned = !l.consentSigned;
+            return l;
+        }
+        return l;
+    });
+    saveAndRefresh();
+}
+
+function showFollowUpPopup() {
+    document.getElementById("followUpDate").value = "";
+    document.getElementById("followUpPopup").style.display = "flex";
+}
+
+function saveFollowUp() {
+    const date = document.getElementById("followUpDate").value;
+    if (!date) return alert("Please select a date");
+
+    leads = leads.map(l => {
+        if (l.id.toString() === selectedLeadId.toString()) {
+            l.followUpDate = date;
+            return l;
+        }
+        return l;
+    });
+    saveAndRefresh();
+    closePopup("followUpPopup");
+}
+
+function updateNotifications() {
+    const today = new Date().toISOString().split('T')[0];
+    const hotLeads = leads.filter(l => l.leadStatus?.toLowerCase() === 'hot');
+    const dueFollowUps = leads.filter(l => l.followUpDate && l.followUpDate <= today);
+
+    const bell = document.querySelector('.bell-icon');
+    if (dueFollowUps.length > 0) {
+        bell.classList.add('bell-overdue');
+    } else {
+        bell.classList.remove('bell-overdue');
+    }
+
+    let hotHtml = '<h5>Hot Leads</h5>';
+    if (hotLeads.length === 0) hotHtml += '<p>No hot leads</p>';
+    else hotHtml += hotLeads.map(l => `
+        <div class="notification-item">
+            ${l.firstName || ''} ${l.lastName || ''} - R ${Number(l.amount||0).toLocaleString()}
+        </div>
+    `).join('');
+
+    let followHtml = '<h5>Due / Overdue Follow-ups</h5>';
+    if (dueFollowUps.length === 0) followHtml += '<p>No due follow-ups</p>';
+    else followHtml += dueFollowUps.map(l => `
+        <div class="notification-item" style="color: ${l.followUpDate < today ? 'red' : 'orange'}; font-weight: ${l.followUpDate < today ? 'bold' : 'normal'}">
+            ${l.firstName || ''} ${l.lastName || ''} - Due: ${l.followUpDate} ${l.followUpDate < today ? '(Overdue)' : ''}
+        </div>
+    `).join('');
+
+    document.getElementById("hotLeadsList").innerHTML = hotHtml;
+    document.getElementById("followUpList").innerHTML = followHtml;
+}
+
+function toggleNotifications() {
+    const popup = document.getElementById("notificationPopup");
+    popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+}
+
+function saveAndRefresh() {
+    localStorage.setItem("kisasa_leads", JSON.stringify(leads));
+    loadLeads(document.getElementById("searchInput")?.value || '');
+}
+
+document.addEventListener("click", e => {
+    if (!e.target.closest(".notifications") && !e.target.closest("#notificationPopup")) {
+        document.getElementById("notificationPopup").style.display = "none";
+    }
+    if (!e.target.closest(".btn-options") && !e.target.closest("#actionMenu")) {
+        document.getElementById("actionMenu").classList.add("hidden");
+    }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
@@ -553,9 +766,47 @@ document.addEventListener("DOMContentLoaded", () => {
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });
     loadLeads();
+    updateNotifications();
 });
 
 function logout() { localStorage.removeItem("loggedInUser"); window.location.href = "login.html"; }
+
+// Contact actions (using popups)
+function callLead() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (lead?.phone) showPhonePopup(lead.phone);
+}
+
+function emailLead() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (lead?.email) showEmailPopup(lead.email);
+}
+
+function whatsappLead() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (lead?.phone) {
+        const clean = lead.phone.replace(/\D/g, '');
+        window.open(`https://wa.me/${clean}`);
+    }
+}
+
+// Popup helpers
+function closePopup(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+// Placeholder popup functions (you already have phone/email popups)
+function showPhonePopup(phone) {
+    document.getElementById("phoneValue").textContent = phone || "No phone number";
+    document.getElementById("callBtn").onclick = () => phone && window.open(`tel:${phone}`);
+    document.getElementById("phonePopup").style.display = "flex";
+}
+
+function showEmailPopup(email) {
+    document.getElementById("emailValue").textContent = email || "No email";
+    document.getElementById("emailBtn").onclick = () => email && window.open(`mailto:${email}`);
+    document.getElementById("emailPopup").style.display = "flex";
+}
 </script>
 </body>
 </html>
