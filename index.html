@@ -179,7 +179,7 @@
         }
         .count-badge:not(:empty):not([data-count="0"]) { transform: scale(1.08); }
 
-        /* LEAD CARDS – very simple now */
+        /* LEAD CARDS */
         .lead-card {
             background: #ffffff; 
             border-radius: 12px; 
@@ -284,7 +284,7 @@
             color: var(--primary);
         }
 
-        /* FAB – solid black with glow */
+        /* FAB */
         .fab {
             position: fixed; bottom: 32px; right: 32px; width: 64px; height: 64px;
             background: #000000;
@@ -489,11 +489,10 @@
     <button onclick="moveLead('tasksList')"><i class="fa-solid fa-arrow-right"></i> Move to Tasks</button>
     <button class="green-btn" onclick="markConverted()"><i class="fa-solid fa-check-double"></i> Mark Converted</button>
     <button onclick="showNotePopup()"><i class="fa-solid fa-note-sticky"></i> Add Note</button>
-    <button onclick="toggleConsent()"><i class="fa-solid fa-file-signature"></i> Mark Consent Signed</button>
+    <button id="consentActionBtn" onclick="toggleConsent()"><i class="fa-solid fa-file-signature"></i> Mark Consent Signed</button>
     <button onclick="showFollowUpPopup()"><i class="fa-solid fa-calendar-alt"></i> Set Follow-up</button>
 </div>
 
-<!-- Note Popup -->
 <div id="notePopup" class="popup-overlay">
     <div class="popup-content">
         <span class="popup-close" onclick="closePopup('notePopup')">×</span>
@@ -503,7 +502,6 @@
     </div>
 </div>
 
-<!-- Follow-up Popup -->
 <div id="followUpPopup" class="popup-overlay">
     <div class="popup-content">
         <span class="popup-close" onclick="closePopup('followUpPopup')">×</span>
@@ -615,9 +613,19 @@ function openMenu(e, btn) {
     const card = btn.closest(".lead-card");
     selectedLeadId = card.id;
     
+    // Logic to only show Consent button if in My Tasks
+    const currentLead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    const consentActionBtn = document.getElementById("consentActionBtn");
+    
+    if (currentLead && (currentLead.status === 'in-progress' || currentLead.status === 'taskslist')) {
+        consentActionBtn.style.display = 'flex';
+    } else {
+        consentActionBtn.style.display = 'none';
+    }
+
     const rect = btn.getBoundingClientRect();
     const menuWidth = 240;
-    const menuHeight = 300;
+    const menuHeight = 320;
     
     let topPosition = rect.bottom + 5;
     if (window.innerHeight - rect.bottom < menuHeight) {
@@ -672,12 +680,14 @@ function saveNote() {
 function toggleConsent() {
     leads = leads.map(l => {
         if (l.id.toString() === selectedLeadId.toString()) {
-            l.consentSigned = !l.consentSigned;
+            l.consentSigned = true; // Set to true
+            l.status = 'completed'; // Move to completed automatically
             return l;
         }
         return l;
     });
     saveAndRefresh();
+    document.getElementById("actionMenu").classList.add("hidden");
 }
 
 function showFollowUpPopup() {
@@ -771,15 +781,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function logout() { localStorage.removeItem("loggedInUser"); window.location.href = "login.html"; }
 
-// Contact actions (using popups)
 function callLead() {
     const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
-    if (lead?.phone) showPhonePopup(lead.phone);
+    if (lead?.phone) window.open(`tel:${lead.phone}`);
 }
 
 function emailLead() {
     const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
-    if (lead?.email) showEmailPopup(lead.email);
+    if (lead?.email) window.open(`mailto:${lead.email}`);
 }
 
 function whatsappLead() {
@@ -790,22 +799,8 @@ function whatsappLead() {
     }
 }
 
-// Popup helpers
 function closePopup(id) {
     document.getElementById(id).style.display = "none";
-}
-
-// Placeholder popup functions (you already have phone/email popups)
-function showPhonePopup(phone) {
-    document.getElementById("phoneValue").textContent = phone || "No phone number";
-    document.getElementById("callBtn").onclick = () => phone && window.open(`tel:${phone}`);
-    document.getElementById("phonePopup").style.display = "flex";
-}
-
-function showEmailPopup(email) {
-    document.getElementById("emailValue").textContent = email || "No email";
-    document.getElementById("emailBtn").onclick = () => email && window.open(`mailto:${email}`);
-    document.getElementById("emailPopup").style.display = "flex";
 }
 </script>
 </body>
