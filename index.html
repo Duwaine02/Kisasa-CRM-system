@@ -99,20 +99,6 @@
         .notification-item { padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.9rem; }
         .notification-item:last-child { border-bottom: none; }
 
-        .search-bar {
-            margin-bottom: 2rem;
-            max-width: 400px;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-        .search-bar input:focus { outline: none; border-color: var(--primary); }
-
         .user-info { 
             display: flex; align-items: center; gap: 1rem; 
             background: white; padding: 0.6rem 1.2rem; 
@@ -144,6 +130,7 @@
             background: #f8fafc; border-radius: 16px; border: 1px solid var(--border); 
             padding: 1.25rem; max-height: 650px; overflow-y: auto; 
             scrollbar-width: thin; scrollbar-color: var(--gray-200) transparent;
+            position: relative;
         }
         .column::-webkit-scrollbar { width: 6px; }
         .column::-webkit-scrollbar-thumb { background-color: var(--gray-200); border-radius: 10px; }
@@ -187,12 +174,17 @@
             margin-bottom: 1rem;
             border: 1px solid var(--gray-200); 
             box-shadow: 0 1px 3px rgba(0,0,0,0.04); 
-            transition: all 0.2s ease;
+            transition: all 0.2s ease, z-index 0s;
+            position: relative;
         }
         .lead-card:hover { 
             transform: translateY(-3px); 
             box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
             border-color: var(--primary); 
+        }
+
+        .lead-card.menu-open {
+            z-index: 150;
         }
 
         .lead-content {
@@ -284,6 +276,67 @@
             color: var(--primary);
         }
 
+        /* ACTION MENU */
+        .action-menu {
+            position: absolute;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+            width: 220px;
+            z-index: 200;
+            padding: 0.4rem 0;
+            top: 100%;
+            right: 4px;
+            margin-top: 6px;
+        }
+
+        .action-menu.upward {
+            top: auto;
+            bottom: 100%;
+            margin-bottom: 6px;
+            margin-top: 0;
+        }
+
+        .action-menu button {
+            width: 100%;
+            padding: 0.75rem 1.1rem;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.94rem;
+            font-weight: 500;
+            color: #1e293b;
+            transition: background 0.12s, color 0.12s;
+        }
+
+        .action-menu button i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .action-menu button:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .action-menu button.green-btn {
+            background: #10b981;
+            color: white;
+            margin-top: 6px;
+            font-weight: 600;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .action-menu button.green-btn:hover {
+            background: #059669;
+        }
+
         /* FAB */
         .fab {
             position: fixed; bottom: 32px; right: 32px; width: 64px; height: 64px;
@@ -302,45 +355,6 @@
             background: #111111;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 0 8px rgba(255,255,255,0.15);
             transform: translateY(-4px);
-        }
-
-        /* ACTION MENU */
-        .action-menu {
-            position: fixed;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            width: 240px;
-            z-index: 2000;
-            padding: 0.5rem 0;
-        }
-        .action-menu button {
-            width: 100%;
-            padding: 1rem 1.2rem;
-            text-align: left;
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .action-menu button i { font-size: 1.1rem; }
-        .action-menu button:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(37,99,235,0.2);
-        }
-        .action-menu button.green-btn {
-            background: var(--success);
-            color: white;
-        }
-        .action-menu button.green-btn:hover {
-            background: #059669;
         }
 
         /* POPUPS */
@@ -377,6 +391,33 @@
             margin-bottom: 1.2rem;
             color: var(--text-main);
         }
+        .popup-info {
+            font-size: 1.1rem;
+            margin: 1rem 0 1.5rem;
+            padding: 1rem;
+            background: var(--gray-100);
+            border-radius: 8px;
+            text-align: center;
+            word-break: break-all;
+        }
+        .popup-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        .popup-btn {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .popup-btn.secondary {
+            background: var(--gray-200);
+            color: var(--text-main);
+        }
         .popup-input, .popup-textarea {
             width: 100%;
             padding: 0.8rem;
@@ -386,17 +427,6 @@
             margin-bottom: 1rem;
         }
         .popup-textarea { height: 120px; resize: vertical; }
-        .popup-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.9rem 1.6rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-        .popup-btn.green { background: var(--success); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -432,10 +462,6 @@
                 <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
             </div>
         </div>
-    </div>
-
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search leads by name, email or phone..." oninput="filterLeads()">
     </div>
 
     <section class="stats-grid">
@@ -481,18 +507,7 @@
     <i class="fa-solid fa-plus"></i>
 </button>
 
-<div id="actionMenu" class="action-menu hidden">
-    <button onclick="callLead()"><i class="fa-solid fa-phone"></i> Call</button>
-    <button onclick="emailLead()"><i class="fa-solid fa-envelope"></i> Email</button>
-    <button onclick="whatsappLead()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-    <button onclick="sendQuote()"><i class="fa-solid fa-paper-plane"></i> Send Quote</button>
-    <button onclick="moveLead('tasksList')"><i class="fa-solid fa-arrow-right"></i> Move to Tasks</button>
-    <button class="green-btn" onclick="markConverted()"><i class="fa-solid fa-check-double"></i> Mark Converted</button>
-    <button onclick="showNotePopup()"><i class="fa-solid fa-note-sticky"></i> Add Note</button>
-    <button id="consentActionBtn" onclick="toggleConsent()"><i class="fa-solid fa-file-signature"></i> Mark Consent Signed</button>
-    <button onclick="showFollowUpPopup()"><i class="fa-solid fa-calendar-alt"></i> Set Follow-up</button>
-</div>
-
+<!-- Popups -->
 <div id="notePopup" class="popup-overlay">
     <div class="popup-content">
         <span class="popup-close" onclick="closePopup('notePopup')">×</span>
@@ -511,11 +526,36 @@
     </div>
 </div>
 
+<div id="phonePopup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup('phonePopup')">×</span>
+        <div class="popup-title">Phone Number</div>
+        <div id="phoneDisplay" class="popup-info"></div>
+        <div class="popup-actions">
+            <button class="popup-btn secondary" onclick="closePopup('phonePopup')">Cancel</button>
+            <button class="popup-btn" id="callNowBtn">Call Now</button>
+        </div>
+    </div>
+</div>
+
+<div id="emailPopup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup('emailPopup')">×</span>
+        <div class="popup-title">Email Address</div>
+        <div id="emailDisplay" class="popup-info"></div>
+        <div class="popup-actions">
+            <button class="popup-btn secondary" onclick="closePopup('emailPopup')">Cancel</button>
+            <button class="popup-btn" id="emailNowBtn">Send Email</button>
+        </div>
+    </div>
+</div>
+
 <script>
 let leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
 let selectedLeadId = null;
+let currentMenu = null;
 
-function loadLeads(filter = '') {
+function loadLeads() {
     const lists = {
         drafts: document.getElementById("draftsList"),
         tasks: document.getElementById("tasksList"),
@@ -524,17 +564,7 @@ function loadLeads(filter = '') {
     Object.values(lists).forEach(l => l.innerHTML = "");
     let counts = { draft: 0, task: 0, complete: 0, revenue: 0 };
 
-    const filteredLeads = leads.filter(lead => {
-        const search = filter.toLowerCase();
-        return (
-            (lead.firstName || '').toLowerCase().includes(search) ||
-            (lead.lastName || '').toLowerCase().includes(search) ||
-            (lead.email || '').toLowerCase().includes(search) ||
-            (lead.phone || '').toLowerCase().includes(search)
-        );
-    });
-
-    filteredLeads.forEach(lead => {
+    leads.forEach(lead => {
         const flowStatus = (lead.status || 'draft').toLowerCase();
         let leadTemp = lead.leadStatus || "Cold";
 
@@ -570,7 +600,7 @@ function loadLeads(filter = '') {
                 ${followUpDisplay}
                 ${notesPreview}
                 <div class="lead-footer">
-                    <button class="btn-options" onclick="openMenu(event,this)"><i class="fa-solid fa-ellipsis-v"></i></button>
+                    <button class="btn-options" onclick="openMenu(event, this)"><i class="fa-solid fa-ellipsis-v"></i></button>
                 </div>
             </div>
         `;
@@ -585,7 +615,7 @@ function loadLeads(filter = '') {
         }
     });
 
-    document.getElementById("newLeadsCount").textContent = filteredLeads.length;
+    document.getElementById("newLeadsCount").textContent = leads.length;
     document.getElementById("inProgressCount").textContent = counts.task;
     document.getElementById("convertedCount").textContent = counts.complete;
     document.getElementById("totalRevenue").textContent = "R " + counts.revenue.toLocaleString();
@@ -597,68 +627,175 @@ function loadLeads(filter = '') {
     document.getElementById("taskCount").setAttribute("data-count", counts.task);
     document.getElementById("completeCount").setAttribute("data-count", counts.complete);
 
-    const winRate = filteredLeads.length > 0 ? Math.round((counts.complete / filteredLeads.length) * 100) : 0;
+    const winRate = leads.length > 0 ? Math.round((counts.complete / leads.length) * 100) : 0;
     document.getElementById("winRate").textContent = winRate + "%";
 
     updateNotifications();
 }
 
-function filterLeads() {
-    const search = document.getElementById("searchInput").value;
-    loadLeads(search);
-}
-
 function openMenu(e, btn) {
     e.stopPropagation();
+    
+    if (currentMenu) {
+        currentMenu.remove();
+        document.querySelector('.lead-card.menu-open')?.classList.remove('menu-open');
+        currentMenu = null;
+    }
+
     const card = btn.closest(".lead-card");
     selectedLeadId = card.id;
-    
-    // Logic to only show Consent button if in My Tasks
-    const currentLead = leads.find(l => l.id.toString() === selectedLeadId.toString());
-    const consentActionBtn = document.getElementById("consentActionBtn");
-    
-    if (currentLead && (currentLead.status === 'in-progress' || currentLead.status === 'taskslist')) {
-        consentActionBtn.style.display = 'flex';
+
+    card.classList.add('menu-open');
+
+    const currentLead = leads.find(l => l.id.toString() === selectedLeadId);
+    const showConsent = currentLead && (currentLead.status === 'in-progress' || currentLead.status === 'taskslist' || currentLead.status === 'tasksList');
+    const showMarkConverted = currentLead && currentLead.status === 'completed';
+
+    const menu = document.createElement("div");
+    menu.className = "action-menu";
+    menu.innerHTML = `
+        <button onclick="callLead()"><i class="fa-solid fa-phone"></i> Call</button>
+        <button onclick="emailLead()"><i class="fa-solid fa-envelope"></i> Email</button>
+        <button onclick="whatsappLead()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+        <button onclick="sendQuote()"><i class="fa-solid fa-paper-plane"></i> Send Quote</button>
+        <button onclick="moveLead('tasksList')"><i class="fa-solid fa-arrow-right"></i> Move to Tasks</button>
+        ${showMarkConverted ? '<button class="green-btn" onclick="markConverted()"><i class="fa-solid fa-check-double"></i> Mark Converted</button>' : ''}
+        <button onclick="showNotePopup()"><i class="fa-solid fa-note-sticky"></i> Add Note</button>
+        ${showConsent ? '<button onclick="toggleConsent()"><i class="fa-solid fa-file-signature"></i> Mark Consent Signed</button>' : ''}
+        <button onclick="showFollowUpPopup()"><i class="fa-solid fa-calendar-alt"></i> Set Follow-up</button>
+    `;
+
+    card.appendChild(menu);
+    currentMenu = menu;
+
+    const btnRect  = btn.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+
+    const spaceBelow = window.innerHeight - btnRect.bottom;
+    const spaceAbove = btnRect.top;
+
+    if (spaceBelow < menuRect.height + 20 && spaceAbove > menuRect.height + 20) {
+        menu.classList.add("upward");
+        menu.style.top = "auto";
+        menu.style.bottom = `${btnRect.height + 6}px`;
     } else {
-        consentActionBtn.style.display = 'none';
+        menu.style.top = `${btnRect.height + 6}px`;
+        menu.style.bottom = "auto";
     }
 
-    const rect = btn.getBoundingClientRect();
-    const menuWidth = 240;
-    const menuHeight = 320;
-    
-    let topPosition = rect.bottom + 5;
-    if (window.innerHeight - rect.bottom < menuHeight) {
-        topPosition = rect.top - menuHeight - 5;
+    menu.style.right = "4px";
+    menu.style.left = "auto";
+
+    if (menuRect.left < cardRect.left + 8) {
+        menu.style.right = "auto";
+        menu.style.left = "8px";
     }
-
-    document.getElementById("actionMenu").style.top = topPosition + "px";
-    document.getElementById("actionMenu").style.left = (rect.left - menuWidth + rect.width) + "px";
-    document.getElementById("actionMenu").classList.remove("hidden");
 }
 
-function moveLead(target) {
-    const statusMap = { 'tasksList': 'in-progress', 'completedList': 'completed' };
-    leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: statusMap[target] } : l);
-    saveAndRefresh();
-}
-
-function markConverted() {
-    leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: 'completed' } : l);
-    saveAndRefresh();
+function closeAllMenus() {
+    if (currentMenu) {
+        currentMenu.remove();
+        currentMenu = null;
+    }
+    document.querySelector('.lead-card.menu-open')?.classList.remove('menu-open');
 }
 
 function sendQuote() {
     const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
     if (lead) {
-        const params = new URLSearchParams({ id: lead.id, fname: lead.firstName || lead.client, lname: lead.lastName || '', email: lead.email, phone: lead.phone, amt: lead.amount });
+        // Automatic note when quote is sent
+        if (!lead.notes) lead.notes = [];
+        lead.notes.push("Quote has been sent. Awaiting client response.");
+
+        // Optional: auto-set follow-up in 3 days (uncomment if desired)
+        // const threeDaysLater = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        // lead.followUpDate = threeDaysLater;
+
+        const params = new URLSearchParams({
+            id: lead.id,
+            fname: lead.firstName || lead.client,
+            lname: lead.lastName || '',
+            email: lead.email,
+            phone: lead.phone,
+            amt: lead.amount
+        });
         window.location.href = `NewQuote.html?${params.toString()}`;
+
+        // Save & refresh so the note shows immediately in the Tasks column
+        saveAndRefresh();
     }
+    closeAllMenus();
+}
+
+function callLead() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (!lead?.phone) {
+        alert("No phone number available for this lead.");
+        closeAllMenus();
+        return;
+    }
+
+    document.getElementById("phoneDisplay").textContent = lead.phone;
+    document.getElementById("phonePopup").style.display = "flex";
+
+    const callBtn = document.getElementById("callNowBtn");
+    callBtn.onclick = function() {
+        window.open(`tel:${lead.phone}`);
+        closePopup("phonePopup");
+    };
+
+    closeAllMenus();
+}
+
+function emailLead() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (!lead?.email) {
+        alert("No email address available for this lead.");
+        closeAllMenus();
+        return;
+    }
+
+    document.getElementById("emailDisplay").textContent = lead.email;
+    document.getElementById("emailPopup").style.display = "flex";
+
+    const emailBtn = document.getElementById("emailNowBtn");
+    emailBtn.onclick = function() {
+        window.open(`mailto:${lead.email}`);
+        closePopup("emailPopup");
+    };
+
+    closeAllMenus();
+}
+
+function whatsappLead() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (lead?.phone) {
+        const clean = lead.phone.replace(/\D/g, '');
+        window.open(`https://wa.me/${clean}`);
+    } else {
+        alert("No phone number available for WhatsApp.");
+    }
+    closeAllMenus();
+}
+
+function moveLead(target) {
+    const statusMap = { 'tasksList': 'in-progress', 'completedList': 'completed' };
+    leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: statusMap[target] || l.status } : l);
+    saveAndRefresh();
+    closeAllMenus();
+}
+
+function markConverted() {
+    leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: 'completed' } : l);
+    saveAndRefresh();
+    closeAllMenus();
 }
 
 function showNotePopup() {
     document.getElementById("noteText").value = "";
     document.getElementById("notePopup").style.display = "flex";
+    closeAllMenus();
 }
 
 function saveNote() {
@@ -680,19 +817,20 @@ function saveNote() {
 function toggleConsent() {
     leads = leads.map(l => {
         if (l.id.toString() === selectedLeadId.toString()) {
-            l.consentSigned = true; // Set to true
-            l.status = 'completed'; // Move to completed automatically
+            l.consentSigned = true;
+            l.status = 'completed';
             return l;
         }
         return l;
     });
     saveAndRefresh();
-    document.getElementById("actionMenu").classList.add("hidden");
+    closeAllMenus();
 }
 
 function showFollowUpPopup() {
     document.getElementById("followUpDate").value = "";
     document.getElementById("followUpPopup").style.display = "flex";
+    closeAllMenus();
 }
 
 function saveFollowUp() {
@@ -749,15 +887,15 @@ function toggleNotifications() {
 
 function saveAndRefresh() {
     localStorage.setItem("kisasa_leads", JSON.stringify(leads));
-    loadLeads(document.getElementById("searchInput")?.value || '');
+    loadLeads();
 }
 
 document.addEventListener("click", e => {
     if (!e.target.closest(".notifications") && !e.target.closest("#notificationPopup")) {
         document.getElementById("notificationPopup").style.display = "none";
     }
-    if (!e.target.closest(".btn-options") && !e.target.closest("#actionMenu")) {
-        document.getElementById("actionMenu").classList.add("hidden");
+    if (!e.target.closest(".btn-options") && !e.target.closest(".action-menu")) {
+        closeAllMenus();
     }
 });
 
@@ -779,24 +917,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateNotifications();
 });
 
-function logout() { localStorage.removeItem("loggedInUser"); window.location.href = "login.html"; }
-
-function callLead() {
-    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
-    if (lead?.phone) window.open(`tel:${lead.phone}`);
-}
-
-function emailLead() {
-    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
-    if (lead?.email) window.open(`mailto:${lead.email}`);
-}
-
-function whatsappLead() {
-    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
-    if (lead?.phone) {
-        const clean = lead.phone.replace(/\D/g, '');
-        window.open(`https://wa.me/${clean}`);
-    }
+function logout() { 
+    localStorage.removeItem("loggedInUser"); 
+    window.location.href = "login.html"; 
 }
 
 function closePopup(id) {
