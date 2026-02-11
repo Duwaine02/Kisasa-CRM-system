@@ -18,6 +18,8 @@
       --border: #e2e8f0;
       --success: #10b981;
       --danger: #ef4444;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
@@ -56,9 +58,9 @@
     .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
     .main-wrapper {
-      margin-left: 76px;
+      margin-left: 100px;
       flex: 1;
-      padding: 2rem 2.5rem;
+      padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 4rem);
       max-width: 900px;
       margin: 0 auto;
     }
@@ -163,7 +165,7 @@
 
     @media (max-width: 768px) {
       .form-grid { grid-template-columns: 1fr; }
-      .main-wrapper { padding: 1.5rem 1rem; }
+      .main-wrapper { padding: 1.5rem 1rem; margin-left: 76px; }
     }
   </style>
 </head>
@@ -215,7 +217,16 @@
         </div>
         <div class="form-group">
           <label for="amount">Deal Value (R)</label>
-          <input type="number" id="amount" min="0" step="1">
+          <input type="text" id="amount" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label for="status"> Status <span style="color:var(--danger);">*</span></label>
+          <select id="status" required>
+            <option value="" disabled selected>Select status...</option>
+            <option value="hot">Hot</option>
+            <option value="warm">Warm</option>
+            <option value="cold">Cold</option>
+          </select>
         </div>
         <div class="form-group full">
           <label for="notes">Notes / Comments</label>
@@ -241,8 +252,27 @@ function logout() {
   window.location.href = "login.html";
 }
 
+// --- NEW: AUTO-COMMA FORMATTING LOGIC ---
+const amountInput = document.getElementById('amount');
+
+amountInput.addEventListener('input', function(e) {
+  // Remove any non-digit characters
+  let value = e.target.value.replace(/\D/g, "");
+  
+  // Format with commas
+  if (value !== "") {
+    e.target.value = Number(value).toLocaleString('en-US');
+  } else {
+    e.target.value = "";
+  }
+});
+
 document.getElementById("leadForm").addEventListener("submit", function(e) {
   e.preventDefault();
+
+  // Strip commas before saving so it remains a pure number in the database
+  const rawAmount = document.getElementById("amount").value.replace(/,/g, "");
+  const temperature = document.getElementById("status").value;
 
   const lead = {
     id: "lead-" + Date.now(),
@@ -251,14 +281,18 @@ document.getElementById("leadForm").addEventListener("submit", function(e) {
     email: document.getElementById("email").value.trim(),
     phone: document.getElementById("phone").value.trim(),
     idNumber: document.getElementById("idNumber").value.trim(),
-    amount: parseFloat(document.getElementById("amount").value) || 0,
+    amount: parseFloat(rawAmount) || 0,
+    
+    // --- FIX: SEPARATE STORAGE ---
+    leadStatus: temperature,    // Saves the "Hot/Warm/Cold" value
+    status: "draft",           // Saves the "Column Position" (Start in Drafts)
+    
     notes: document.getElementById("notes").value.trim(),
-    status: "draft",
     date: new Date().toISOString().split("T")[0]
   };
 
   let leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
-  leads.unshift(lead);   // ← CHANGED: unshift instead of push → newest at top
+  leads.unshift(lead);   // newest at top
   localStorage.setItem("kisasa_leads", JSON.stringify(leads));
 
   window.location.href = "leads.html";

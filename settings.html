@@ -18,13 +18,12 @@
       --border: #e2e8f0;
       --success: #10b981;
       --danger: #ef4444;
-      --warning: #f59e0b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
     body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-    /* ── SIDEBAR (identical to all other pages) ── */
+    /* ── SIDEBAR ── */
     .sidebar {
       width: 76px;
       background: var(--sidebar-bg);
@@ -101,7 +100,7 @@
     .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
     .logout:hover { color: var(--danger); }
 
-    /* ── SETTINGS SECTIONS ── */
+    /* ── SETTINGS CARD ── */
     .settings-card {
       background: white;
       border-radius: 16px;
@@ -128,7 +127,7 @@
       color: var(--text-muted);
       font-size: 0.9rem;
     }
-    input, select {
+    input {
       width: 100%;
       padding: 0.75rem 1rem;
       border: 1px solid var(--border);
@@ -136,66 +135,10 @@
       font-size: 0.95rem;
       transition: border-color 0.2s;
     }
-    input:focus, select:focus {
+    input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-    }
-
-    .toggle-group {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-    }
-    .toggle-label {
-      font-weight: 500;
-      color: var(--text-main);
-    }
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 26px;
-    }
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider { background-color: var(--primary); }
-    input:checked + .slider:before { transform: translateX(24px); }
-
-    .danger-zone {
-      border: 1px solid #fee2e2;
-      background: #fef2f2;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-    }
-    .danger-zone h3 {
-      color: var(--danger);
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
     }
 
     .btn {
@@ -206,10 +149,13 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: #1d4ed8; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-danger:hover { background: #dc2626; }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
 
     @media (max-width: 768px) {
       .main-wrapper { padding: 1.5rem 1rem; }
@@ -258,37 +204,6 @@
       <button class="btn btn-primary">Save Changes</button>
     </div>
   </div>
-
-  <div class="settings-card">
-    <h2>Account Preferences</h2>
-    <div class="toggle-group">
-      <span class="toggle-label">Email Notifications</span>
-      <label class="toggle-switch">
-        <input type="checkbox" checked>
-        <span class="slider"></span>
-      </label>
-    </div>
-    <div class="toggle-group">
-      <span class="toggle-label">Dark Mode</span>
-      <label class="toggle-switch">
-        <input type="checkbox">
-        <span class="slider"></span>
-      </label>
-    </div>
-    <div class="toggle-group">
-      <span class="toggle-label">Two-Factor Authentication</span>
-      <label class="toggle-switch">
-        <input type="checkbox">
-        <span class="slider"></span>
-      </label>
-    </div>
-  </div>
-
-  <div class="danger-zone">
-    <h3>Danger Zone</h3>
-    <p style="margin-bottom: 1rem; color: var(--text-muted);">Be careful — these actions cannot be undone.</p>
-    <button class="btn btn-danger">Delete Account</button>
-  </div>
 </div>
 
 <script>
@@ -301,18 +216,9 @@ function logout() {
   window.location.href = "login.html";
 }
 
-// Placeholder save logic (you can expand this later)
-document.querySelectorAll('.btn-primary').forEach(btn => {
-  btn.addEventListener('click', () => {
-    alert("Settings saved successfully!");
-  });
-});
-
-document.querySelector('.btn-danger').addEventListener('click', () => {
-  if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
-    alert("Account deletion initiated...");
-    // In real app: clear localStorage and redirect to login
-  }
+// Placeholder save logic
+document.querySelector('.btn-primary').addEventListener('click', () => {
+  alert("Settings saved successfully!");
 });
 </script>
 </body>

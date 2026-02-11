@@ -1,352 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leads - Kisasa CRM</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-light: #dbeafe;
-      --sidebar-bg: #0b1f3b;
-      --bg-main: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-      --gray-400: #9ca3af;
-      --lead-badge: #374151;
-      --client-badge: #3b82f6;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leads - Kisasa CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --sidebar-bg: #0b1f3b;
+            --bg-main: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --gray-100: #f3f4f6;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-    .sidebar {
-      width: 76px;
-      background: var(--sidebar-bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem 0;
-      position: fixed;
-      height: 100vh;
-      z-index: 1000;
-    }
-    .sidebar .logo {
-      color: #60a5fa;
-      font-weight: 800;
-      font-size: 1.4rem;
-      margin-bottom: 3rem;
-      letter-spacing: -0.5px;
-    }
-    .sidebar a {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      margin-bottom: 1rem;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-    .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
-    .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.35); }
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 76px;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+        .sidebar .logo {
+            color: #60a5fa;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar a {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
+        .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-    .main-wrapper {
-      margin-left: 100px;           /* ← increased for professional gap from sidebar */
-      flex: 1;
-      padding: 2.5rem 6rem;         /* wide horizontal space */
-      max-width: 1800px;            /* wider content area */
-      margin: 0 auto;
-    }
+        /* --- LAYOUT WRAPPER --- */
+        .main-wrapper {
+            flex: 1;
+            margin-left: 76px;
+            padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem);
+            max-width: 1600px;
+        }
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2.5rem;
-    }
-    .top-bar h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: white;
-      padding: 0.6rem 1.4rem;
-      border-radius: 50px;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      color: var(--primary);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-    .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-    .logout:hover { color: var(--danger); }
+        /* --- TOP BAR --- */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+        .top-bar h1 {
+            font-size: clamp(1.6rem, 4vw, 1.8rem);
+            font-weight: 700;
+            color: #0f172a;
+        }
 
-    .filters {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--gray-200);
-      padding-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .filter {
-      padding: 0.6rem 1.2rem;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      position: relative;
-      transition: color 0.2s;
-      border-radius: 50px;
-    }
-    .filter:hover { color: var(--text-main); background: var(--gray-100); }
-    .filter.active {
-      color: var(--primary);
-      font-weight: 600;
-      background: var(--primary-light);
-    }
+        /* --- SEARCH BAR (minimal line style) --- */
+        .search-container {
+            position: relative;
+            width: 340px;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.4rem;
+            border: none;
+            border-bottom: 2px solid #cbd5e1;
+            background: transparent;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: border-color 0.2s;
+        }
+        .search-container input:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+        }
+        .search-container input::placeholder {
+            color: #94a3b8;
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
 
-    .search-box {
-      margin-bottom: 2.5rem;
-      position: relative;
-      max-width: 500px;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 0.8rem 0;
-      border: none;
-      border-bottom: 1.5px solid var(--gray-400);
-      background: transparent;
-      font-size: 1rem;
-      color: var(--text-main);
-      transition: border-color 0.2s;
-    }
-    .search-box input:focus {
-      outline: none;
-      border-bottom-color: var(--primary);
-    }
-    .search-box input::placeholder {
-      color: var(--gray-400);
-    }
+        /* --- ACTION BAR (made significantly smaller / more compact) --- */
+        .action-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            max-width: 680px;               /* ← smaller width */
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            font-size: 0.92rem;
+        }
+        .bulk-actions {
+            display: none;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn-bulk {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 14px;              /* smaller button */
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: 0.2s;
+        }
+        .btn-bulk:hover { background: #1d4ed8; }
+        .btn-bulk i {
+            margin-right: 6px;
+            font-size: 0.9rem;
+        }
 
-    .table-container {
-      background: white;
-      border-radius: 12px;
-      overflow-x: auto;
-      border: 1px solid var(--gray-200);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-    }
-    th, td {
-      padding: 1.4rem 1.8rem;
-      text-align: left;
-      border-bottom: 1px solid var(--gray-100);
-    }
-    th {
-      background: #fafafa;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #475569;
-      text-transform: uppercase;
-      white-space: nowrap;
-      letter-spacing: 0.5px;
-    }
-    tr:hover { background: #f9fafb; }
-    .badge {
-      padding: 0.45rem 1rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: white;
-      text-transform: capitalize;
-      display: inline-block;
-      min-width: 80px;
-      text-align: center;
-    }
-    .lead  { background: #374151; }
-    .client { background: #3b82f6; }
+        /* --- TABLE STYLES --- */
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 1.2rem 1.5rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .checkbox-cell { width: 60px; text-align: center; }
+        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
 
-    @media (max-width: 1280px) {
-      .main-wrapper { padding: 2rem 4rem; margin-left: 100px; }
-    }
-
-    @media (max-width: 1024px) {
-      .main-wrapper { padding: 2rem 3rem; margin-left: 90px; }
-    }
-
-    @media (max-width: 768px) {
-      .main-wrapper { padding: 1.5rem 1.5rem; margin-left: 76px; }
-      .filters { flex-wrap: wrap; gap: 1rem; }
-      .search-box { max-width: 100%; }
-      table, thead, tbody, th, td, tr { display: block; }
-      thead tr { position: absolute; top: -9999px; left: -9999px; }
-      tr { margin-bottom: 1.5rem; border: 1px solid var(--gray-200); border-radius: 8px; }
-      td { border: none; position: relative; padding-left: 50%; text-align: right; }
-      td:before {
-        position: absolute;
-        top: 1.2rem;
-        left: 1.5rem;
-        width: 45%;
-        padding-right: 1rem;
-        white-space: nowrap;
-        font-weight: 600;
-        color: #64748b;
-        content: attr(data-label);
-        text-align: left;
-      }
-    }
-  </style>
+        /* --- BADGES --- */
+        .badge {
+            padding: 0.3rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: capitalize;
+        }
+        .badge.hot { background: #fee2e2; color: #ef4444; }
+        .badge.warm { background: #fef3c7; color: #d97706; }
+        .badge.cold { background: #dbeafe; color: #2563eb; }
+        .badge.draft { background: #f1f5f9; color: #475569; }
+        .badge.in-progress { background: #dcfce7; color: #166534; }
+        .badge.completed { background: #e0e7ff; color: #4338ca; }
+    </style>
 </head>
 <body>
 
 <aside class="sidebar">
-  <div class="logo">KISASA</div>
-  <nav>
-    <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
-    <a href="leads.html" class="active" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
-    <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
-    <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
-    <a href="reports.html" title="Reports"><i class="fa-solid fa-chart-line"></i></a>
-    <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
-  </nav>
+    <div class="logo">Kisasa</div>
+    <nav>
+        <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="leads.html" class="active" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
+        <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
+        <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
+        <a href="reports.html" title="Reports"><i class="fa-solid fa-chart-line"></i></a>
+        <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
+    </nav>
 </aside>
 
 <div class="main-wrapper">
-  <div class="top-bar">
-    <h1>Leads & Clients</h1>
-    <div class="user-info">
-      <div class="avatar" id="avatarLetter">D</div>
-      <span id="userFullName"></span>
-      <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
+    <div class="top-bar">
+        <h1>All Leads</h1>
+        <div class="search-container">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search leads...">
+        </div>
     </div>
-  </div>
 
-  <div class="filters">
-    <span class="filter active" data-status="all">All</span>
-    <span class="filter" data-status="old-client">Ex-clients</span>
-    <span class="filter" data-status="hot">Hot</span>
-    <span class="filter" data-status="warm">Warm</span>
-    <span class="filter" data-status="cold">Cold</span>
-  </div>
+    <div class="action-container">
+        <div id="selectionInfo" style="font-size: 0.88rem; color: var(--text-muted);">
+            Select leads to perform bulk actions
+        </div>
+        <div class="bulk-actions" id="bulkActions">
+            <span id="selectedCount" style="font-weight: 700; color: var(--primary); font-size: 0.88rem;">0 Selected</span>
+            <button class="btn-bulk" onclick="moveToDrafts()">
+                <i class="fa-solid fa-file-export"></i> Move to Drafts
+            </button>
+        </div>
+    </div>
 
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search">
-  </div>
-
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Client</th>
-          <th>Email</th>
-          <th>ID Number</th>
-          <th>Cell Number</th>
-          <th>Type</th>
-          <th>Amount (R)</th>
-          <th>Date Registered</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="checkbox-cell"><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th>ID Number</th>
+                    <th>Status</th>
+                    <th>Amount (R)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 </div>
 
 <script>
-const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
-document.getElementById("userFullName").textContent = user.name + " " + user.surname;
-document.getElementById("avatarLetter").textContent = user.name[0];
+    let data = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
+    const tableBody = document.getElementById('tableBody');
+    const searchInput = document.getElementById('searchInput');
 
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
+    function render() {
+        tableBody.innerHTML = '';
+        const term = searchInput.value.toLowerCase().trim();
 
-const data = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-const tableBody = document.getElementById('tableBody');
-const filters = document.querySelectorAll('.filter');
-const searchInput = document.getElementById('searchInput');
+        const filtered = data.filter(item => {
+            const fullName = `${item.firstName || ''} ${item.lastName || ''}`.toLowerCase();
+            return fullName.includes(term) || 
+                   (item.email || '').toLowerCase().includes(term) ||
+                   (item.idNumber || '').includes(term);
+        });
 
-let currentFilter = 'all';
+        if (filtered.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:3rem;color:#94a3b8;">No results found.</td></tr>';
+            return;
+        }
 
-function render() {
-  tableBody.innerHTML = '';
-  const term = searchInput.value.toLowerCase().trim();
+        filtered.forEach((item) => {
+            const status = (item.status || 'cold').toLowerCase();
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="checkbox-cell"><input type="checkbox" class="lead-checkbox" value="${item.id}" onchange="updateUI()"></td>
+                <td style="font-weight:600; color:#0f172a;">${item.firstName} ${item.lastName}</td>
+                <td style="color:var(--text-muted);">${item.email}</td>
+                <td>${item.idNumber || '—'}</td>
+                <td><span class="badge ${status}">${status}</span></td>
+                <td style="font-weight:600;">R ${(Number(item.amount) || 0).toLocaleString()}</td>
+                <td style="color:#94a3b8; font-size:0.8rem;">${item.date || '—'}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
 
-  const filtered = data.filter(item => {
-    const status = (item.status || '').toLowerCase();
-    const matchesFilter = 
-      currentFilter === 'all' ||
-      status === currentFilter ||
-      (currentFilter === 'old-client' && status === 'old-client');
-    const matchesSearch = 
-      `${item.firstName || ''} ${item.lastName || ''}`.toLowerCase().includes(term) ||
-      (item.email || '').toLowerCase().includes(term) ||
-      (item.phone || '').includes(term) ||
-      (item.idNumber || '').includes(term) ||
-      String(item.amount || '').includes(term);
-    return matchesFilter && matchesSearch;
-  });
+    function toggleAll(source) {
+        const checkboxes = document.querySelectorAll('.lead-checkbox');
+        checkboxes.forEach(cb => cb.checked = source.checked);
+        updateUI();
+    }
 
-  if (filtered.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:6rem;color:#9ca3af;">No leads found</td></tr>';
-    return;
-  }
+    function updateUI() {
+        const selected = document.querySelectorAll('.lead-checkbox:checked');
+        const bulkActions = document.getElementById('bulkActions');
+        const selectionInfo = document.getElementById('selectionInfo');
+        const countSpan = document.getElementById('selectedCount');
 
-  filtered.forEach(item => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td style="font-weight:500;" data-label="Client">${item.firstName || ''} ${item.lastName || ''}</td>
-      <td data-label="Email">${item.email || '—'}</td>
-      <td data-label="ID Number">${item.idNumber || '—'}</td>
-      <td data-label="Cell Number">${item.phone || '—'}</td>
-      <td data-label="Type"><span class="badge ${item.status || 'lead'}">${(item.status || 'lead').toUpperCase()}</span></td>
-      <td data-label="Amount (R)">R ${(Number(item.amount) || 0).toLocaleString()}</td>
-      <td data-label="Date Registered">${item.date || '—'}</td>
-    `;
-    row.onclick = () => {
-      localStorage.setItem('selectedClient', JSON.stringify(item));
-      window.location.href = 'client Detail.html';
-    };
-    tableBody.appendChild(row);
-  });
-}
+        if (selected.length > 0) {
+            bulkActions.style.display = 'flex';
+            selectionInfo.style.display = 'none';
+            countSpan.textContent = `${selected.length} Lead(s) Selected`;
+        } else {
+            bulkActions.style.display = 'none';
+            selectionInfo.style.display = 'block';
+        }
+    }
 
-filters.forEach(f => {
-  f.addEventListener('click', () => {
-    filters.forEach(f2 => f2.classList.remove('active'));
-    f.classList.add('active');
-    currentFilter = f.dataset.status;
+    function moveToDrafts() {
+        const selectedIds = Array.from(document.querySelectorAll('.lead-checkbox:checked')).map(cb => cb.value);
+        
+        if (selectedIds.length === 0) return;
+
+        data = data.map(item => {
+            if (selectedIds.includes(item.id.toString())) {
+                return { ...item, status: 'draft' }; 
+            }
+            return item;
+        });
+
+        localStorage.setItem('kisasa_leads', JSON.stringify(data));
+        
+        alert(`Success! ${selectedIds.length} lead(s) moved to Dashboard Drafts.`);
+        
+        document.getElementById('selectAll').checked = false;
+        render();
+        updateUI();
+    }
+
+    searchInput.addEventListener('input', render);
     render();
-  });
-});
-
-searchInput.addEventListener('input', render);
-render();
 </script>
+
 </body>
 </html>

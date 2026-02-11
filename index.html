@@ -1,262 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Kisasa CRM – Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Kisasa CRM – Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-:root {
-    --primary: #2563eb;
-    --primary-light: #dbeafe;
-    --sidebar-bg: #0b1f3b;
-    --bg-main: #f1f5f9;
-    --card-bg: #ffffff;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    --success: #10b981;
-    --danger: #ef4444;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-}
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --sidebar-bg: #0b1f3b;
+            --bg-main: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --whatsapp: #25D366;
+            
+            --cold-bg: #f1f5f9;
+            --cold-text: #475569;
+            --cold-border: #cbd5e1;
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
+            --warm-bg: #fff7ed;
+            --warm-text: #c2410c;
+            --warm-border: #fdba74;
 
-/* SIDEBAR */
-.sidebar {
-    width: 76px;
-    background: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem 0;
-    position: fixed;
-    height: 100vh;
-    z-index: 1000;
-}
-.sidebar .logo {
-    color: #60a5fa;
-    font-weight: 800;
-    font-size: 1.2rem;
-    margin-bottom: 2.5rem;
-}
-.sidebar a {
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    margin-bottom: 0.75rem;
-    transition: all 0.3s;
-    text-decoration: none;
-}
-.sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
-.sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+            --hot-bg: #fef2f2;
+            --hot-text: #dc2626;
+            --hot-border: #fecaca;
+        }
 
-/* MAIN – fluid & responsive */
-main { 
-    flex: 1; 
-    margin-left: 76px; 
-    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem); 
-    overflow-x: hidden; /* prevent horizontal overflow */
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-/* HEADER */
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
-.header h1 { font-size: clamp(1.6rem, 4vw, 1.8rem); font-weight: 700; color: #0f172a; }
-.user-info { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.6rem 1.2rem; border-radius: 50px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: center; }
-.logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-.logout:hover { color: var(--danger); }
+        /* SIDEBAR */
+        .sidebar {
+            width: 76px; background: var(--sidebar-bg);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 0; position: fixed; height: 100vh; z-index: 1000;
+        }
+        .sidebar .logo { color: #60a5fa; font-weight: 800; font-size: 1.2rem; margin-bottom: 2.5rem; }
+        .sidebar a {
+            width: 46px; height: 46px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: #94a3b8; margin-bottom: 0.75rem; transition: all 0.3s; text-decoration: none;
+        }
+        .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
+        .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-/* STATS */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
-.stat-card { background: var(--card-bg); border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
-.stat-card p { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; }
-.stat-card h2 { font-size: 2rem; font-weight: 800; margin: 0; }
-.stat-card.revenue { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; }
-.stat-card.revenue p { color: rgba(255,255,255,0.9); }
+        /* MAIN LAYOUT */
+        main { flex: 1; margin-left: 76px; padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem); overflow-x: hidden; }
 
-/* CHART */
-.chart-container { 
-    background: white; 
-    border-radius: 16px; 
-    padding: 1.5rem; 
-    border: 1px solid var(--border); 
-    margin-bottom: 2.5rem; 
-    height: clamp(280px, 45vh, 320px); 
-    width: 100%; 
-    overflow-x: auto; 
-}
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+        .header h1 { font-size: clamp(1.6rem, 4vw, 1.8rem); font-weight: 700; color: #0f172a; }
+        
+        .user-info { 
+            display: flex; align-items: center; gap: 1rem; 
+            background: white; padding: 0.6rem 1.2rem; 
+            border-radius: 50px; border: 1px solid var(--border); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .logout:hover { color: var(--danger); }
 
-/* PIPELINE */
-.pipeline-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
-    gap: 1.5rem; 
-    overflow-x: auto; /* scroll if columns overflow on zoom/small screen */
-    padding-bottom: 1rem;
-}
-.column { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 1.25rem; }
-.column-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-200); }
-.column-header h3 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; color: var(--text-main); }
-.count-badge { background: var(--gray-100); color: var(--text-muted); font-size: 0.8rem; padding: 0.35rem 0.8rem; border-radius: 999px; font-weight: 600; }
+        /* STATS */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card { background: var(--card-bg); border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .stat-card p { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; }
+        .stat-card h2 { font-size: 2rem; font-weight: 800; margin: 0; }
+        .stat-card.revenue { background: linear-gradient(135deg, #ffffff, #ffffff); color: rgb(0, 0, 0); border: none; }
 
-.lead-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid var(--gray-200);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: all 0.2s ease;
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-}
-.lead-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-color: var(--primary);
-}
-.lead-card .drag-handle {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    cursor: grab;
-    padding-top: 0.25rem;
-}
-.lead-card .content {
-    flex: 1;
-}
-.lead-card h4 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin-bottom: 0.35rem;
-    color: var(--text-main);
-}
-.lead-card .price {
-    color: var(--success);
-    font-weight: 700;
-    font-size: 1.15rem;
-    margin-bottom: 0.9rem;
-    display: block;
-}
+        /* CHART */
+        .chart-container { 
+            background: white; border-radius: 16px; padding: 1.5rem; 
+            border: 1px solid var(--border); margin-bottom: 2.5rem; 
+            height: 300px; width: 100%; 
+        }
 
-.lead-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--gray-200);
-}
-.contact-icons {
-    display: flex;
-    gap: 1rem;
-}
-.contact-icons i {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.contact-icons i:hover {
-    color: var(--success);
-    transform: scale(1.15);
-}
+        /* PIPELINE GRID */
+        .pipeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; padding-bottom: 1rem; }
+        
+        .column { 
+            background: #f8fafc; border-radius: 16px; border: 1px solid var(--border); 
+            padding: 1.25rem; max-height: 650px; overflow-y: auto; 
+            scrollbar-width: thin; scrollbar-color: var(--gray-200) transparent;
+        }
+        .column::-webkit-scrollbar { width: 6px; }
+        .column::-webkit-scrollbar-thumb { background-color: var(--gray-200); border-radius: 10px; }
 
-.btn-options {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 0.4rem;
-    border-radius: 50%;
-    transition: all 0.2s;
-}
-.btn-options:hover {
-    background: var(--gray-100);
-    color: var(--primary);
-}
+        .column-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 1.25rem; padding-bottom: 0.75rem; 
+            border-bottom: 1px solid var(--gray-200); 
+            position: sticky; top: 0; background: #f8fafc; z-index: 10;
+        }
+        .column-header h3 { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.6rem; 
+            color: var(--text-main); 
+        }
+        .column-header h3 i { color: #000000; }
 
-.fab {
-    position: fixed;
-    bottom: clamp(20px, 5vw, 32px);
-    right: clamp(20px, 5vw, 32px);
-    width: 60px;
-    height: 60px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.6rem;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(37,99,235,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    z-index: 999;
-}
-.fab:hover { transform: scale(1.1); background: #1d4ed8; }
+        .count-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
+            min-width: 28px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            border: none;
+            transition: transform 0.2s ease;
+        }
+        .count-badge:not(:empty):not([data-count="0"]) { transform: scale(1.08); }
 
-.action-menu {
-    position: absolute;
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    width: 220px;
-    z-index: 2000;
-    padding: 0.5rem 0;
-}
-.action-menu button {
-    width: 100%;
-    padding: 0.7rem 1.2rem;
-    text-align: left;
-    background: none;
-    border: none;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.action-menu button:hover { background: var(--primary-light); color: var(--primary); }
-.hidden { display: none !important; }
+        /* LEAD CARDS – compact */
+        .lead-card {
+            background: #ffffff; 
+            border-radius: 12px; 
+            padding: 1rem;
+            margin-bottom: 0.9rem;
+            border: 1px solid var(--gray-200); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            transition: all 0.2s ease; 
+            position: relative;
+        }
+        .lead-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+            border-color: var(--primary); 
+        }
+        
+        .status-indicator {
+            position: absolute; left: 0; top: 15%; height: 70%; width: 4px; border-radius: 0 4px 4px 0;
+        }
 
-@media (max-width: 1024px) {
-    main { padding: clamp(1.5rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem); }
-    .pipeline-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-}
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        .badge-cold { background: var(--cold-bg); color: var(--cold-text); border: 1px solid var(--cold-border); }
+        .badge-warm { background: var(--warm-bg); color: var(--warm-text); border: 1px solid var(--warm-border); }
+        .badge-hot { background: var(--hot-bg); color: var(--hot-text); border: 1px solid var(--hot-border); }
 
-@media (max-width: 768px) {
-    .sidebar { width: 70px; }
-    main { margin-left: 70px; padding: 1.5rem 1rem; }
-    .fab { width: 56px; height: 56px; font-size: 1.4rem; bottom: 20px; right: 20px; }
-    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    .chart-container { height: 260px; }
-}
-</style>
+        .lead-card .content { position: relative; }
+
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.6rem;
+        }
+
+        .lead-info { flex: 1; }
+
+        .lead-card h4 { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            margin-bottom: 0.2rem; 
+            color: var(--text-main); 
+        }
+
+        .price { 
+            color: #334155;
+            font-weight: 700; 
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem; 
+            display: block; 
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .contact-icons { 
+            display: flex; 
+            gap: 0.9rem; 
+        }
+        .contact-icons i { 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            transition: transform 0.2s; 
+        }
+        .contact-icons .fa-phone { color: #000000; }
+        .contact-icons .fa-envelope { color: #ef4444; }
+        .contact-icons .fa-whatsapp { color: var(--whatsapp); }
+        .contact-icons i:hover { transform: scale(1.2); }
+
+        .lead-footer { 
+            display: flex; 
+            justify-content: flex-end;
+            padding-top: 0.6rem; 
+            border-top: 1px solid var(--gray-200); 
+        }
+
+        .btn-options { 
+            background: none; 
+            border: none; 
+            color: #000000; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            padding: 0.3rem; 
+            border-radius: 50%; 
+            transition: all 0.2s;
+        }
+        .btn-options:hover { 
+            background: var(--gray-100); 
+            color: var(--primary); 
+        }
+
+        /* POPUP STYLES – clean & professional */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+        .popup-content {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            position: relative;
+            text-align: center;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .popup-close:hover { color: var(--danger); }
+        .popup-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+        .popup-value {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            word-break: break-all;
+        }
+        .popup-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .popup-btn:hover { background: #1d4ed8; }
+
+        /* FAB & ACTION MENU */
+        .fab {
+            position: fixed; bottom: 32px; right: 32px; width: 60px; height: 60px; 
+            background: var(--primary); color: white; border: none; border-radius: 50%;
+            font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 20px rgba(37,99,235,0.3);
+            display: flex; align-items: center; justify-content: center; z-index: 999;
+        }
+
+        .action-menu {
+            position: fixed;
+            background: white; border-radius: 12px; border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 200px; z-index: 2000; padding: 0.5rem 0;
+        }
+        .action-menu button { 
+            width: 100%; padding: 0.8rem 1.2rem; text-align: left; background: none; border: none; 
+            cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; 
+        }
+        .action-menu button:hover { background: var(--primary-light); color: var(--primary); }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
 <aside class="sidebar">
     <div class="logo">Kisasa</div>
     <nav>
-        <a href="index.html" class="active"><i class="fa-solid fa-gauge-high"></i></a>
-        <a href="leads.html"><i class="fa-solid fa-user-plus"></i></a>
-        <a href="clients.html"><i class="fa-solid fa-users"></i></a>
-        <a href="quotes.html"><i class="fa-solid fa-file-invoice"></i></a>
-        <a href="reports.html"><i class="fa-solid fa-chart-line"></i></a>
-        <a href="settings.html"><i class="fa-solid fa-gear"></i></a>
+        <a href="index.html" class="active" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="leads.html" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
+        <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
+        <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
+        <a href="reports.html" title="Reports"><i class="fa-solid fa-chart-line"></i></a>
+        <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
     </nav>
 </aside>
 
@@ -264,14 +324,14 @@ main {
     <div class="header">
         <h1>Dashboard</h1>
         <div class="user-info">
-            <div class="avatar" id="avatarLetter"></div>
-            <span id="userFullName"></span>
+            <div class="avatar" id="avatarLetter">D</div>
+            <span id="userFullName">Duwaine Julies</span>
             <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
         </div>
     </div>
 
     <section class="stats-grid">
-        <div class="stat-card"><p>New Leads</p><h2 id="newLeadsCount">0</h2></div>
+        <div class="stat-card"><p>Total Leads</p><h2 id="newLeadsCount">0</h2></div>
         <div class="stat-card"><p>In Progress</p><h2 id="inProgressCount">0</h2></div>
         <div class="stat-card"><p>Converted</p><h2 id="convertedCount">0</h2></div>
         <div class="stat-card"><p>Win Rate</p><h2 id="winRate">0%</h2></div>
@@ -309,194 +369,193 @@ main {
     </section>
 </main>
 
-<button class="fab" onclick="openAddLead()"><i class="fa-solid fa-plus"></i></button>
+<button class="fab" onclick="window.location.href='addNewlead.html'"><i class="fa-solid fa-plus"></i></button>
 
 <div id="actionMenu" class="action-menu hidden">
     <button onclick="sendQuote()"><i class="fa-solid fa-paper-plane"></i> Send Quote</button>
     <button onclick="moveLead('tasksList')"><i class="fa-solid fa-arrow-right"></i> Move to Tasks</button>
     <button onclick="moveLead('completedList')"><i class="fa-solid fa-check-double"></i> Mark Converted</button>
-    <button style="color:var(--danger);" onclick="deleteLead()"><i class="fa-solid fa-trash"></i> Delete</button>
+</div>
+
+<!-- Popups -->
+<div id="phonePopup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup('phonePopup')">×</span>
+        <div class="popup-title">Phone Number</div>
+        <div class="popup-value" id="phoneValue"></div>
+        <button class="popup-btn" id="callBtn">Call Now</button>
+    </div>
+</div>
+
+<div id="emailPopup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup('emailPopup')">×</span>
+        <div class="popup-title">Email Address</div>
+        <div class="popup-value" id="emailValue"></div>
+        <button class="popup-btn" id="emailBtn">Send Email</button>
+    </div>
 </div>
 
 <script>
-// ── User Info ──
-const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
-document.getElementById("userFullName").textContent = user.name + " " + user.surname;
-document.getElementById("avatarLetter").textContent = user.name.charAt(0);
+let leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
+let currentLead = null;
 
-function logout() {
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "login.html";
+// Popup functions
+function showPhonePopup(phone) {
+    document.getElementById("phoneValue").textContent = phone || "No phone number available";
+    document.getElementById("callBtn").onclick = () => {
+        if (phone) window.open(`tel:${phone}`);
+    };
+    document.getElementById("phonePopup").style.display = "flex";
 }
 
-function openAddLead() {
-    window.location.href = "addNewlead.html";
+function showEmailPopup(email) {
+    document.getElementById("emailValue").textContent = email || "No email available";
+    document.getElementById("emailBtn").onclick = () => {
+        if (email) window.open(`mailto:${email}`);
+    };
+    document.getElementById("emailPopup").style.display = "flex";
 }
 
-// ── Leads Management ──
-let leads = [];
-
-try {
-    leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
-    if (!Array.isArray(leads)) leads = [];
-} catch (e) {
-    console.error("Invalid leads data in localStorage", e);
-    leads = [];
+function closePopup(id) {
+    document.getElementById(id).style.display = "none";
 }
 
 function loadLeads() {
+    leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
     const lists = {
-        draftsList: document.getElementById("draftsList"),
-        tasksList: document.getElementById("tasksList"),
-        completedList: document.getElementById("completedList")
+        drafts: document.getElementById("draftsList"),
+        tasks: document.getElementById("tasksList"),
+        completed: document.getElementById("completedList")
     };
-
-    if (!lists.draftsList || !lists.tasksList || !lists.completedList) {
-        console.warn("One or more list containers missing");
-        return;
-    }
-
-    Object.values(lists).forEach(list => list.innerHTML = "");
-
-    let newCount = 0, progressCount = 0, closedCount = 0, revenue = 0;
+    Object.values(lists).forEach(l => l.innerHTML = "");
+    let counts = { draft: 0, task: 0, complete: 0, revenue: 0 };
 
     leads.forEach(lead => {
+        const flowStatus = (lead.status || 'draft').toLowerCase();
+        let leadTemp = lead.leadStatus || "Cold";
+
         const card = document.createElement("div");
         card.className = "lead-card";
-        card.id = lead.id || `lead-${Date.now()}`;
+        card.id = lead.id;
+
+        const cleanPhone = (lead.phone || "").replace(/\D/g, '');
+        let colorCode = '#94a3b8'; let badgeClass = 'badge-cold';
+        if (leadTemp.toLowerCase() === 'hot') { colorCode = '#ef4444'; badgeClass = 'badge-hot'; }
+        else if (leadTemp.toLowerCase() === 'warm') { colorCode = '#f59e0b'; badgeClass = 'badge-warm'; }
+
         card.innerHTML = `
-            <div class="drag-handle"><i class="fa-solid fa-grip-lines"></i></div>
+            <div class="status-indicator" style="background:${colorCode}"></div>
             <div class="content">
-                <h4>${lead.firstName || ''} ${lead.lastName || ''}</h4>
-                <span class="price">R ${(Number(lead.amount) || 0).toLocaleString()}</span>
-                <div class="lead-footer">
-                    <div class="contact-icons">
-                        <i class="fa-solid fa-phone" title="Call" onclick="window.open('tel:${lead.phone || ''}')"></i>
-                        <i class="fa-solid fa-envelope" title="Email" onclick="window.open('mailto:${lead.email || ''}')"></i>
-                        <i class="fa-brands fa-whatsapp" title="WhatsApp" onclick="window.open('https://wa.me/${(lead.phone || '').replace('+','')}')"></i>
+                <div class="lead-header">
+                    <div class="lead-info">
+                        <span class="status-badge ${badgeClass}">${leadTemp}</span>
+                        <h4>${lead.firstName || lead.client || 'Unknown'} ${lead.lastName || ''}</h4>
+                        <span class="price">R ${(Number(lead.amount) || 0).toLocaleString()}</span>
                     </div>
-                    <button class="btn-options" title="Options" onclick="openMenu(event,this)"><i class="fa-solid fa-ellipsis-v"></i></button>
+                    <div class="card-actions">
+                        <div class="contact-icons">
+                            <i class="fa-solid fa-phone" title="Call" onclick="showPhonePopup('${lead.phone || ''}')"></i>
+                            <i class="fa-solid fa-envelope" title="Email" onclick="showEmailPopup('${lead.email || ''}')"></i>
+                            <i class="fa-brands fa-whatsapp" title="WhatsApp" onclick="window.open('https://wa.me/${cleanPhone}')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="lead-footer">
+                    <div class="footer-content"></div>
+                    <button class="btn-options" onclick="openMenu(event,this)"><i class="fa-solid fa-ellipsis-v"></i></button>
                 </div>
             </div>
         `;
 
-        if (lead.status === "draft") {
-            lists.draftsList.appendChild(card);
-            newCount++;
-        } else if (lead.status === "in-progress") {
-            lists.tasksList.appendChild(card);
-            progressCount++;
-        } else if (lead.status === "completed") {
-            card.classList.add("completed");
-            lists.completedList.appendChild(card);
-            closedCount++;
-            revenue += Number(lead.amount) || 0;
+        if (flowStatus === "in-progress" || flowStatus === "taskslist") {
+            lists.tasks.appendChild(card); counts.task++;
+        } else if (flowStatus === "completed" || flowStatus === "completedlist") {
+            lists.completed.appendChild(card); counts.complete++;
+            counts.revenue += Number(lead.amount) || 0;
+        } else {
+            lists.drafts.appendChild(card); counts.draft++;
         }
     });
 
-    document.getElementById("newLeadsCount").textContent = newCount + progressCount + closedCount;
-    document.getElementById("inProgressCount").textContent = progressCount;
-    document.getElementById("convertedCount").textContent = closedCount;
-    document.getElementById("winRate").textContent = (newCount + progressCount > 0 ? Math.round((closedCount / (newCount + progressCount)) * 100) : 0) + "%";
-    document.getElementById("totalRevenue").textContent = "R " + revenue.toLocaleString();
+    document.getElementById("newLeadsCount").textContent = leads.length;
+    document.getElementById("inProgressCount").textContent = counts.task;
+    document.getElementById("convertedCount").textContent = counts.complete;
+    document.getElementById("totalRevenue").textContent = "R " + counts.revenue.toLocaleString();
+    document.getElementById("draftCount").textContent = counts.draft;
+    document.getElementById("taskCount").textContent = counts.task;
+    document.getElementById("completeCount").textContent = counts.complete;
 
-    document.getElementById("draftCount").textContent = newCount;
-    document.getElementById("taskCount").textContent = progressCount;
-    document.getElementById("completeCount").textContent = closedCount;
+    document.getElementById("draftCount").setAttribute("data-count", counts.draft);
+    document.getElementById("taskCount").setAttribute("data-count", counts.task);
+    document.getElementById("completeCount").setAttribute("data-count", counts.complete);
+
+    const winRate = leads.length > 0 ? Math.round((counts.complete / leads.length) * 100) : 0;
+    document.getElementById("winRate").textContent = winRate + "%";
 }
 
-// ── Menu Positioning ──
-let selectedLead = null;
+let selectedLeadId = null;
 const actionMenu = document.getElementById("actionMenu");
 
 function openMenu(e, btn) {
     e.stopPropagation();
-    selectedLead = btn.closest(".lead-card");
+    const card = btn.closest(".lead-card");
+    selectedLeadId = card.id;
+    
+    const rect = btn.getBoundingClientRect();
+    const menuWidth = 200;
+    const menuHeight = 150;
+    
+    let topPosition = rect.bottom + 5;
+    if (window.innerHeight - rect.bottom < menuHeight) {
+        topPosition = rect.top - menuHeight - 5;
+    }
 
-    const rect = selectedLead.getBoundingClientRect();
-    let top = rect.bottom + window.scrollY + 8;
-    let left = rect.right + window.scrollX - 220;
-
-    if (left + 220 > window.innerWidth) left = rect.left + window.scrollX;
-
-    if (top + 180 > window.innerHeight + window.scrollY) top = rect.top + window.scrollY - 180 - 8;
-
-    actionMenu.style.top = top + "px";
-    actionMenu.style.left = left + "px";
+    actionMenu.style.top = topPosition + "px";
+    actionMenu.style.left = (rect.left - menuWidth + rect.width) + "px";
     actionMenu.classList.remove("hidden");
+}
+
+function moveLead(target) {
+    const statusMap = { 'tasksList': 'in-progress', 'completedList': 'completed' };
+    leads = leads.map(l => l.id.toString() === selectedLeadId.toString() ? { ...l, status: statusMap[target] } : l);
+    saveAndRefresh();
+}
+
+function sendQuote() {
+    const lead = leads.find(l => l.id.toString() === selectedLeadId.toString());
+    if (lead) {
+        const params = new URLSearchParams({ id: lead.id, fname: lead.firstName || lead.client, lname: lead.lastName || '', email: lead.email, phone: lead.phone, amt: lead.amount });
+        window.location.href = `NewQuote.html?${params.toString()}`;
+    }
+}
+
+function saveAndRefresh() {
+    localStorage.setItem("kisasa_leads", JSON.stringify(leads));
+    loadLeads();
+    actionMenu.classList.add("hidden");
 }
 
 document.addEventListener("click", () => actionMenu.classList.add("hidden"));
 
-function moveLead(targetId) {
-    if (!selectedLead) return;
-    const id = selectedLead.id;
-    const lead = leads.find(l => l.id === id);
-    if (lead) {
-        lead.status = targetId === "completedList" ? "completed" : "in-progress";
-        localStorage.setItem("kisasa_leads", JSON.stringify(leads));
-    }
-    document.getElementById(targetId).appendChild(selectedLead);
-    loadLeads();
-}
-
-function deleteLead() {
-    if (!selectedLead) return;
-    const id = selectedLead.id;
-    leads = leads.filter(l => l.id !== id);
-    localStorage.setItem("kisasa_leads", JSON.stringify(leads));
-    selectedLead.remove();
-    loadLeads();
-}
-
-function sendQuote() {
-    alert("Quote generation started...");
-}
-
-// ── Chart ──
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById('performanceChart');
-  if (!canvas) {
-    console.warn("Canvas #performanceChart not found");
-    return;
-  }
+    const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
+    document.getElementById("userFullName").textContent = user.name + " " + user.surname;
+    document.getElementById("avatarLetter").textContent = user.name[0];
 
-  const ctx = canvas.getContext('2d');
-  const rootStyle = getComputedStyle(document.documentElement);
-  const primaryColor = rootStyle.getPropertyValue('--primary').trim() || '#2563eb';
-  const borderColor = rootStyle.getPropertyValue('--border').trim() || '#e2e8f0';
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [{
-        label: 'Revenue',
-        data: [12000, 19000, 15000, 22000, 28000, 34000],
-        borderColor: primaryColor,
-        backgroundColor: 'rgba(37,99,235,0.15)',
-        tension: 0.4,
-        fill: true,
-        pointBackgroundColor: '#fff',
-        pointBorderColor: primaryColor,
-        pointRadius: 4,
-        pointHoverRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: borderColor } },
-        x: { grid: { display: false } }
-      }
-    }
-  });
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            datasets: [{ label: 'Revenue', data: [5000, 10000, 8000, 15000, 25000, 30000], borderColor: '#2563eb', tension: 0.4, fill: true, backgroundColor: 'rgba(37,99,235,0.1)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+    loadLeads();
 });
 
-// ── Initialize ──
-loadLeads();
+function logout() { localStorage.removeItem("loggedInUser"); window.location.href = "login.html"; }
 </script>
 </body>
 </html>
