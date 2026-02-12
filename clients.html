@@ -25,7 +25,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-        /* --- SIDEBAR (KEPT THE SAME) --- */
+        /* Sidebar */
         .sidebar {
             width: 76px;
             background: var(--sidebar-bg);
@@ -63,7 +63,7 @@
         .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
         .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-        /* --- LAYOUT WRAPPER --- */
+        /* Main content */
         .main-wrapper {
             flex: 1;
             margin-left: 76px;
@@ -71,7 +71,6 @@
             max-width: 1600px;
         }
 
-        /* --- TOP BAR --- */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -108,78 +107,114 @@
         .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
         .logout:hover { color: var(--danger); }
 
-        /* --- SEARCH BOX --- */
-        .search-box {
-            margin-bottom: 2.5rem;
+        /* Tabs + Search (visual only - no function) */
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .tab {
+            padding: 0.6rem 0;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: default;
             position: relative;
-            max-width: 500px;
+        }
+        .tab.active {
+            color: var(--text-main);
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+        .search-box {
+            position: relative;
+            width: 280px;
         }
         .search-box input {
             width: 100%;
-            padding: 0.8rem 0;
-            border: none;
-            border-bottom: 1.5px solid var(--gray-400);
-            background: transparent;
-            font-size: 1rem;
-            color: var(--text-main);
-            transition: border-color 0.2s;
+            padding: 0.7rem 1rem 0.7rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
         }
-        .search-box input:focus {
-            outline: none;
-            border-bottom-color: var(--primary);
+        .search-box::before {
+            content: '\f002';
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
-        /* --- TABLE --- */
+        /* Table */
         .table-container {
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
         table { width: 100%; border-collapse: collapse; }
         th {
             background: #f8fafc;
-            padding: 1rem 1.5rem;
+            padding: 1rem 1.25rem;
             text-align: left;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border);
+            font-weight: 600;
         }
         td {
-            padding: 1.2rem 1.5rem;
-            font-size: 0.9rem;
+            padding: 1.1rem 1.25rem;
+            font-size: 0.92rem;
             border-bottom: 1px solid var(--gray-100);
-            cursor: pointer;
+            color: var(--text-main);
         }
         tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #fbfcfe; }
+        tr:hover td { background: #f8fafc; cursor: pointer; }
 
-        /* --- BADGES --- */
+        .name-cell { font-weight: 600; color: #0f172a; }
         .badge {
-            padding: 0.45rem 1rem;
+            padding: 0.35rem 0.9rem;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.73rem;
             font-weight: 600;
-            display: inline-block;
             text-transform: uppercase;
+            display: inline-block;
         }
+        .badge.lead   { background: #fef3c7; color: #d97706; }
         .badge.client { background: #dbeafe; color: #2563eb; }
 
         @media (max-width: 768px) {
             .sidebar { width: 70px; }
             .main-wrapper { margin-left: 70px; padding: 1.5rem 1rem; }
             .table-container { overflow-x: auto; }
-            table { min-width: 800px; }
+            table { min-width: 900px; }
+            .filters { flex-direction: column; align-items: stretch; gap: 1rem; }
+            .search-box { width: 100%; }
         }
     </style>
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="logo">Kisasa</div>
+    <div class="logo">K</div>
     <nav>
         <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
         <a href="leads.html" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
@@ -194,14 +229,22 @@
     <div class="top-bar">
         <h1>Clients</h1>
         <div class="user-info">
-            <div class="avatar" id="avatarLetter"></div>
-            <span id="userFullName"></span>
+            <div class="avatar">A</div>
+            <span>Alex Marsh</span>
             <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
         </div>
     </div>
 
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search clients...">
+    <div class="filters">
+        <div class="tabs">
+            <div class="tab active">All Users</div>
+            <div class="tab">Leads</div>
+            <div class="tab">Clients</div>
+            <div class="tab">Ex-clients</div>
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="Search">
+        </div>
     </div>
 
     <div class="table-container">
@@ -213,75 +256,84 @@
                     <th>ID Number</th>
                     <th>Cell Number</th>
                     <th>Type</th>
-                    <th>Amount (R)</th>
                     <th>Date Registered</th>
                 </tr>
             </thead>
-            <tbody id="tableBody"></tbody>
+            <tbody>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Jiko Jiko</td>
+                    <td>jiko@email.com</td>
+                    <td>9201017100086</td>
+                    <td>065 985 6366</td>
+                    <td><span class="badge lead">lead</span></td>
+                    <td>2026-02-05</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Fixesthre Testing</td>
+                    <td>FixesThreeTesting@gmail.com</td>
+                    <td>7710101492087</td>
+                    <td>084 123 4567</td>
+                    <td><span class="badge client">client</span></td>
+                    <td>2026-02-04</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Fixestwo Testing</td>
+                    <td>FixesTwoTesting@gmail.com</td>
+                    <td>77102093082</td>
+                    <td>084 123 4567</td>
+                    <td><span class="badge client">client</span></td>
+                    <td>2026-02-04</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Fixes Testing</td>
+                    <td>FixesTesting@gmail.com</td>
+                    <td>77101115084</td>
+                    <td>084 123 4567</td>
+                    <td><span class="badge client">client</span></td>
+                    <td>2026-02-04</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Claimster Claimster</td>
+                    <td>claimster@email.com</td>
+                    <td>8401055330084</td>
+                    <td>065 985 6333</td>
+                    <td><span class="badge lead">lead</span></td>
+                    <td>2026-02-03</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Roa Test</td>
+                    <td>roatest@mint.com</td>
+                    <td>7810021343087</td>
+                    <td>084 123 4567</td>
+                    <td><span class="badge client">client</span></td>
+                    <td>2026-02-03</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Endorse Mint</td>
+                    <td>EndorseMint@gmail.com</td>
+                    <td>78102299089</td>
+                    <td>084 123 4567</td>
+                    <td><span class="badge client">client</span></td>
+                    <td>2026-02-03</td>
+                </tr>
+                <tr onclick="location.href='client%20Detail.html'">
+                    <td class="name-cell">Ntp Test</td>
+                    <td>ntptest@gmail.com</td>
+                    <td>7807082122087</td>
+                    <td>084 123 4567</td>
+                    <td><span class="badge lead">lead</span></td>
+                    <td>2026-02-02</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // User Context
-    const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
-    document.getElementById("userFullName").textContent = user.name + " " + user.surname;
-    document.getElementById("avatarLetter").textContent = user.name[0];
-
     function logout() {
         localStorage.removeItem("loggedInUser");
         window.location.href = "login.html";
     }
-
-    // Logic to pull from 'kisasa_leads'
-    let leadsData = JSON.parse(localStorage.getItem('kisasa_leads') || '[]');
-    const tableBody = document.getElementById('tableBody');
-    const searchInput = document.getElementById('searchInput');
-
-    function render() {
-        tableBody.innerHTML = '';
-        const term = searchInput.value.toLowerCase().trim();
-
-        // Only show leads where status is 'completed' (Converted to Clients)
-        const filtered = leadsData.filter(item => {
-            const status = (item.status || '').toLowerCase();
-            const matchesSearch = `${item.firstName || ''} ${item.lastName || ''}`.toLowerCase().includes(term) ||
-                                 (item.email || '').toLowerCase().includes(term) ||
-                                 (item.phone || '').includes(term) ||
-                                 (item.idNumber || '').includes(term);
-            
-            return status === 'completed' && matchesSearch;
-        });
-
-        if (filtered.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:6rem;color:#9ca3af;">No active clients found.</td></tr>';
-            return;
-        }
-
-        filtered.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td style="font-weight:600; color:#0f172a;">${item.firstName || ''} ${item.lastName || ''}</td>
-                <td style="color:#64748b;">${item.email || '—'}</td>
-                <td>${item.idNumber || '—'}</td>
-                <td>${item.phone || '—'}</td>
-                <td><span class="badge client">CLIENT</span></td>
-                <td style="font-weight:600;">R ${(Number(item.amount) || 0).toLocaleString()}</td>
-                <td style="color:#94a3b8; font-size:0.8rem;">${item.date || '—'}</td>
-            `;
-            
-            // Fixed: correct filename with space encoded as %20
-            row.onclick = () => {
-                localStorage.setItem('selectedClient', JSON.stringify(item));
-                window.location.href = 'client%20Detail.html';
-            };
-            
-            tableBody.appendChild(row);
-        });
-    }
-
-    searchInput.addEventListener('input', render);
-    render();
 </script>
 </body>
 </html>
