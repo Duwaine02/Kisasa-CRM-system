@@ -1,460 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Client Details - Kisasa CRM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #f4f6f9;
-  color: #1f2937;
-}
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-.sidebar {
-  width: 70px;
-  background: #0f172a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-}
-.sidebar nav a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: #94a3b8;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-}
-.sidebar nav a:hover {
-  background: #1e293b;
-  color: #fff;
-}
-.sidebar nav a.active {
-  background: #2563eb;
-  color: #fff;
-}
-.main {
-  margin-left: 70px;
-  flex: 1;
-  padding: 32px;
-}
-h1 {
-  margin-bottom: 24px;
-  font-size: 28px;
-  font-weight: 700;
-  color: #0f172a;
-}
-.tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.tab {
-  padding: 10px 18px;
-  background: #e5e7eb;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  color: #475569;
-  transition: all 0.2s;
-}
-.tab:hover {
-  background: #d1d5db;
-}
-.tab.active {
-  background: #2563eb;
-  color: #fff;
-}
-.tab-content {
-  background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  border: 1px solid #e5e7eb;
-}
-.section-header {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #0f172a;
-}
-.section-header .count {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
-  background: #3b82f6;
-  padding: 4px 10px;
-  border-radius: 999px;
-  min-width: 20px;
-  text-align: center;
-}
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin-bottom: 40px;
-}
-.info-item {
-  background: #f9fafb;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  transition: all 0.15s;
-}
-.info-item:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-.info-item strong {
-  display: block;
-  font-size: 0.85rem;
-  color: #64748b;
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-.info-item p {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #0f172a;
-}
-.drop-zone {
-  border: 2px dashed #c7d2fe;
-  padding: 40px;
-  text-align: center;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: #f9fafb;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.drop-zone:hover {
-  background: #f1f5f9;
-  border-color: #2563eb;
-}
-.drop-zone.dragover {
-  background: #eef2ff;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-}
-.drop-zone i {
-  font-size: 1.8rem;
-  color: #64748b;
-  margin-bottom: 12px;
-}
-.drop-zone strong {
-  display: block;
-  color: #1f2937;
-  font-weight: 500;
-  margin-bottom: 6px;
-}
-.drop-zone small {
-  color: #64748b;
-  font-size: 0.9rem;
-}
-.list-item {
-  padding: 14px 18px;
-  background: #f9fafb;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  border: 1px solid #e5e7eb;
-  transition: all 0.2s;
-}
-.list-item:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-.list-item i {
-  font-size: 1.3rem;
-  color: #475569;
-}
-.list-item .content {
-  flex: 1;
-}
-.list-item .content .name {
-  font-weight: 500;
-  color: #1f2937;
-}
-.list-item .meta {
-  font-size: 0.85rem;
-  color: #6b7280;
-}
-.no-items {
-  color: #64748b;
-  text-align: center;
-  padding: 24px 0;
-  font-style: italic;
-}
-.notes-form {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  align-items: flex-start;
-}
-textarea {
-  width: 100%;
-  min-height: 110px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  resize: vertical;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-textarea:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-}
-button {
-  padding: 12px 24px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-button:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisasa - Client Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-bg: #ffffff;
+            --bg-main: #fcfcfc;
+            --text-main: #333333;
+            --text-muted: #999999;
+            --border-color: #eeeeee;
+            --accent-dark: #1a1c1e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 70px; background: var(--sidebar-bg);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 0; position: fixed; height: 100vh;
+            border-right: 1px solid var(--border-color); z-index: 1000;
+        }
+        .sidebar .logo { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 3rem; color: #000; }
+        .sidebar nav { display: flex; flex-direction: column; gap: 1.2rem; }
+        .sidebar a { color: #cccccc; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; }
+        .sidebar a.active { background: var(--accent-dark); color: white; }
+
+        /* --- MAIN --- */
+        .main-container { flex: 1; margin-left: 70px; display: flex; flex-direction: column; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2.5rem; background: white; border-bottom: 1px solid var(--border-color); }
+        .header h1 { font-size: 1.5rem; font-weight: 600; color: #111; }
+        .user-profile { display: flex; align-items: center; gap: 15px; color: #333; font-weight: 500; font-size: 0.9rem; }
+
+        .controls-row { padding: 1.2rem 2.5rem 0.5rem 2.5rem; }
+        .filter-tabs { display: flex; gap: 8px; }
+        .tab { padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; color: #666; cursor: pointer; transition: 0.2s; font-weight: 500; }
+        .tab.active { background: var(--accent-dark); color: white; }
+
+        .content-body { display: grid; grid-template-columns: 240px 1fr; gap: 3rem; padding: 1rem 2.5rem; }
+
+        /* LEFT SIDEBAR INFO */
+        .info-sidebar { display: flex; flex-direction: column; gap: 1.2rem; border-right: 1px solid var(--border-color); padding-right: 1rem; }
+        .info-group label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 2px; }
+        .info-group p { font-size: 0.85rem; font-weight: 500; color: #333; }
+
+        /* RIGHT WORKSPACE */
+        .main-workspace { display: flex; flex-direction: column; gap: 2rem; }
+        .section-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.8rem; color: #888; display: flex; align-items: center; gap: 6px; }
+
+        /* COMPACT DRAG & DROP */
+        .compact-drop-zone {
+            border: 2px dashed #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            background: #fff;
+            transition: 0.2s;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .compact-drop-zone:hover, .compact-drop-zone.dragover {
+            border-color: var(--accent-dark);
+            background: #fcfcfc;
+        }
+        .compact-drop-zone i { color: #ccc; font-size: 1.1rem; margin-bottom: 4px; }
+        .compact-drop-zone p { font-size: 0.75rem; color: #999; font-weight: 500; }
+
+        /* DOC LIST */
+        .doc-list { display: flex; flex-direction: column; }
+        .doc-item { 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 8px 0; border-bottom: 1px solid #f5f5f5;
+        }
+        .doc-info { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: 500; }
+        .doc-info i { color: #999; }
+        .doc-date { font-size: 0.75rem; color: #bbb; }
+
+        /* NOTES ENTRY */
+        .notes-list { display: flex; flex-direction: column; gap: 12px; }
+        .note-entry { border-left: 2px solid #eee; padding-left: 12px; }
+        .note-content { font-size: 0.9rem; line-height: 1.4; color: #444; white-space: pre-wrap; margin-bottom: 3px; }
+        .note-meta { font-size: 0.7rem; color: #bbb; font-weight: 600; text-transform: uppercase; }
+
+        /* INPUT AREA */
+        .note-input-container { margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 15px; }
+        .note-input-container textarea {
+            width: 100%; border: none; outline: none; background: transparent;
+            font-size: 0.9rem; resize: none; min-height: 50px; color: #333;
+        }
+        .note-actions { display: flex; justify-content: flex-end; }
+        .post-btn { background: none; border: none; color: var(--accent-dark); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; letter-spacing: 0.5px; }
+    </style>
 </head>
 <body>
 
-<div class="layout">
-  <aside class="sidebar">
+<aside class="sidebar">
+    <div class="logo">Kisasa</div>
     <nav>
-      <a href="index.html"><i class="fas fa-tachometer-alt"></i></a>
-      <a href="leads.html"><i class="fas fa-user-plus"></i></a>
-      <a href="leads.html?filter=client" class="active"><i class="fas fa-users"></i></a>
-      <a href="quotes.html"><i class="fas fa-file-invoice-dollar"></i></a>
-      <a href="reports.html"><i class="fas fa-chart-line"></i></a>
-      <a href="settings.html"><i class="fas fa-cog"></i></a>
+        <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="users.html" class="active" title="Users"><i class="fa-regular fa-circle-user"></i></a>
     </nav>
-  </aside>
+</aside>
 
-  <main class="main">
-    <h1 id="clientName">Client Details</h1>
+<div class="main-container">
+    <header class="header">
+        <h1 id="clientName">Loading...</h1>
+        <div class="user-profile"><span>Duwaine Julies</span><i class="fa-solid fa-power-off"></i></div>
+    </header>
 
-    <div class="tabs">
-      <div class="tab active" data-tab="info">Info</div>
-      <div class="tab" data-tab="emails">Emails</div>
-      <div class="tab" data-tab="updates">Updates</div>
+    <div class="controls-row">
+        <div class="filter-tabs">
+            <div class="tab active" onclick="switchTab('info', this)">Info</div>
+            <div class="tab" onclick="switchTab('emails', this)">Emails</div>
+            <div class="tab" onclick="switchTab('updates', this)">Updates</div>
+        </div>
     </div>
 
-    <div class="tab-content" id="tabContent"></div>
-  </main>
+    <div id="tabContent"></div>
 </div>
 
 <script>
-const now = () => new Date().toLocaleString();
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientName = urlParams.get('name') || "Client Name";
+    document.getElementById('clientName').innerText = clientName;
 
-const selected = JSON.parse(localStorage.getItem('selectedClient')) || {
-  firstName: 'Unknown',
-  lastName: '',
-  email: '',
-  phone: '',
-  idNumber: 'Not provided',
-  status: 'Unknown',
-  date: '—'
-};
+    const clientData = {
+        email: "jamejulies@gmail.com",
+        phone: "055 675 4225",
+        idNumber: "5456466981084",
+        status: "Active Lead",
+        dateAdded: "2026-02-05",
+        docs: [
+            { name: "Contract_V1.pdf", date: "Feb 05" },
+            { name: "ID_Copy.jpg", date: "Feb 05" }
+        ],
+        notes: [
+            { text: "Client requested a follow up call next Tuesday.", time: "Feb 05 • 10:15 AM" }
+        ]
+    };
 
-const client = {
-  name: (selected.firstName + ' ' + selected.lastName).trim() || 'Client',
-  email: selected.email || '—',
-  phone: selected.phone || '—',
-  idNumber: selected.idNumber || '—',
-  status: (selected.status || 'Unknown').replace('-', ' '),
-  date: selected.date || '—',
-  documents: [{name:"Contract.pdf", time:now()}, {name:"Invoice.pdf", time:now()}],
-  emails: [{text: selected.email || 'No email', time:now()}],
-  updates: [{text:"Initial contact", time:now()}],
-  notes: []
-};
+    function switchTab(tab, el) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        renderTab(tab);
+    }
 
-document.getElementById("clientName").textContent = client.name;
+    function renderTab(tab) {
+        const container = document.getElementById('tabContent');
+        if (tab === 'info') {
+            container.innerHTML = `
+                <div class="content-body">
+                    <div class="info-sidebar">
+                        <div class="info-group"><label>Email</label><p>${clientData.email}</p></div>
+                        <div class="info-group"><label>Phone</label><p>${clientData.phone}</p></div>
+                        <div class="info-group"><label>ID Number</label><p>${clientData.idNumber}</p></div>
+                        <div class="info-group"><label>Status</label><p>${clientData.status}</p></div>
+                        <div class="info-group"><label>Added</label><p>${clientData.dateAdded}</p></div>
+                    </div>
+                    
+                    <div class="main-workspace">
+                        <div>
+                            <div class="section-title">Documents</div>
+                            <div class="compact-drop-zone" id="dropZone">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <p>Drop files here to upload</p>
+                                <input type="file" id="fileInput" hidden multiple>
+                            </div>
+                            <div class="doc-list" id="docList">
+                                ${clientData.docs.map(doc => `
+                                    <div class="doc-item">
+                                        <div class="doc-info"><i class="fa-regular fa-file"></i> ${doc.name}</div>
+                                        <div class="doc-date">${doc.date}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
 
-function showTab(tab){
-  const c = document.getElementById("tabContent");
-  c.innerHTML = '';
+                        <div>
+                            <div class="section-title">Notes</div>
+                            <div class="notes-list" id="notesBox">
+                                ${clientData.notes.map(note => `
+                                    <div class="note-entry">
+                                        <div class="note-content">${note.text}</div>
+                                        <div class="note-meta">${note.time}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="note-input-container">
+                                <textarea id="newNote" placeholder="Write a note..."></textarea>
+                                <div class="note-actions">
+                                    <button class="post-btn" onclick="addNote()">Post Note</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            initUpload();
+        } else {
+            container.innerHTML = `<div style="padding: 2.5rem; color: #999; font-size: 0.85rem;">No ${tab} records.</div>`;
+        }
+    }
 
-  if(tab === "info"){
-    c.innerHTML = `
-      <div class="info-grid">
-        <div class="info-item">
-          <strong>Email</strong>
-          <p>${client.email}</p>
-        </div>
-        <div class="info-item">
-          <strong>Phone</strong>
-          <p>${client.phone}</p>
-        </div>
-        <div class="info-item">
-          <strong>ID Number</strong>
-          <p>${client.idNumber}</p>
-        </div>
-        <div class="info-item">
-          <strong>Status</strong>
-          <p>${client.status}</p>
-        </div>
-        <div class="info-item">
-          <strong>Added Date</strong>
-          <p>${client.date}</p>
-        </div>
-      </div>
+    function initUpload() {
+        const dz = document.getElementById('dropZone');
+        const fi = document.getElementById('fileInput');
+        if(!dz) return;
 
-      <div style="margin-bottom:40px;">
-        <div class="section-header">
-          Documents
-          <span class="count">${client.documents.length}</span>
-        </div>
-        <div class="drop-zone" id="dropZone">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <strong>Drag & drop documents here</strong><br>
-          <small>or click to select files</small>
-          <input type="file" id="fileInput" hidden multiple>
-        </div>
-        <div id="documentsList">
-          ${client.documents.length ? client.documents.map(d => `
-            <div class="list-item">
-              <i class="fas fa-file-pdf"></i>
-              <div class="content">
-                <div class="name">${d.name}</div>
-                <div class="meta">Uploaded: ${d.time}</div>
-              </div>
-            </div>
-          `).join("") : '<div class="no-items">No documents uploaded yet</div>'}
-        </div>
-      </div>
+        dz.onclick = () => fi.click();
+        dz.ondragover = (e) => { e.preventDefault(); dz.classList.add('dragover'); };
+        dz.ondragleave = () => dz.classList.remove('dragover');
+        dz.ondrop = (e) => {
+            e.preventDefault();
+            dz.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        };
+        fi.onchange = (e) => handleFiles(e.target.files);
+    }
 
-      <div>
-        <div class="section-header">
-          Notes
-          <span class="count">${client.notes.length}</span>
-        </div>
-        <div class="notes-form">
-          <textarea id="noteInput" placeholder="Write a note..."></textarea>
-          <button onclick="addNote()">Add Note</button>
-        </div>
-        <div id="notesList">
-          ${client.notes.length ? client.notes.map(n => `
-            <div class="list-item">
-              <i class="fas fa-sticky-note"></i>
-              <div class="content">
-                <div class="name">${n.text}</div>
-                <div class="meta">${n.time}</div>
-              </div>
-            </div>
-          `).join("") : '<div class="no-items">No notes added yet</div>'}
-        </div>
-      </div>
-    `;
-    initUpload();
-  }
+    function handleFiles(files) {
+        [...files].forEach(f => {
+            clientData.docs.unshift({ name: f.name, date: "Just Now" });
+        });
+        renderTab('info');
+    }
 
-  if(tab === "emails"){
-    c.innerHTML = `
-      <div class="section-header">Emails <span class="count">${client.emails.length}</span></div>
-      ${client.emails.map(e => `
-        <div class="list-item">
-          <i class="fas fa-envelope"></i>
-          <div class="content">
-            <div class="name">${e.text}</div>
-            <div class="meta">Sent: ${e.time}</div>
-          </div>
-        </div>
-      `).join("") || '<div class="no-items">No emails recorded yet</div>'}
-    `;
-  }
+    function addNote() {
+        const text = document.getElementById('newNote').value;
+        if(!text.trim()) return;
+        clientData.notes.push({ text: text, time: "Just Now" });
+        renderTab('info');
+    }
 
-  if(tab === "updates"){
-    c.innerHTML = `
-      <div class="section-header">Updates <span class="count">${client.updates.length}</span></div>
-      ${client.updates.map(u => `
-        <div class="list-item">
-          <i class="fas fa-bell"></i>
-          <div class="content">
-            <div class="name">${u.text}</div>
-            <div class="meta">Updated: ${u.time}</div>
-          </div>
-        </div>
-      `).join("") || '<div class="no-items">No updates yet</div>'}
-    `;
-  }
-}
-
-function initUpload(){
-  const dz = document.getElementById("dropZone");
-  if (!dz) return;
-  const fi = document.getElementById("fileInput");
-
-  dz.onclick = () => fi.click();
-  dz.ondragover = e => { e.preventDefault(); dz.classList.add("dragover"); };
-  dz.ondragleave = () => dz.classList.remove("dragover");
-  dz.ondrop = e => {
-    e.preventDefault();
-    dz.classList.remove("dragover");
-    handleFiles(e.dataTransfer.files);
-  };
-  fi.onchange = e => handleFiles(e.target.files);
-
-  function handleFiles(files) {
-    [...files].forEach(f => {
-      client.documents.push({name: f.name, time: now()});
-    });
-    showTab("info");
-  }
-}
-
-function addNote(){
-  const input = document.getElementById("noteInput");
-  if (!input) return;
-  const val = input.value.trim();
-  if(!val) return;
-  client.notes.push({text: val, time: now()});
-  input.value = '';
-  showTab("info");
-}
-
-showTab("info");
-
-document.querySelectorAll(".tab").forEach(t => {
-  t.onclick = () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-    t.classList.add("active");
-    showTab(t.dataset.tab);
-  };
-});
+    renderTab('info');
 </script>
-
 </body>
-
 </html>
