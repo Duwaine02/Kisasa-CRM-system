@@ -2,123 +2,248 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quotes - Kisasa CRM</title>
+    <title>Kisasa CRM – Quotes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        :root { 
-            --primary: #2563eb; 
-            --sidebar-bg: #0b1f3b; 
-            --bg: #f1f5f9; 
-            --border: #e2e8f0; 
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+        :root {
+            --sidebar-width: 70px;
+            --bg-main: #fcfcfc;
+            --border: #eeeeee;
+            --text-main: #1a1c1e;
+            --accent-blue: #3b82f6;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); display: flex; min-height: 100vh; color: var(--text-main); }
+        body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
+        /* --- SIDEBAR --- */
         .sidebar {
-            width: 76px;
-            background: var(--sidebar-bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 1.5rem 0;
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
+            width: var(--sidebar-width); background: #fff;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 0; position: fixed; height: 100vh;
+            border-right: 1px solid var(--border); z-index: 1000;
         }
-        .sidebar .logo { color: #60a5fa; font-weight: 800; font-size: 1.2rem; margin-bottom: 2.5rem; }
-        .sidebar nav { display: flex; flex-direction: column; align-items: center; }
-        .sidebar a {
-            width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            color: #94a3b8; margin-bottom: 0.75rem; transition: all 0.3s; text-decoration: none;
-        }
-        .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
-        .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .sidebar .logo { font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 3rem; color: #000; }
+        .sidebar nav { display: flex; flex-direction: column; gap: 1.2rem; }
+        .sidebar a { color: #ccc; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; text-decoration: none; }
+        .sidebar a.active { background: #1a1c1e; color: white; }
 
-        .main { flex: 1; margin-left: 76px; padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 3rem); }
-        .header { margin-bottom: 2.5rem; }
-        .header h1 { font-size: clamp(1.6rem, 4vw, 1.8rem); font-weight: 700; color: #0f172a; }
-        
-        .table-container { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        /* --- MAIN CONTENT --- */
+        main { flex: 1; margin-left: var(--sidebar-width); display: flex; flex-direction: column; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2.5rem; background: white; border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: 1.4rem; font-weight: 700; }
+        .controls-row { padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; }
+        .page-title-group p { font-size: 0.75rem; color: #999; font-weight: 500; margin-top: 2px; }
+
+        /* --- TABLE STYLING --- */
+        .table-wrapper { padding: 0 2.5rem 2rem 2.5rem; }
+        .table-card { background: white; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 1rem 1.5rem; background: #f8fafc; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
-        td { padding: 1.2rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; }
-        
-        .badge { display: inline-flex; align-items: center; background: #dcfce7; color: #166534; padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; font-size: 0.7rem; }
-        .debit-badge { background: #e0f2fe; color: #0369a1; margin-left: 0.5rem; }
-        .inst-text { font-size: 0.75rem; color: var(--primary); font-weight: 700; display: block; margin-top: 0.25rem; }
+        th { text-align: left; padding: 15px 20px; font-size: 0.65rem; color: #999; font-weight: 800; text-transform: uppercase; background: #fafafa; border-bottom: 1px solid var(--border); }
+        td { padding: 16px 20px; font-size: 0.85rem; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+        .amount-main { font-weight: 700; display: block; }
+        .amount-sub { font-size: 0.7rem; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; }
+        .status-badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; background: #f1f5f9; color: #475569; }
+        .status-badge.sent { background: #000; color: #fff; }
+        .view-btn { background: none; border: 1px solid var(--border); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
 
-        @media (max-width: 768px) { .sidebar { width: 70px; } .main { margin-left: 70px; } }
+        /* --- MODAL / PDF PREVIEW STYLING --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); overflow-y: auto; }
+        .modal-content { background: white; margin: 2% auto; padding: 3.5rem; border-radius: 4px; width: 95%; max-width: 850px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); color: #000; }
+        
+        .preview-header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+        .brand-logo { font-size: 2rem; font-weight: 800; letter-spacing: 2px; }
+        .doc-type { text-align: right; }
+        .doc-type h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
+
+        .address-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 40px; }
+        .address-box h4 { font-size: 0.7rem; font-weight: 800; color: #999; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .address-box p { font-size: 0.85rem; line-height: 1.5; }
+
+        .quote-meta-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .quote-meta-table td { padding: 4px 0; font-size: 0.85rem; border: none; }
+        .meta-label { font-weight: 700; width: 140px; }
+
+        .service-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .service-table th { background: #000; color: #fff; font-size: 0.75rem; padding: 12px; text-align: left; text-transform: uppercase; }
+        .service-table td { padding: 15px 12px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+
+        .totals-area { margin-left: auto; width: 280px; }
+        .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.85rem; }
+        .grand-total-row { border-top: 2px solid #000; margin-top: 10px; padding-top: 10px; font-weight: 800; font-size: 1.1rem; }
+
+        .banking-details { margin-top: 50px; padding: 20px; background: #fafafa; border: 1px solid #eee; border-radius: 4px; }
+        .banking-details h4 { font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+        .banking-details p { font-size: 0.8rem; line-height: 1.6; }
     </style>
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="logo">Kisasa</div>
+    <div class="logo">KISASA</div>
     <nav>
-        <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
-        <a href="leads.html" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
-        <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
-        <a href="quotes.html" class="active" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
-        <a href="reports.html" title="Reports"><i class="fa-solid fa-chart-line"></i></a>
-        <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
+        <a href="index.html"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="leads.html"><i class="fa-regular fa-circle-user"></i></a>
+        <a href="quotes.html" class="active"><i class="fa-solid fa-file-invoice-dollar"></i></a>
     </nav>
 </aside>
 
-<div class="main">
-    <div class="header"><h1>Quotes & Clearing Plans</h1></div>
-    <div class="table-container">
-        <table>
+<main>
+    <header class="header">
+        <h1>Quotes</h1>
+    </header>
+
+    <div class="controls-row">
+        <div class="page-title-group">
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Quote #</th>
+                        <th>Date</th>
+                        <th>Client</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="quotesBody"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<div id="quoteModal" class="modal">
+    <div class="modal-content">
+        <div class="preview-header">
+            <div class="brand-logo">KISASA</div> <div class="doc-type">
+                <h2>QUOTATION</h2> <p id="m-quote-num" style="font-weight:700;"></p> </div>
+        </div>
+
+        <div class="address-grid">
+            <div class="address-box">
+                <h4>From</h4>
+                <p><strong>Kisasa Financial Services</strong></p>
+                <p>50 Long Street, Cape Town</p> <p>CBD, 8001</p> </div>
+            <div class="address-box">
+                <h4>To</h4>
+                <p><strong id="m-client-name"></strong></p> <p id="m-client-email"></p> <p id="m-client-address">50 Long Street, Cape Town</p> <p>Western Cape, 8001</p> </div>
+        </div>
+
+        <table class="quote-meta-table">
+            <tr><td class="meta-label">Date:</td><td id="m-date"></td></tr> <tr><td class="meta-label">Expiry Date:</td><td id="m-expiry"></td></tr> <tr><td class="meta-label">Reference:</td><td id="m-ref"></td></tr> <tr id="m-method-row"><td class="meta-label">Payment Method:</td><td id="m-method"></td></tr>
+        </table>
+
+        <table class="service-table">
             <thead>
                 <tr>
-                    <th>Quote #</th>
-                    <th>Date</th>
-                    <th>Client Details</th>
-                    <th>Amount / Plan</th>
-                    <th>Payment Method</th>
-                    <th>Status</th>
+                    <th>Service Description</th>
+                    <th style="text-align: right;">Total (Incl)</th>
                 </tr>
             </thead>
-            <tbody id="quotesBody"></tbody>
-        </table>
+            <tbody id="m-services"></tbody> </table>
+
+        <div class="totals-area">
+            <div class="total-row"><span>Sub Total:</span><span id="m-subtotal"></span></div> <div class="total-row"><span>Total VAT (0%):</span><span>R 0.00</span></div> <div class="total-row grand-total-row"><span>Total:</span><span id="m-total"></span></div> <div id="m-debit-summary" style="margin-top:10px; font-size:0.75rem; color:var(--accent-blue); text-align:right; font-weight:700;"></div>
+        </div>
+
+        <div class="banking-details">
+            <h4>Banking Details</h4>
+            <p><strong>Bank:</strong> FNB | <strong>Acc:</strong> 62786407017</p> <p><strong>Branch:</strong> Long Street | <strong>Code:</strong> 201709</p> <p><strong>Ref:</strong> <span id="m-bank-ref"></span></p> </div>
+
+        <div style="margin-top: 30px; display: flex; gap: 10px;">
+            <button class="view-btn" style="flex:1; padding: 12px; background: #000; color: #fff;" onclick="closeModal()">Close Preview</button>
+        </div>
     </div>
 </div>
 
 <script>
+    // Robust Currency Formatter to handle "R14,000,00" or strings 
+    function formatCurrency(val) {
+        if (!val) return "R 0.00";
+        let clean = String(val).replace(/[R\s]/g, '').replace(/,/g, '.');
+        // If there's a specific typo like "000,00", we fix the decimal
+        if (clean.endsWith('.00')) clean = clean.slice(0, -3) + '.00';
+        const num = parseFloat(clean) || 0;
+        return "R " + num.toLocaleString('en-ZA', { minimumFractionDigits: 2 });
+    }
+
     function render() {
         const quotes = JSON.parse(localStorage.getItem('kisasa_quotes') || '[]');
         const body = document.getElementById('quotesBody');
         if(quotes.length === 0) {
-            body.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:4rem; color:var(--text-muted)">No quotes found.</td></tr>';
+            body.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:40px; color:#999;">No quotes found.</td></tr>`;
             return;
         }
+
         body.innerHTML = [...quotes].reverse().map(q => `
             <tr>
-                <td style="font-weight:700; color:var(--primary)">${q.quoteNumber}</td>
-                <td>${q.date}</td>
+                <td style="font-weight:700;">${q.quoteNumber}</td>
+                <td style="color:#666;">${q.date}</td>
                 <td>
-                    <div style="font-weight:600">${q.firstName} ${q.lastName}</div>
-                    <div style="font-size:0.8rem; color:var(--text-muted)">${q.email}</div>
+                    <span style="display:block; font-weight:600;">${q.firstName} ${q.lastName}</span>
+                    <span style="font-size:0.75rem; color:#999;">${q.email}</span>
                 </td>
                 <td>
-                    <div style="font-weight:700">R ${Number(q.amount).toLocaleString()}</div>
-                    ${q.isDebitOrder ? `<span class="inst-text"><i class="fa-solid fa-rotate"></i> R ${Number(q.debitDetails.monthly).toLocaleString()} /mo</span>` : ''}
+                    <span class="amount-main">${formatCurrency(q.amount)}</span>
+                    ${q.isDebitOrder ? `<span class="amount-sub"><i class="fa-solid fa-rotate"></i> ${formatCurrency(q.debitDetails.monthly)}/mo</span>` : ''}
                 </td>
+                <td style="font-size:0.75rem; font-weight:500;">${q.isDebitOrder ? 'Debit Order' : 'EFT'}</td>
+                <td><span class="status-badge sent">Sent</span></td>
                 <td>
-                    ${q.isDebitOrder ? `<span>Day ${q.debitDetails.day} Debit</span>` : '<span>Full EFT</span>'}
-                </td>
-                <td>
-                    <span class="badge">SENT</span>
-                    ${q.isDebitOrder ? `<span class="badge debit-badge">RECURRING</span>` : ''}
+                    <button class="view-btn" onclick="previewQuote('${q.quoteNumber}')"><i class="fa-regular fa-eye"></i></button>
                 </td>
             </tr>
         `).join('');
     }
+
+    function previewQuote(quoteNum) {
+        const quotes = JSON.parse(localStorage.getItem('kisasa_quotes') || '[]');
+        const q = quotes.find(item => item.quoteNumber === quoteNum);
+        if(!q) return;
+
+        // Populate Fields [cite: 8, 9, 13, 19]
+        document.getElementById('m-quote-num').innerText = q.quoteNumber;
+        document.getElementById('m-client-name').innerText = `${q.firstName} ${q.lastName}`;
+        document.getElementById('m-client-email').innerText = q.email;
+        document.getElementById('m-date').innerText = q.date;
+        document.getElementById('m-expiry').innerText = q.expiryDate || 'N/A';
+        document.getElementById('m-ref').innerText = q.idNumber || 'None';
+        document.getElementById('m-bank-ref').innerText = q.idNumber || 'Quote Ref';
+
+        // Payment Method [cite: 14]
+        document.getElementById('m-method').innerText = q.isDebitOrder ? `Monthly Debit Order (Day ${q.debitDetails.day})` : 'EFT / Once-off';
+
+        // Amounts 
+        const formatted = formatCurrency(q.amount);
+        document.getElementById('m-services').innerHTML = `<tr><td>Debt Review Financial Services</td><td style="text-align:right;">${formatted}</td></tr>`;
+        document.getElementById('m-subtotal').innerText = formatted;
+        document.getElementById('m-total').innerText = formatted;
+
+        // Debit Details
+        const summary = document.getElementById('m-debit-summary');
+        if(q.isDebitOrder) {
+            summary.innerHTML = `<i class="fa-solid fa-rotate"></i> INSTALLMENT: ${formatCurrency(q.debitDetails.monthly)} / MONTHLY`;
+            summary.style.display = 'block';
+        } else {
+            summary.style.display = 'none';
+        }
+
+        document.getElementById('quoteModal').style.display = 'block';
+    }
+
+    function closeModal() { document.getElementById('quoteModal').style.display = 'none'; }
+    window.onclick = function(e) { if(e.target == document.getElementById('quoteModal')) closeModal(); }
     window.onload = render;
 </script>
+
 </body>
 </html>

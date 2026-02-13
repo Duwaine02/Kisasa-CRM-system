@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kisasa - Users</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
@@ -21,64 +21,150 @@
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 70px; background: var(--sidebar-bg);
-            display: flex; flex-direction: column; align-items: center;
-            padding: 1.5rem 0; position: fixed; height: 100vh;
-            border-right: 1px solid var(--border-color); z-index: 1000;
+            width: 70px;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid var(--border-color);
+            z-index: 1000;
         }
-        .sidebar .logo { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 3rem; color: #000; }
-        .sidebar nav { display: flex; flex-direction: column; gap: 1.2rem; }
-        .sidebar a { color: #cccccc; font-size: 1.3rem; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; }
-        .sidebar a.active { background: var(--accent-dark); color: white; }
+        .sidebar .logo {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 3rem;
+            color: #000;
+        }
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .sidebar a {
+            color: #cccccc;
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+        }
+        .sidebar a.active {
+            background: var(--accent-dark);
+            color: white;
+        }
 
         /* --- MAIN CONTENT --- */
-        .main-container { flex: 1; margin-left: 70px; display: flex; flex-direction: column; }
+        .main-container {
+            flex: 1;
+            margin-left: 70px;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* --- HEADER --- */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2.5rem; background: white; }
-        .header h1 { font-size: 1.6rem; font-weight: 600; color: #111; }
-        .user-profile { display: flex; align-items: center; gap: 15px; color: #333; font-weight: 500; font-size: 0.95rem; }
-
-        /* --- SUB-NAV & SEARCH (FIXED ALIGNMENT) --- */
-        .controls-row {
-            padding: 0.5rem 2.5rem 1.5rem 2.5rem;
+        .header {
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Better alignment for the row */
+            align-items: center;
+            padding: 1.2rem 2.5rem;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header h1 { font-size: 1.6rem; font-weight: 600; color: #111; }
+        .user-profile { display: flex; align-items: center; gap: 15px; color: #333; font-weight: 500; font-size: 0.95rem; }
+        .power-btn { color: #333; font-size: 1.3rem; cursor: pointer; }
+
+        /* --- SUB-NAV & SEARCH (Alignment Fixed) --- */
+        .controls-row {
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end; /* Aligns both children to the bottom */
         }
         .filter-tabs { display: flex; gap: 10px; }
         .tab {
-            padding: 6px 16px; border-radius: 20px; font-size: 0.85rem;
-            color: #666; cursor: pointer; transition: 0.2s; font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            border: 1px solid transparent;
         }
         .tab.active { background: var(--accent-dark); color: white; }
+        .tab:hover:not(.active) { background: #f0f0f0; }
         
-        /* Search Bar Fix */
-        .search-box { width: 250px; display: flex; flex-direction: column; gap: 2px; }
-        .search-box label { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .search-box {
+            width: 320px;
+            position: relative;
+        }
         .search-box input {
-            width: 100%; border: none; border-bottom: 1px solid #ddd;
-            background: transparent; padding: 4px 0; font-size: 0.9rem; outline: none;
+            width: 100%;
+            border: none;
+            border-bottom: 1.5px solid #e0e0e0;
+            background: transparent;
+            padding: 8px 0;
+            font-size: 0.95rem;
+            outline: none;
+            color: #333;
+            transition: border-color 0.3s;
+        }
+        .search-box input:focus {
+            border-color: var(--accent-dark);
+        }
+        .search-box label {
+            position: absolute;
+            left: 0;
+            top: -18px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* --- TABLE --- */
         .table-wrapper { padding: 0 2.5rem; }
-        .table-card { background: white; border-top: 1px solid var(--border-color); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 20px; font-size: 0.75rem; color: #b0b0b0; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
-        
-        tr.client-row { cursor: pointer; transition: background 0.2s; }
-        tr.client-row:hover { background: #f9f9f9; }
-
-        td { padding: 16px 20px; font-size: 0.9rem; color: #333; border-bottom: 1px solid #fcfcfc; }
-        
-        .type-badge {
-            background: #eee; color: #666;
-            padding: 4px 12px; border-radius: 4px;
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        .table-card {
+            background: white;
+            border-top: 1px solid var(--border-color);
+            overflow: hidden;
         }
-        .type-badge.client { background: var(--accent-dark); color: white; }
-        .type-badge.lead { background: #fff7ed; color: #c2410c; }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: 20px;
+            font-size: 0.75rem;
+            color: #aaa;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+        }
+        td {
+            padding: 18px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            border-bottom: 1px solid #f9f9f9;
+        }
+        .type-badge {
+            background: var(--accent-dark);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -88,6 +174,7 @@
     <nav>
         <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
         <a href="users.html" class="active" title="Users"><i class="fa-regular fa-circle-user"></i></a>
+        <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice-dollar"></i></a>
     </nav>
 </aside>
 
@@ -96,21 +183,20 @@
         <h1>Users</h1>
         <div class="user-profile">
             <span>Duwaine Julies</span>
-            <i class="fa-solid fa-power-off" style="cursor:pointer;"></i>
+            <i class="fa-solid fa-power-off power-btn"></i>
         </div>
     </header>
 
     <div class="controls-row">
         <div class="filter-tabs" id="filterTabs">
-            <div class="tab active" onclick="filterData('all', this)">All</div>
-            <div class="tab" onclick="filterData('user', this)">Users</div>
-            <div class="tab" onclick="filterData('lead', this)">Leads</div>
-            <div class="tab" onclick="filterData('client', this)">Clients</div>
-            <div class="tab" onclick="filterData('ex-client', this)">Ex-clients</div>
+            <div class="tab active" data-type="all">All</div>
+            <div class="tab" data-type="user">Users</div>
+            <div class="tab" data-type="lead">Leads</div>
+            <div class="tab" data-type="client">Clients</div>
+            <div class="tab" data-type="ex-client">Ex-clients</div>
         </div>
         <div class="search-box">
-            <label>Search</label>
-            <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="searchTable()">
+            <input type="text" id="searchInput" placeholder="Search">
         </div>
     </div>
 
@@ -135,59 +221,54 @@
 
 <script>
     const data = [
-        { name: "Duwaine", email: "jamejulies@gmail.com", id: "5456466", cell: "0556754225", type: "lead", date: "2026-02-05" },
-        { name: "Jake Smith", email: "jake@example.com", id: "92010155", cell: "0721234567", type: "client", date: "2026-01-20" },
-        { name: "Sarah Connor", email: "sarah@sky.net", id: "84050611", cell: "0839987654", type: "user", date: "2026-02-01" },
-        { name: "Donnie Darko", email: "donnie@rabbit.com", id: "77101022", cell: "0614455667", type: "ex-client", date: "2025-12-15" }
+        { name: "Duwaine Julies", email: "jamejulies@gmail.com", id: "5456466", cell: "0556754225", type: "lead", date: "2026-02-05" },
+        { name: "Sarah Connor", email: "sarah@sky.net", id: "9988776", cell: "0821234567", type: "user", date: "2026-01-15" },
+        { name: "John Doe", email: "john@example.com", id: "1122334", cell: "0719876543", type: "client", date: "2025-12-10" }
     ];
 
     let currentFilter = 'all';
 
-    function render(filteredData) {
+    function render() {
         const tbody = document.getElementById('tableBody');
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+        const filteredData = data.filter(item => {
+            const matchesType = currentFilter === 'all' || item.type === currentFilter;
+            const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
+                                  item.email.toLowerCase().includes(searchTerm);
+            return matchesType && matchesSearch;
+        });
+
         tbody.innerHTML = filteredData.map(item => `
-            <tr class="client-row" onclick="goToDetail('${item.name}')">
-                <td style="font-weight: 500;">${item.name}</td>
+            <tr>
+                <td style="font-weight: 600;">${item.name}</td>
                 <td style="color: #666;">${item.email}</td>
                 <td>${item.id}</td>
                 <td>${item.cell}</td>
-                <td><span class="type-badge ${item.type}">${item.type}</span></td>
+                <td><span class="type-badge">${item.type}</span></td>
                 <td style="color: #b0b0b0; font-size: 0.85rem;">${item.date}</td>
             </tr>
         `).join('');
     }
 
-    // --- TAB FILTERING LOGIC ---
-    function filterData(type, element) {
-        currentFilter = type;
-        
-        // Update UI
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
+    // Toggle logic for tabs
+    document.getElementById('filterTabs').addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab')) {
+            // Update UI
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            e.target.classList.add('active');
 
-        // Filter Data
-        const filtered = type === 'all' ? data : data.filter(d => d.type === type);
-        render(filtered);
-    }
+            // Update Logic
+            currentFilter = e.target.getAttribute('data-type');
+            render();
+        }
+    });
 
-    // --- SEARCH LOGIC ---
-    function searchTable() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = data.filter(d => 
-            (currentFilter === 'all' || d.type === currentFilter) && 
-            d.name.toLowerCase().includes(term)
-        );
-        render(filtered);
-    }
+    // Search logic
+    document.getElementById('searchInput').addEventListener('input', render);
 
-    // --- NAVIGATION ---
-    function goToDetail(name) {
-        // Redirects to detail page with name as a parameter
-        window.location.href = `client Detail.html?name=${encodeURIComponent(name)}`;
-    }
-
-    // Initial load
-    render(data);
+    // Initial render
+    render();
 </script>
 
 </body>

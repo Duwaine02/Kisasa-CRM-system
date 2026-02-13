@@ -1,302 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add New Lead - Kisasa CRM</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-light: #dbeafe;
-      --sidebar-bg: #0b1f3b;
-      --bg-main: #f1f5f9;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --danger: #ef4444;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-    }
+    <meta charset="UTF-8">
+    <title>Kisasa – Add New Lead</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sidebar-width: 70px;
+            --bg-main: #fcfcfc;
+            --border: #eeeeee;
+            --text-main: #1a1c1e;
+            --text-muted: #999999;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-main); display: flex; min-height: 100vh; color: var(--text-main); }
 
-    .sidebar {
-      width: 76px;
-      background: var(--sidebar-bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem 0;
-      position: fixed;
-      height: 100vh;
-      z-index: 1000;
-    }
-    .sidebar .logo {
-      color: #60a5fa;
-      font-weight: 800;
-      font-size: 1.2rem;
-      margin-bottom: 2.5rem;
-    }
-    .sidebar a {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      margin-bottom: 0.75rem;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-    .sidebar a:hover { background: rgba(255,255,255,0.08); color: white; }
-    .sidebar a.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        /* --- SIDEBAR (Standardized - No Add Lead Icon) --- */
+        .sidebar {
+            width: var(--sidebar-width); background: #fff;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 0; position: fixed; height: 100vh;
+            border-right: 1px solid var(--border); z-index: 1000;
+        }
+        .sidebar .logo { font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 3rem; color: #000; }
+        .sidebar nav { display: flex; flex-direction: column; gap: 1.2rem; }
+        .sidebar a { color: #ccc; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; text-decoration: none; }
+        .sidebar a.active { background: #1a1c1e; color: white; }
 
-    .main-wrapper {
-      margin-left: 100px;
-      flex: 1;
-      padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 5vw, 4rem);
-      max-width: 900px;
-      margin: 0 auto;
-    }
+        /* --- MAIN CONTENT --- */
+        main { flex: 1; margin-left: var(--sidebar-width); padding: 2rem; display: flex; flex-direction: column; align-items: center; }
+        .content-wrapper { width: 100%; max-width: 800px; }
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .top-bar h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: white;
-      padding: 0.6rem 1.2rem;
-      border-radius: 50px;
-      border: 1px solid var(--border);
-    }
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      color: var(--primary);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .logout { color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-    .logout:hover { color: var(--danger); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; width: 100%; }
+        .header h1 { font-size: 1.6rem; font-weight: 700; }
+        .user-info { font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
 
-    .form-card {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-    .form-group.full { grid-column: 1 / -1; }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      transition: border-color 0.2s;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-    }
-
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .btn {
-      padding: 0.8rem 1.6rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-    .btn-primary:hover { background: #1d4ed8; }
-    .btn-secondary {
-      background: var(--gray-100);
-      color: var(--text-main);
-    }
-    .btn-secondary:hover { background: var(--gray-200); }
-
-    @media (max-width: 768px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .main-wrapper { padding: 1.5rem 1rem; margin-left: 76px; }
-    }
-  </style>
+        /* --- FORM LAYOUT --- */
+        .section-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #bbb; letter-spacing: 1px; margin-bottom: 2rem; display: block; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 20px; }
+        
+        label { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; color: #999; margin-bottom: 8px; letter-spacing: 0.5px; }
+        input, select, textarea { 
+            padding: 12px 0; border: none; border-bottom: 1px solid var(--border);
+            font-size: 0.95rem; color: var(--text-main); outline: none; background: transparent; transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: #000; }
+        
+        textarea { height: 80px; resize: none; border: 1px solid var(--border); padding: 10px; border-radius: 4px; margin-top: 10px; }
+        
+        .btn-container { margin-top: 30px; display: flex; justify-content: flex-end; }
+        .btn-save { 
+            background: #000; color: #fff; padding: 12px 40px; border-radius: 4px; 
+            border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s;
+        }
+        .btn-save:hover { opacity: 0.8; }
+    </style>
 </head>
 <body>
 
 <aside class="sidebar">
-  <div class="logo">Kisasa</div>
-  <nav>
-    <a href="index.html" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
-    <a href="leads.html" class="active" title="Leads"><i class="fa-solid fa-user-plus"></i></a>
-    <a href="clients.html" title="Clients"><i class="fa-solid fa-users"></i></a>
-    <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice"></i></a>
-    <a href="settings.html" title="Settings"><i class="fa-solid fa-gear"></i></a>
-  </nav>
+    <div class="logo">KISASA</div>
+    <nav>
+        <a href="index.html"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="leads.html"><i class="fa-regular fa-circle-user"></i></a>
+    </nav>
 </aside>
 
-<div class="main-wrapper">
-  <div class="top-bar">
-    <h1>Add New Lead</h1>
-    <div class="user-info">
-      <div class="avatar" id="avatarLetter">D</div>
-      <span id="userFullName"></span>
-      <i class="fa-solid fa-power-off logout" onclick="logout()"></i>
+<main>
+    <div class="content-wrapper">
+        <header class="header">
+            <h1>Add New Lead</h1>
+            <div class="user-info">
+                Duwaine Julies <i class="fa-solid fa-power-off" style="cursor:pointer;"></i>
+            </div>
+        </header>
+
+        <form id="leadForm">
+            <span class="section-label">Lead Information</span>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" placeholder="Enter name" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" placeholder="Enter surname">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" placeholder="000 000 0000">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>ID Number</label>
+                    <input type="text" placeholder="Identification number">
+                </div>
+                <div class="form-group">
+                    <label>Deal Value (R)</label>
+                    <input type="text" placeholder="0.00">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Lead Status</label>
+                <select required>
+                    <option value="" disabled selected>Select temperature...</option>
+                    <option value="Cold">Cold</option>
+                    <option value="Warm">Warm</option>
+                    <option value="Hot">Hot</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Internal Notes</label>
+                <textarea placeholder="Add any background info or follow-up requirements..."></textarea>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-save">Save Lead</button>
+            </div>
+        </form>
     </div>
-  </div>
-
-  <div class="form-card">
-    <form id="leadForm">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="firstName">First Name <span style="color:var(--danger);">*</span></label>
-          <input type="text" id="firstName" required>
-        </div>
-        <div class="form-group">
-          <label for="lastName">Last Name <span style="color:var(--danger);">*</span></label>
-          <input type="text" id="lastName" required>
-        </div>
-        <div class="form-group">
-          <label for="email">Email Address <span style="color:var(--danger);">*</span></label>
-          <input type="email" id="email" required>
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone">
-        </div>
-        <div class="form-group">
-          <label for="idNumber">ID Number</label>
-          <input type="text" id="idNumber">
-        </div>
-        <div class="form-group">
-          <label for="amount">Deal Value (R)</label>
-          <input type="text" id="amount" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label for="status"> Status <span style="color:var(--danger);">*</span></label>
-          <select id="status" required>
-            <option value="" disabled selected>Select status...</option>
-            <option value="hot">Hot</option>
-            <option value="warm">Warm</option>
-            <option value="cold">Cold</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label for="notes">Notes / Comments</label>
-          <textarea id="notes" rows="4"></textarea>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='leads.html'">Cancel</button>
-        <button type="submit" class="btn btn-primary">Create Lead</button>
-      </div>
-    </form>
-  </div>
-</div>
+</main>
 
 <script>
-const user = JSON.parse(localStorage.getItem("loggedInUser")) || {name:"Duwaine", surname:"Julies"};
-document.getElementById("userFullName").textContent = user.name + " " + user.surname;
-document.getElementById("avatarLetter").textContent = user.name[0];
-
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-// --- NEW: AUTO-COMMA FORMATTING LOGIC ---
-const amountInput = document.getElementById('amount');
-
-amountInput.addEventListener('input', function(e) {
-  // Remove any non-digit characters
-  let value = e.target.value.replace(/\D/g, "");
-  
-  // Format with commas
-  if (value !== "") {
-    e.target.value = Number(value).toLocaleString('en-US');
-  } else {
-    e.target.value = "";
-  }
-});
-
-document.getElementById("leadForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  // Strip commas before saving so it remains a pure number in the database
-  const rawAmount = document.getElementById("amount").value.replace(/,/g, "");
-  const temperature = document.getElementById("status").value;
-
-  const lead = {
-    id: "lead-" + Date.now(),
-    firstName: document.getElementById("firstName").value.trim(),
-    lastName: document.getElementById("lastName").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    phone: document.getElementById("phone").value.trim(),
-    idNumber: document.getElementById("idNumber").value.trim(),
-    amount: parseFloat(rawAmount) || 0,
-    
-    // --- FIX: SEPARATE STORAGE ---
-    leadStatus: temperature,    // Saves the "Hot/Warm/Cold" value
-    status: "draft",           // Saves the "Column Position" (Start in Drafts)
-    
-    notes: document.getElementById("notes").value.trim(),
-    date: new Date().toISOString().split("T")[0]
-  };
-
-  let leads = JSON.parse(localStorage.getItem("kisasa_leads") || "[]");
-  leads.unshift(lead);   // newest at top
-  localStorage.setItem("kisasa_leads", JSON.stringify(leads));
-
-  window.location.href = "leads.html";
-});
+    document.getElementById('leadForm').onsubmit = function(e) {
+        e.preventDefault();
+        alert("Lead saved successfully!");
+        window.location.href = 'index.html';
+    };
 </script>
+
 </body>
 </html>

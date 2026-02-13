@@ -20,7 +20,18 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-main); display: flex; min-height: 100vh; width: 100vw; overflow-x: hidden; color: var(--text-main); }
+        
+        body { 
+            background: var(--bg-main); 
+            display: flex; 
+            min-height: 100vh; 
+            width: 100vw; 
+            overflow-x: hidden; 
+            color: var(--text-main);
+            transition: opacity 0.6s ease;
+        }
+
+        body.fade-out { opacity: 0; pointer-events: none; }
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -29,9 +40,11 @@
             padding: 1.5rem 0; position: fixed; height: 100vh;
             border-right: 1px solid var(--border); z-index: 1000;
         }
-        .sidebar .logo { font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 3rem; }
+        .sidebar .logo { font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 3rem; color: #000; }
         .sidebar nav { display: flex; flex-direction: column; gap: 1.2rem; }
-        .sidebar a { color: #ccc; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; }
+        .sidebar a { color: #ccc; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; text-decoration: none; transition: 0.2s; }
+        
+        /* Only the Gauge icon is active here */
         .sidebar a.active { background: #1a1c1e; color: white; }
 
         /* --- MAIN CONTENT --- */
@@ -55,32 +68,17 @@
         .column-header h3 { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #444; }
         .count-badge { font-size: 0.65rem; font-weight: 800; background: #000; color: #fff; padding: 1px 6px; border-radius: 3px; }
 
-        /* --- ULTRA-CLEAN LEAD CARDS --- */
         .lead-card {
-            background: #fff; 
-            border: 1px solid var(--border); 
-            padding: 10px 12px; 
-            margin-bottom: 6px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
+            background: #fff; border: 1px solid var(--border); padding: 10px 12px; margin-bottom: 6px;
+            display: flex; justify-content: space-between; align-items: center; border-radius: 4px; font-size: 0.8rem; transition: 0.2s;
         }
-        .lead-card:hover { border-color: #d1d1d1; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .lead-card:hover { border-color: #d1d1d1; }
 
         .lead-info { display: flex; align-items: center; gap: 8px; flex: 1; }
-        .lead-name { font-weight: 600; color: #1a1c1e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+        .lead-name { font-weight: 600; color: #1a1c1e; }
         
-        /* Actions are hidden until hover or kept very subtle */
         .lead-actions { display: flex; gap: 10px; align-items: center; margin-right: 12px; }
-        .action-btn { 
-            text-decoration: none; 
-            font-size: 0.8rem; 
-            color: #ccc; /* Subtle gray by default */
-            transition: 0.2s;
-        }
+        .action-btn { text-decoration: none; font-size: 0.8rem; color: #ccc; transition: 0.2s; cursor: pointer; }
         .action-btn:hover.wa { color: var(--whatsapp); }
         .action-btn:hover.ph { color: var(--phone); }
         .action-btn:hover.qt { color: var(--quote); }
@@ -88,7 +86,8 @@
         .lead-price { font-weight: 700; font-size: 0.75rem; color: #000; min-width: 65px; text-align: right; }
         .status-tag { font-size: 0.5rem; font-weight: 800; padding: 2px 4px; border-radius: 2px; text-transform: uppercase; }
 
-        .fab { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #000; color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #000; color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: transform 0.2s; }
+        .fab:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -96,8 +95,9 @@
 <aside class="sidebar">
     <div class="logo">KISASA</div>
     <nav>
-        <a href="index.html" class="active"><i class="fa-solid fa-gauge-high"></i></a>
-        <a href="leads.html"><i class="fa-regular fa-circle-user"></i></a>
+        <a href="index.html" class="active" title="Dashboard"><i class="fa-solid fa-gauge-high"></i></a>
+        <a href="leads.html" title="Users"><i class="fa-regular fa-circle-user"></i></a>
+        <a href="quotes.html" title="Quotes"><i class="fa-solid fa-file-invoice-dollar"></i></a>
     </nav>
 </aside>
 
@@ -122,21 +122,19 @@
 
         <section class="pipeline-grid">
             <div class="column">
-                <div class="column-header"><h3>Drafts</h3><span class="count-badge">3</span></div>
-                
+                <div class="column-header"><h3>Drafts</h3><span class="count-badge">2</span></div>
                 <div class="lead-card">
                     <div class="lead-info">
                         <span class="status-tag" style="background:#f1f5f9; color:#475569;">Cold</span>
                         <span class="lead-name">Jake</span>
                     </div>
                     <div class="lead-actions">
-                        <a href="https://wa.me/27123456789" class="action-btn wa" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="tel:+27123456789" class="action-btn ph" title="Call"><i class="fa-solid fa-phone"></i></a>
-                        <a href="#" class="action-btn qt" title="Quote" onclick="alert('Quote sent')"><i class="fa-solid fa-file-invoice-dollar"></i></a>
+                        <a href="https://wa.me/27123456789" class="action-btn wa"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a class="action-btn ph" onclick="showNumber('012 345 6789')"><i class="fa-solid fa-phone"></i></a>
+                        <a class="action-btn qt" onclick="handleQuoteRedirect(this)"><i class="fa-solid fa-file-invoice-dollar"></i></a>
                     </div>
                     <div class="lead-price">R 20,000</div>
                 </div>
-
                 <div class="lead-card">
                     <div class="lead-info">
                         <span class="status-tag" style="background:#fef2f2; color:#dc2626;">Hot</span>
@@ -144,15 +142,15 @@
                     </div>
                     <div class="lead-actions">
                         <a href="#" class="action-btn wa"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="#" class="action-btn ph"><i class="fa-solid fa-phone"></i></a>
-                        <a href="#" class="action-btn qt"><i class="fa-solid fa-file-invoice-dollar"></i></a>
+                        <a class="action-btn ph" onclick="showNumber('072 111 2222')"><i class="fa-solid fa-phone"></i></a>
+                        <a class="action-btn qt" onclick="handleQuoteRedirect(this)"><i class="fa-solid fa-file-invoice-dollar"></i></a>
                     </div>
                     <div class="lead-price">R 2,000</div>
                 </div>
             </div>
 
             <div class="column">
-                <div class="column-header"><h3>Tasks</h3><span class="count-badge">2</span></div>
+                <div class="column-header"><h3>Tasks</h3><span class="count-badge">1</span></div>
                 <div class="lead-card">
                     <div class="lead-info">
                         <span class="status-tag" style="background:#fff7ed; color:#c2410c;">Warm</span>
@@ -160,15 +158,15 @@
                     </div>
                     <div class="lead-actions">
                         <a href="#" class="action-btn wa"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="#" class="action-btn ph"><i class="fa-solid fa-phone"></i></a>
-                        <a href="#" class="action-btn qt"><i class="fa-solid fa-file-invoice-dollar"></i></a>
+                        <a class="action-btn ph" onclick="showNumber('083 444 5555')"><i class="fa-solid fa-phone"></i></a>
+                        <a class="action-btn qt" onclick="handleQuoteRedirect(this)"><i class="fa-solid fa-file-invoice-dollar"></i></a>
                     </div>
                     <div class="lead-price">R 70,000</div>
                 </div>
             </div>
 
             <div class="column">
-                <div class="column-header"><h3>Completed</h3><span class="count-badge">3</span></div>
+                <div class="column-header"><h3>Completed</h3><span class="count-badge">1</span></div>
                 <div class="lead-card">
                     <div class="lead-info">
                         <span class="status-tag" style="background:#f0fdf4; color:#16a34a;">Win</span>
@@ -176,8 +174,8 @@
                     </div>
                     <div class="lead-actions">
                         <a href="#" class="action-btn wa"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="#" class="action-btn ph"><i class="fa-solid fa-phone"></i></a>
-                        <a href="#" class="action-btn qt"><i class="fa-solid fa-file-invoice-dollar"></i></a>
+                        <a class="action-btn ph" onclick="showNumber('061 999 8888')"><i class="fa-solid fa-phone"></i></a>
+                        <a class="action-btn qt" onclick="handleQuoteRedirect(this)"><i class="fa-solid fa-file-invoice-dollar"></i></a>
                     </div>
                     <div class="lead-price">R 22,222</div>
                 </div>
@@ -186,9 +184,19 @@
     </div>
 </main>
 
-<button class="fab" title="Add New Lead"><i class="fa-solid fa-plus"></i></button>
+<button class="fab" title="Add New Lead" onclick="window.location.href='addNewlead.html'">
+    <i class="fa-solid fa-plus"></i>
+</button>
 
 <script>
+    function showNumber(num) { alert("Client Number: " + num); }
+
+    function handleQuoteRedirect(element) {
+        element.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        document.body.classList.add('fade-out');
+        setTimeout(() => { window.location.href = 'NewQuote.html'; }, 800);
+    }
+
     const ctx = document.getElementById('performanceChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',
